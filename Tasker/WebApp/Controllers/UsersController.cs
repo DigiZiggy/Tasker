@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL;
+using DAL.App.EF;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;
@@ -22,7 +26,9 @@ namespace WebApp.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Users.Include(u => u.HourlyRate).Include(u => u.UserType);
+            var appDbContext = _context.Users
+                .Include(u => u.HourlyRate)
+                .Include(u => u.UserType);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -49,9 +55,12 @@ namespace WebApp.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id");
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name");
-            return View();
+            var vm = new UserCreateViewModel()
+            {
+                HourlyRateSelectList = new SelectList(_context.HourlyRates, nameof(HourlyRate.Id), nameof(HourlyRate.PriceListId)),
+                UserTypeSelectList = new SelectList(_context.UserTypes, nameof(UserType.Id), nameof(UserType.Name))
+            };
+            return View(vm);
         }
 
         // POST: Users/Create
@@ -59,17 +68,23 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Email,Phone,UserTypeId,HourlyRateId,Id")] User user)
+        public async Task<IActionResult> Create(UserCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                _context.Add(vm.User);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
-            return View(user);
+
+            vm.UserTypeSelectList = new SelectList(_context.UserTypes, nameof(UserType.Id),
+                nameof(UserType.Name), vm.User.UserTypeId);
+            vm.HourlyRateSelectList = new SelectList(_context.HourlyRates, nameof(HourlyRate.Id),
+                nameof(HourlyRate.PriceListId), vm.User.HourlyRateId);
+
+//            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
+//            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
+            return View(vm);
         }
 
         // GET: Users/Edit/5

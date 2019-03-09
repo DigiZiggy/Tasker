@@ -1,13 +1,13 @@
-import {PLATFORM,LogManager} from "aurelia-framework";
+import {PLATFORM, LogManager} from "aurelia-framework";
 import {RouterConfiguration, Router} from "aurelia-router";
 
 export var log = LogManager.getLogger('MainRouter');
 
 export class MainRouter {
-  
-  public router : Router;
-  
-  constructor() {
+
+  public router: Router;
+
+  constructor(){
     log.debug('constructor');
   }
 
@@ -15,10 +15,10 @@ export class MainRouter {
     log.debug('configureRouter');
 
     this.router = router;
-    config.title = "Tasker App -Aurelia";
+    config.title = "Contact App - Aurelia";
     config.map(
       [
-        {route: ['', 'home'], name: 'home', moduelId: PLATFORM.moduleName('home'), nav: true, title: 'Home'}
+        {route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('home'), nav: true, title: 'Home'},
       ]
       
     );

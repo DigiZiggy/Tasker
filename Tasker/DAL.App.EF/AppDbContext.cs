@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Action = System.Action;
 
-namespace DAL
+namespace DAL.App.EF
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
