@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
 using DAL.App.EF;
 using Domain;
+using Identity;
 using Microsoft.AspNetCore.Authorization;
-using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -17,19 +17,24 @@ namespace WebApp.Controllers
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(AppDbContext context)
+        public UsersController(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Users
-                .Include(u => u.HourlyRate)
-                .Include(u => u.UserType);
-            return View(await appDbContext.ToListAsync());
+//            var users = await _context.Users
+//                .Include(u => u.AppUser)
+//                .Include(u => u.HourlyRate)
+//                .Include(u => u.UserType)
+//                .Where(u => u.AppUserId == User.GetUserId()).ToListAsync();
+//            
+            var users = await _userRepository.AllAsync(User.GetUserId());
+            return View(users);
         }
 
         // GET: Users/Details/5
@@ -41,6 +46,7 @@ namespace WebApp.Controllers
             }
 
             var user = await _context.Users
+                .Include(u => u.AppUser)
                 .Include(u => u.HourlyRate)
                 .Include(u => u.UserType)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -55,12 +61,7 @@ namespace WebApp.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            var vm = new UserCreateViewModel()
-            {
-                HourlyRateSelectList = new SelectList(_context.HourlyRates, nameof(HourlyRate.Id), nameof(HourlyRate.PriceListId)),
-                UserTypeSelectList = new SelectList(_context.UserTypes, nameof(UserType.Id), nameof(UserType.Name))
-            };
-            return View(vm);
+            return View();
         }
 
         // POST: Users/Create
@@ -68,23 +69,18 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserCreateViewModel vm)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Email,Phone,UserTypeId,HourlyRateId,Id")] User user)
         {
+            user.AppUserId = User.GetUserId();
+            
             if (ModelState.IsValid)
             {
-                _context.Add(vm.User);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            vm.UserTypeSelectList = new SelectList(_context.UserTypes, nameof(UserType.Id),
-                nameof(UserType.Name), vm.User.UserTypeId);
-            vm.HourlyRateSelectList = new SelectList(_context.HourlyRates, nameof(HourlyRate.Id),
-                nameof(HourlyRate.PriceListId), vm.User.HourlyRateId);
-
-//            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
-//            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
-            return View(vm);
+     
+            return View(user);
         }
 
         // GET: Users/Edit/5
@@ -100,6 +96,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
             ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
             ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
             return View(user);
@@ -110,7 +107,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FirstName,LastName,Email,Phone,UserTypeId,HourlyRateId,Id")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("FirstName,LastName,Email,Phone,UserTypeId,AppUserId,HourlyRateId,Id")] User user)
         {
             if (id != user.Id)
             {
@@ -137,6 +134,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
             ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
             ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
             return View(user);
@@ -151,6 +149,7 @@ namespace WebApp.Controllers
             }
 
             var user = await _context.Users
+                .Include(u => u.AppUser)
                 .Include(u => u.HourlyRate)
                 .Include(u => u.UserType)
                 .FirstOrDefaultAsync(m => m.Id == id);

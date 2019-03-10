@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using Domain.Identity;
 
 namespace Domain
 {
@@ -25,7 +27,10 @@ namespace Domain
 
         public int UserTypeId { get; set; }
         public UserType UserType { get; set; }
-
+        
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+        
         public int HourlyRateId { get; set; }
         public HourlyRate HourlyRate { get; set; }
     }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DAL;
 using DAL.App.EF;
 using Domain;
 
@@ -23,8 +22,7 @@ namespace WebApp.Controllers
         // GET: HourlyRates
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.HourlyRates
-                .Include(h => h.PriceList);
+            var appDbContext = _context.HourlyRates.Include(h => h.PriceList);
             return View(await appDbContext.ToListAsync());
         }
 
