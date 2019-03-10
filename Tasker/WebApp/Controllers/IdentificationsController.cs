@@ -2,28 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Identity;
 
 namespace WebApp.Controllers
 {
     public class IdentificationsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public IdentificationsController(AppDbContext context)
+        public IdentificationsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Identifications
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Identifications.Include(i => i.IdentificationType).Include(i => i.User);
-            return View(await appDbContext.ToListAsync());
+//            var appDbContext = _context.Identifications
+//                .Include(i => i.IdentificationType)
+//                .Include(i => i.User);
+
+            var identifications = await _uow.Identifications.AllAsync();
+
+            return View(identifications);
         }
 
         // GET: Identifications/Details/5
@@ -34,10 +41,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _context.Identifications
-                .Include(i => i.IdentificationType)
-                .Include(i => i.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var identification = await _context.Identifications
+//                .Include(i => i.IdentificationType)
+//                .Include(i => i.User)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var identification = await _uow.Identifications.FindAsync(id);
+
             if (identification == null)
             {
                 return NotFound();
@@ -49,8 +59,8 @@ namespace WebApp.Controllers
         // GET: Identifications/Create
         public IActionResult Create()
         {
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+//            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Name");
+//            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
@@ -61,14 +71,16 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,Id")] Identification identification)
         {
+            identification.AppUserId = User.GetUserId();
+
             if (ModelState.IsValid)
             {
-                _context.Add(identification);
-                await _context.SaveChangesAsync();
+                await _uow.Identifications.AddAsync(identification);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Name", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", identification.UserId);
+            ViewData["IdentificationTypeId"] = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Name", identification.IdentificationTypeId);
+            ViewData["UserId"] = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Email", identification.UserId);
             return View(identification);
         }
 
@@ -80,13 +92,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _context.Identifications.FindAsync(id);
+            var identification = await _uow.Identifications.FindAsync(id);
             if (identification == null)
             {
                 return NotFound();
             }
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Name", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", identification.UserId);
+            ViewData["IdentificationTypeId"] = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Name", identification.IdentificationTypeId);
+            ViewData["UserId"] = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Email", identification.UserId);
             return View(identification);
         }
 
@@ -104,26 +116,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(identification);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!IdentificationExists(identification.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Identifications.Update(identification);
+                await _uow.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Name", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", identification.UserId);
+            ViewData["IdentificationTypeId"] = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Name", identification.IdentificationTypeId);
+            ViewData["UserId"] = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Email", identification.UserId);
             return View(identification);
         }
 
@@ -135,10 +134,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _context.Identifications
-                .Include(i => i.IdentificationType)
-                .Include(i => i.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var identification = await _uow.Identifications.FindAsync();
+
             if (identification == null)
             {
                 return NotFound();
@@ -152,15 +149,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var identification = await _context.Identifications.FindAsync(id);
-            _context.Identifications.Remove(identification);
-            await _context.SaveChangesAsync();
+            _uow.Identifications.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool IdentificationExists(int id)
-        {
-            return _context.Identifications.Any(e => e.Id == id);
-        }
     }
 }

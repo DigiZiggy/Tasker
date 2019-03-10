@@ -2,28 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using Identity;
+using Task = Domain.Task;
 
 namespace WebApp.Controllers
 {
     public class ReviewsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public ReviewsController(AppDbContext context)
+        public ReviewsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Reviews.Include(r => r.Task);
-            return View(await appDbContext.ToListAsync());
+//            var appDbContext = _context.Reviews.Include(r => r.Task);
+
+            var reviews = await _uow.Reviews.AllAsync();
+
+            return View(reviews);
         }
 
         // GET: Reviews/Details/5
@@ -34,9 +41,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews
-                .Include(r => r.Task)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var review = await _context.Reviews
+//                .Include(r => r.Task)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var review = await _uow.Reviews.FindAsync(id);
+
             if (review == null)
             {
                 return NotFound();
@@ -48,7 +58,7 @@ namespace WebApp.Controllers
         // GET: Reviews/Create
         public IActionResult Create()
         {
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address");
+//            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address");
             return View();
         }
 
@@ -59,13 +69,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Rating,Comment,TaskId,Id")] Review review)
         {
+            review.AppUserId = User.GetUserId();
+
             if (ModelState.IsValid)
             {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
+                await _uow.Reviews.AddAsync(review);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address", review.TaskId);
+            ViewData["TaskId"] = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Address", review.TaskId);
             return View(review);
         }
 
@@ -77,12 +89,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews.FindAsync(id);
+            var review = await _uow.Reviews.FindAsync(id);
             if (review == null)
             {
                 return NotFound();
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address", review.TaskId);
+            ViewData["TaskId"] = new SelectList(await _uow.BaseRepository<Task>().AllAsync(), "Id", "Address", review.TaskId);
             return View(review);
         }
 
@@ -100,25 +112,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReviewExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Reviews.Update(review);
+                await _uow.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address", review.TaskId);
+            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", review.AppUserId);
+            ViewData["TaskId"] = new SelectList(await _uow.BaseRepository<Task>().AllAsync(), "Id", "Address", review.TaskId);
             return View(review);
         }
 
@@ -130,9 +130,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Reviews
-                .Include(r => r.Task)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var review = await _uow.Reviews.FindAsync();
+
             if (review == null)
             {
                 return NotFound();
@@ -146,15 +145,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var review = await _context.Reviews.FindAsync(id);
-            _context.Reviews.Remove(review);
-            await _context.SaveChangesAsync();
+            _uow.Reviews.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ReviewExists(int id)
-        {
-            return _context.Reviews.Any(e => e.Id == id);
-        }
     }
 }

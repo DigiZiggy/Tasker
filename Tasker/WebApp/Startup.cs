@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using DAL;
 using DAL.App.EF;
@@ -43,29 +44,29 @@ namespace WebApp
                 options.UseMySql(
                     Configuration.GetConnectionString("MySqlConnection")));
 
-            services.AddScoped<IAddressRepository, AddressRepository>();
-            services.AddScoped<ICityRepository, CityRepository>();
-            services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<IHourlyRateRepository, HourlyRateRepository>();
-            services.AddScoped<IIdentificationRepository, IdentificationRepository>();
-            services.AddScoped<IIdentificationTypeRepository, IdentificationTypeRepository>();
-            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-            services.AddScoped<IInvoiceLineRepository, InvoiceLineRepository>();
-            services.AddScoped<IMeansOfPaymentRepository, MeansOfPaymentRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IPriceRepository, PriceRepository>();
-            services.AddScoped<IPriceListRepository, PriceListRepository>();
-            services.AddScoped<IReviewRepository, ReviewRepository>();
-            services.AddScoped<ISkillRepository, SkillRepository>();
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserGroupRepository, UserGroupRepository>();      
-            services.AddScoped<IUserInGroupRepository, UserInGroupRepository>();
-            services.AddScoped<IUserOnAddressRepository, UserOnAddressRepository>();
-            services.AddScoped<IUserOnTaskRepository, UserOnTaskRepository>();
-            services.AddScoped<IUserSkillRepository, UserSkillRepository>();
-            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
+            services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
+//            services.AddScoped<ICityRepository, CityRepository>();
+//            services.AddScoped<ICountryRepository, CountryRepository>();
+//            services.AddScoped<IHourlyRateRepository, HourlyRateRepository>();
+//            services.AddScoped<IIdentificationRepository, IdentificationRepository>();
+//            services.AddScoped<IIdentificationTypeRepository, IdentificationTypeRepository>();
+//            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+//            services.AddScoped<IInvoiceLineRepository, InvoiceLineRepository>();
+//            services.AddScoped<IMeansOfPaymentRepository, MeansOfPaymentRepository>();
+//            services.AddScoped<IPaymentRepository, PaymentRepository>();
+//            services.AddScoped<IPriceRepository, PriceRepository>();
+//            services.AddScoped<IPriceListRepository, PriceListRepository>();
+//            services.AddScoped<IReviewRepository, ReviewRepository>();
+//            services.AddScoped<ISkillRepository, SkillRepository>();
+//            services.AddScoped<ITaskRepository, TaskRepository>();
+//            services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
+//            services.AddScoped<IUserRepository, UserRepository>();
+//            services.AddScoped<IUserGroupRepository, UserGroupRepository>();      
+//            services.AddScoped<IUserInGroupRepository, UserInGroupRepository>();
+//            services.AddScoped<IUserOnAddressRepository, UserOnAddressRepository>();
+//            services.AddScoped<IUserOnTaskRepository, UserOnTaskRepository>();
+//            services.AddScoped<IUserSkillRepository, UserSkillRepository>();
+//            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
             
             services.AddDefaultIdentity<AppUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)

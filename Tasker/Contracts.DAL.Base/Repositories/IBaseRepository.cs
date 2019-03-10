@@ -20,7 +20,5 @@ namespace Contracts.DAL.Base.Repositories
         void Remove(TEntity entity);
         void Remove(params object[] id);
 
-        int SaveChanges();
-        Task<int> SaveChangesAsync();
     }
 }

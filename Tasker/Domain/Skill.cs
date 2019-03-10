@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Identity;
 
 namespace Domain
 {
@@ -10,5 +11,8 @@ namespace Domain
         public string Name { get; set; }
         public string Description { get; set; }
         public string Comment { get; set; }
+        
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Migrations.Model;
+using Domain.Identity;
 
 namespace Domain
 {
@@ -15,5 +16,8 @@ namespace Domain
 
         public int TaskId { get; set; }
         public Task Task { get; set; }
+        
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

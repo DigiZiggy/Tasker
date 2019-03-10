@@ -2,27 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using Identity;
 
 namespace WebApp.Controllers
 {
     public class SkillsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public SkillsController(AppDbContext context)
+        public SkillsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Skills
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Skills.ToListAsync());
+            var skills = await _uow.Skills.AllAsync();
+
+            return View(skills);
         }
 
         // GET: Skills/Details/5
@@ -33,8 +38,10 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _context.Skills
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var skill = await _context.Skills
+//                .FirstOrDefaultAsync(m => m.Id == id);
+            var skill = await _uow.Skills.FindAsync(id);
+
             if (skill == null)
             {
                 return NotFound();
@@ -56,10 +63,12 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,Comment,Id")] Skill skill)
         {
+            skill.AppUserId = User.GetUserId();
+
             if (ModelState.IsValid)
             {
-                _context.Add(skill);
-                await _context.SaveChangesAsync();
+                await _uow.Skills.AddAsync(skill);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);
@@ -73,7 +82,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _context.Skills.FindAsync(id);
+            var skill = await _uow.Skills.FindAsync(id);
             if (skill == null)
             {
                 return NotFound();
@@ -95,22 +104,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(skill);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SkillExists(skill.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Skills.Update(skill);
+                await _uow.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);
@@ -124,8 +120,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _context.Skills
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var skill = await _uow.Skills.FindAsync();
+
             if (skill == null)
             {
                 return NotFound();
@@ -139,15 +135,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var skill = await _context.Skills.FindAsync(id);
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
+            _uow.Skills.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SkillExists(int id)
-        {
-            return _context.Skills.Any(e => e.Id == id);
-        }
     }
 }

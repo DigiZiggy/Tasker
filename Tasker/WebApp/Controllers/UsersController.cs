@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
 using Identity;
 using Microsoft.AspNetCore.Authorization;
 
@@ -16,12 +18,11 @@ namespace WebApp.Controllers
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly IUserRepository _userRepository;
+        private readonly IAppUnitOfWork _uow;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IAppUnitOfWork uow)
         {
-            _userRepository = userRepository;
+            _uow = uow;
         }
 
         // GET: Users
@@ -33,7 +34,8 @@ namespace WebApp.Controllers
 //                .Include(u => u.UserType)
 //                .Where(u => u.AppUserId == User.GetUserId()).ToListAsync();
 //            
-            var users = await _userRepository.AllAsync(User.GetUserId());
+            var users = await _uow.Users.AllAsync(User.GetUserId());
+            
             return View(users);
         }
 
@@ -45,11 +47,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .Include(u => u.AppUser)
-                .Include(u => u.HourlyRate)
-                .Include(u => u.UserType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var user = await _context.Users
+//                .Include(u => u.AppUser)
+//                .Include(u => u.HourlyRate)
+//                .Include(u => u.UserType)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await _uow.Users.FindAsync(id);
+            
             if (user == null)
             {
                 return NotFound();
@@ -75,8 +80,8 @@ namespace WebApp.Controllers
             
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await _uow.Users.AddAsync(user);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
      
@@ -91,14 +96,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _uow.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
-            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
+            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId);
+            ViewData["HourlyRateId"] = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId);
+            ViewData["UserTypeId"] = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Name", user.UserTypeId);
             return View(user);
         }
 
@@ -116,27 +121,14 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Users.Update(user);
+                await _uow.SaveChangesAsync();
+   
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
-            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
-            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Name", user.UserTypeId);
+            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId);
+            ViewData["HourlyRateId"] = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId);
+            ViewData["UserTypeId"] = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Name", user.UserTypeId);
             return View(user);
         }
 
@@ -148,11 +140,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .Include(u => u.AppUser)
-                .Include(u => u.HourlyRate)
-                .Include(u => u.UserType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _uow.Users.FindAsync();
             if (user == null)
             {
                 return NotFound();
@@ -166,15 +154,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            _uow.Users.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
-        }
     }
 }

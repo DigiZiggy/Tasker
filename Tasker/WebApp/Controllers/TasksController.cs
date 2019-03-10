@@ -2,28 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using Identity;
+using Task = Domain.Task;
 
 namespace WebApp.Controllers
 {
     public class TasksController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public TasksController(AppDbContext context)
+        public TasksController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Tasks.Include(t => t.TaskType);
-            return View(await appDbContext.ToListAsync());
+//            var appDbContext = _context.Tasks.Include(t => t.TaskType);
+
+            var tasks = await _uow.Tasks.AllAsync();
+            return View(tasks);
         }
 
         // GET: Tasks/Details/5
@@ -34,9 +40,11 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Tasks
-                .Include(t => t.TaskType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var task = await _context.Tasks
+//                .Include(t => t.TaskType)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+            var task = await _uow.Tasks.FindAsync(id);
+
             if (task == null)
             {
                 return NotFound();
@@ -48,7 +56,7 @@ namespace WebApp.Controllers
         // GET: Tasks/Create
         public IActionResult Create()
         {
-            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Name");
+//            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Name");
             return View();
         }
 
@@ -59,13 +67,15 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Description,TimeEstimate,Address,TaskTypeId,Id")] Domain.Task task)
         {
+            task.AppUserId = User.GetUserId();
+
             if (ModelState.IsValid)
             {
-                _context.Add(task);
-                await _context.SaveChangesAsync();
+                await _uow.Tasks.AddAsync(task);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Name", task.TaskTypeId);
+            ViewData["TaskTypeId"] = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Name", task.TaskTypeId);
             return View(task);
         }
 
@@ -77,12 +87,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Tasks.FindAsync(id);
+            var task = await _uow.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound();
             }
-            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Name", task.TaskTypeId);
+            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId);
+            ViewData["TaskTypeId"] = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Name", task.TaskTypeId);
             return View(task);
         }
 
@@ -100,25 +111,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(task);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaskExists(task.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Tasks.Update(task);
+                await _uow.SaveChangesAsync();
+    
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Name", task.TaskTypeId);
+            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId);
+            ViewData["TaskTypeId"] = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Name", task.TaskTypeId);
             return View(task);
         }
 
@@ -130,9 +129,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var task = await _context.Tasks
-                .Include(t => t.TaskType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var task = await _uow.Tasks.FindAsync();
+
             if (task == null)
             {
                 return NotFound();
@@ -146,15 +144,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
+            _uow.Tasks.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TaskExists(int id)
-        {
-            return _context.Tasks.Any(e => e.Id == id);
         }
     }
 }

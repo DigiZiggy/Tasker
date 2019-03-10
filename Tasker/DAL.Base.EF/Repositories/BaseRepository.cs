@@ -64,14 +64,5 @@ namespace DAL.Base.EF.Repositories
             RepositoryDbSet.Remove(Find(id));
         }
 
-        public virtual int SaveChanges()
-        {
-            return RepositoryDbContext.SaveChanges();
-        }
-
-        public virtual async Task<int> SaveChangesAsync()
-        {
-            return await RepositoryDbContext.SaveChangesAsync();
-        }
     }
 }
