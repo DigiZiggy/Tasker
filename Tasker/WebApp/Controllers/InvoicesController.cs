@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -24,7 +25,6 @@ namespace WebApp.Controllers
         {
             var invoices = await _uow.Invoices.AllAsync();
 
-//            var appDbContext = _context.Invoices.Include(i => i.User);
             return View(invoices);
         }
 
@@ -35,10 +35,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var invoice = await _context.Invoices
-//                .Include(i => i.User)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var invoice = await _uow.Invoices.FindAsync(id);
 
@@ -53,8 +49,13 @@ namespace WebApp.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            var vm = new InvoiceCreateViewModel()
+            {
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id"),
+
+            };
+            
+            return View(vm);
         }
 
         // POST: Invoices/Create
@@ -62,16 +63,19 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InvoiceNumber,Date,TotalWithVAT,TotalWithoutVAT,VAT,Comment,UserId,Id")] Invoice invoice)
+        public async Task<IActionResult> Create(InvoiceCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.Invoices.AddAsync(invoice);
+                await _uow.Invoices.AddAsync(vm.Invoice);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", invoice.UserId);
-            return View(invoice);
+            
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+                "Id", vm.Invoice.UserId);
+
+            return View(vm);
         }
 
         // GET: Invoices/Edit/5
@@ -87,8 +91,14 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", invoice.UserId);
-            return View(invoice);
+            
+            var vm = new InvoiceEditViewModel()
+            {
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", invoice.UserId),
+
+            };
+            
+            return View(vm);
         }
 
         // POST: Invoices/Edit/5
@@ -96,22 +106,24 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InvoiceNumber,Date,TotalWithVAT,TotalWithoutVAT,VAT,Comment,UserId,Id")] Invoice invoice)
+        public async Task<IActionResult> Edit(int id, InvoiceEditViewModel vm)
         {
-            if (id != invoice.Id)
+            if (id != vm.Invoice.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.Invoices.Update(invoice);
+                _uow.Invoices.Update(vm.Invoice);
                 await _uow.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", invoice.UserId);
-            return View(invoice);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+                "Id", vm.Invoice.UserId);
+            
+            return View(vm);
         }
 
         // GET: Invoices/Delete/5

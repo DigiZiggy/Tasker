@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,9 +26,6 @@ namespace WebApp.Controllers
         {
             var userInGroups = await _uow.UserInGroups.AllAsync();
 
-//            var appDbContext = _context.UserInGroups
-//                .Include(u => u.User)
-//                .Include(u => u.UserGroup);
             return View(userInGroups);
         }
 
@@ -38,11 +36,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var userInGroup = await _context.UserInGroups
-//                .Include(u => u.User)
-//                .Include(u => u.UserGroup)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var userInGroup = await _uow.UserInGroups.FindAsync(id);
 
@@ -57,9 +50,13 @@ namespace WebApp.Controllers
         // GET: UserInGroups/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id");
-            return View();
+            var vm = new UserInGroupCreateViewModel()
+            {
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id"),
+                UserGroupSelectList = new SelectList(_uow.BaseRepository<UserGroup>().All(), "Id", "Id"),
+            };
+            
+            return View(vm);
         }
 
         // POST: UserInGroups/Create
@@ -67,17 +64,20 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Start,End,UserId,UserGroupId,Id")] UserInGroup userInGroup)
+        public async Task<IActionResult> Create(UserInGroupCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.UserInGroups.AddAsync(userInGroup);
+                await _uow.UserInGroups.AddAsync(vm.UserInGroup);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userInGroup.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id", userInGroup.UserGroupId);
-            return View(userInGroup);
+            
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+                "Id", vm.UserInGroup.UserId);
+            vm.UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id", vm.UserInGroup.UserGroupId);
+
+            return View(vm);
         }
 
         // GET: UserInGroups/Edit/5
@@ -93,9 +93,13 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userInGroup.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id", userInGroup.UserGroupId);
-            return View(userInGroup);
+            
+            var vm = new UserInGroupEditViewModel()
+            {
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", userInGroup.UserId),
+                UserGroupSelectList = new SelectList(_uow.BaseRepository<UserGroup>().All(), "Id", "Id", userInGroup.UserGroupId),
+            };
+            return View(vm);
         }
 
         // POST: UserInGroups/Edit/5
@@ -103,23 +107,26 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Start,End,UserId,UserGroupId,Id")] UserInGroup userInGroup)
+        public async Task<IActionResult> Edit(int id, UserInGroupEditViewModel vm)
         {
-            if (id != userInGroup.Id)
+            if (id != vm.UserInGroup.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.UserInGroups.Update(userInGroup);
+                _uow.UserInGroups.Update(vm.UserInGroup);
                 await _uow.SaveChangesAsync();
    
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userInGroup.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id", userInGroup.UserGroupId);
-            return View(userInGroup);
+            
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+                "Id", vm.UserInGroup.UserId);
+            vm.UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id", vm.UserInGroup.UserGroupId);
+
+            return View(vm);
         }
 
         // GET: UserInGroups/Delete/5

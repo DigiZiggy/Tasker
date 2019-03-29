@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -24,7 +25,6 @@ namespace WebApp.Controllers
         {
             var cities = await _uow.Cities.AllAsync();
 
-//            var appDbContext = _context.Cities.Include(c => c.Country);
             return View(cities);
         }
 
@@ -35,10 +35,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var city = await _context.Cities
-//                .Include(c => c.Country)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var city = await _uow.Cities.FindAsync(id);
 
@@ -53,8 +49,12 @@ namespace WebApp.Controllers
         // GET: Cities/Create
         public IActionResult Create()
         {
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id");
-            return View();
+            var vm = new CityCreateViewModel()
+            {
+                CountrySelectList = new SelectList(_uow.BaseRepository<Country>().All(), "Id", "Id"),
+            };
+
+            return View(vm);
         }
 
         // POST: Cities/Create
@@ -62,16 +62,18 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Comment,CountryId,Id")] City city)
+        public async Task<IActionResult> Create(CityCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.Cities.AddAsync(city);
+                await _uow.Cities.AddAsync(vm.City);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
-            return View(city);
+            
+            vm.CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id", vm.City.CountryId);
+
+            return View(vm);
         }
 
         // GET: Cities/Edit/5
@@ -87,8 +89,12 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
-            return View(city);
+            var vm = new CityEditViewModel()
+            {
+                CountrySelectList = new SelectList(_uow.BaseRepository<Country>().All(), "Id", "Id", city.CountryId),
+            };
+            
+            return View(vm);
         }
 
         // POST: Cities/Edit/5
@@ -96,22 +102,23 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Comment,CountryId,Id")] City city)
+        public async Task<IActionResult> Edit(int id, CityEditViewModel vm)
         {
-            if (id != city.Id)
+            if (id != vm.City.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.Cities.Update(city);
+                _uow.Cities.Update(vm.City);
                 await _uow.SaveChangesAsync();
                     
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
-            return View(city);
+            
+            vm.CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id", vm.City.CountryId);
+            return View(vm);
         }
 
         // GET: Cities/Delete/5

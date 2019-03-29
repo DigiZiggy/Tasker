@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
 using Identity;
 using WebApp.ViewModels;
 
@@ -27,10 +28,6 @@ namespace WebApp.Controllers
         {
             var userSkills = await _uow.UserSills.AllAsync();
 
-//            var appDbContext = _context.UserSkills
-//                .Include(u => u.AppUser)
-//                .Include(u => u.Skill)
-//                .Include(u => u.User);
             return View(userSkills);
         }
 
@@ -41,12 +38,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var userSkill = await _context.UserSkills
-//                .Include(u => u.AppUser)
-//                .Include(u => u.Skill)
-//                .Include(u => u.User)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var userSkill = await _uow.UserSills.FindAsync(id);
 
@@ -63,9 +54,9 @@ namespace WebApp.Controllers
         {
             var vm = new UserSkillCreateViewModel()
             {
-                UserSelectList = new SelectList(_uow.Users.Where(p => p.AppUserId == User.GetUserId()), "Id", "FirstName"),
-                SkillSelectList = new SelectList(_uow.Skills, "Id", "Id"),
-                AppUserSelectList = new SelectList(_uow.Users, "Id", "Id")
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
+                SkillSelectList = new SelectList(_uow.BaseRepository<Skill>().All(), "Id", "Id"),
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id")
 
             };
  
@@ -86,14 +77,11 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            vm.UserSelectList = new SelectList(_uow.Users.Where(p => p.AppUserId == User.GetUserId()), "Id",
-                "FirstName", vm.UserSkill.UserId);
-            vm.SkillSelectList = new SelectList(_uow.Skills, "Id", "Id", vm.UserSkill.SkillId);
-            vm.AppUserSelectList = new SelectList(_uow.Users, "Id", "Id", vm.UserSkill.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.UserSkill.AppUserId);
+            vm.SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserSkill.UserId);
 
-//            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userSkill.AppUserId);
-//            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Id", userSkill.SkillId);
-//            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userSkill.UserId);
             return View(vm);
         }
 
@@ -110,10 +98,16 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userSkill.AppUserId);
-            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Id", userSkill.SkillId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userSkill.UserId);
-            return View(userSkill);
+            
+            var vm = new UserSkillEditViewModel()
+            {
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", userSkill.AppUserId),
+                SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id", userSkill.SkillId),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", userSkill.UserId)
+
+            };
+
+            return View(vm);
         }
 
         // POST: UserSkills/Edit/5
@@ -121,24 +115,26 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Start,End,Comment,UserId,SkillId,AppUserId,Id")] UserSkill userSkill)
+        public async Task<IActionResult> Edit(int id, UserSkillEditViewModel vm)
         {
-            if (id != userSkill.Id)
+            if (id != vm.UserSkill.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.UserSills.Update(userSkill);
+                _uow.UserSills.Update(vm.UserSkill);
                 await _uow.SaveChangesAsync();
                     
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userSkill.AppUserId);
-            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Id", userSkill.SkillId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userSkill.UserId);
-            return View(userSkill);
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.UserSkill.AppUserId);
+            vm.SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserSkill.UserId);
+            
+            return View(vm);
         }
 
         // GET: UserSkills/Delete/5

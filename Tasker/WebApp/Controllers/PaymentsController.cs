@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,9 +26,6 @@ namespace WebApp.Controllers
         {
             var payments = await _uow.Payments.AllAsync();
 
-//            var appDbContext = _context.Payments
-//                .Include(p => p.Invoice)
-//                .Include(p => p.MeansOfPayment);
             return View(payments);
         }
 
@@ -38,11 +36,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var payment = await _context.Payments
-//                .Include(p => p.Invoice)
-//                .Include(p => p.MeansOfPayment)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var payment = await _uow.Payments.FindAsync(id);
 
@@ -57,9 +50,15 @@ namespace WebApp.Controllers
         // GET: Payments/Create
         public IActionResult Create()
         {
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id");
-            ViewData["MeansOfPaymentId"] = new SelectList(_context.MeansOfPayments, "Id", "Id");
-            return View();
+            
+            var vm = new PaymentCreateViewModel()
+            {
+                InvoiceSelectList = new SelectList(_uow.BaseRepository<Invoice>().All(), "Id", "FirstName"),
+                MeansOfPaymentSelectList = new SelectList(_uow.BaseRepository<MeansOfPayment>().All(), "Id", "Id"),
+
+            };
+
+            return View(vm);
         }
 
         // POST: Payments/Create
@@ -67,17 +66,21 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PaymentCode,TimeOfPayment,Total,Comment,MeansOfPaymentId,InvoiceId,Id")] Payment payment)
+        public async Task<IActionResult> Create(PaymentCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.Payments.AddAsync(payment);
+                await _uow.Payments.AddAsync(vm.Payment);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", payment.InvoiceId);
-            ViewData["MeansOfPaymentId"] = new SelectList(_context.MeansOfPayments, "Id", "Id", payment.MeansOfPaymentId);
-            return View(payment);
+            
+            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id",
+                "Id", vm.Payment.InvoiceId);
+            vm.MeansOfPaymentSelectList = new SelectList(await _uow.BaseRepository<MeansOfPayment>().AllAsync(), "Id",
+                "Id", vm.Payment.MeansOfPaymentId);
+
+            return View(vm);
         }
 
         // GET: Payments/Edit/5
@@ -93,9 +96,15 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", payment.InvoiceId);
-            ViewData["MeansOfPaymentId"] = new SelectList(_context.MeansOfPayments, "Id", "Id", payment.MeansOfPaymentId);
-            return View(payment);
+            
+            var vm = new PaymentEditViewModel()
+            {
+                InvoiceSelectList = new SelectList(_uow.BaseRepository<Invoice>().All(), "Id", "FirstName", payment.InvoiceId),
+                MeansOfPaymentSelectList = new SelectList(_uow.BaseRepository<MeansOfPayment>().All(), "Id", "Id", payment.MeansOfPaymentId),
+
+            };
+
+            return View(vm);
         }
 
         // POST: Payments/Edit/5
@@ -103,23 +112,28 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentCode,TimeOfPayment,Total,Comment,MeansOfPaymentId,InvoiceId,Id")] Payment payment)
+        public async Task<IActionResult> Edit(int id, PaymentEditViewModel vm)
         {
-            if (id != payment.Id)
+            if (id != vm.Payment.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.Payments.Update(payment);
+                _uow.Payments.Update(vm.Payment);
                 await _uow.SaveChangesAsync();
  
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", payment.InvoiceId);
-            ViewData["MeansOfPaymentId"] = new SelectList(_context.MeansOfPayments, "Id", "Id", payment.MeansOfPaymentId);
-            return View(payment);
+            
+            
+            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id",
+                "Id", vm.Payment.InvoiceId);
+            vm.MeansOfPaymentSelectList = new SelectList(await _uow.BaseRepository<MeansOfPayment>().AllAsync(), "Id",
+                "Id", vm.Payment.MeansOfPaymentId);
+            
+            return View(vm);
         }
 
         // GET: Payments/Delete/5

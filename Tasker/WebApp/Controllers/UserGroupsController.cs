@@ -35,9 +35,6 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-//            var userGroup = await _context.UserGroups
-//                .FirstOrDefaultAsync(m => m.Id == id);
-
             var userGroup = await _uow.UserGroups.FindAsync(id);
 
             if (userGroup == null)

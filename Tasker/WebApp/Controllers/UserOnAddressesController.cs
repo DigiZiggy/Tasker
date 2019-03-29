@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -24,10 +26,6 @@ namespace WebApp.Controllers
         {
             var userOnAddresses = await _uow.UserOnAddresses.AllAsync();
 
-//            var appDbContext = _context.UserOnAddresses
-//                .Include(u => u.Address)
-//                .Include(u => u.AppUser)
-//                .Include(u => u.User);
             return View(userOnAddresses);
         }
 
@@ -38,12 +36,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-//
-//            var userOnAddress = await _context.UserOnAddresses
-//                .Include(u => u.Address)
-//                .Include(u => u.AppUser)
-//                .Include(u => u.User)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
 
@@ -58,10 +50,15 @@ namespace WebApp.Controllers
         // GET: UserOnAddresses/Create
         public IActionResult Create()
         {
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id");
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            
+            var vm = new UserOnAddressCreateViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
+                AddressSelectList = new SelectList(_uow.BaseRepository<Address>().All(), "Id", "Id"),
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id")
+            };
+         
+            return View(vm);
         }
 
         // POST: UserOnAddresses/Create
@@ -69,18 +66,21 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Start,End,UserId,AddressId,AppUserId,Id")] UserOnAddress userOnAddress)
+        public async Task<IActionResult> Create(UserOnAddressCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.UserOnAddresses.AddAsync(userOnAddress);
+                await _uow.UserOnAddresses.AddAsync(vm.UserOnAddress);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", userOnAddress.AddressId);
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnAddress.AppUserId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userOnAddress.UserId);
-            return View(userOnAddress);
+            
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.UserOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
+
+            return View(vm);
         }
 
         // GET: UserOnAddresses/Edit/5
@@ -96,10 +96,15 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", userOnAddress.AddressId);
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnAddress.AppUserId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userOnAddress.UserId);
-            return View(userOnAddress);
+            
+            var vm = new UserOnAddressEditViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", userOnAddress.AppUserId),
+                AddressSelectList = new SelectList(_uow.BaseRepository<Address>().All(), "Id", "Id", userOnAddress.AddressId),
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", userOnAddress.UserId)
+            };
+            
+            return View(vm);
         }
 
         // POST: UserOnAddresses/Edit/5
@@ -107,24 +112,27 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Start,End,UserId,AddressId,AppUserId,Id")] UserOnAddress userOnAddress)
+        public async Task<IActionResult> Edit(int id, UserOnAddressEditViewModel vm)
         {
-            if (id != userOnAddress.Id)
+            if (id != vm.UserOnAddress.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.UserOnAddresses.Update(userOnAddress);
+                _uow.UserOnAddresses.Update(vm.UserOnAddress);
                 await _uow.SaveChangesAsync();
   
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", userOnAddress.AddressId);
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnAddress.AppUserId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userOnAddress.UserId);
-            return View(userOnAddress);
+            
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.UserOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
+
+            return View(vm);
         }
 
         // GET: UserOnAddresses/Delete/5

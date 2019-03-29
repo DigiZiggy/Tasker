@@ -36,9 +36,6 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-//            var meansOfPayment = await _context.MeansOfPayments
-//                .FirstOrDefaultAsync(m => m.Id == id);
-
             var meansOfPayment = await _uow.MeansOfPayments.FindAsync(id);
 
             if (meansOfPayment == null)

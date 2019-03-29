@@ -1,4 +1,4 @@
-@model Domain.Invoice
+@model InvoiceEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,41 +13,41 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="InvoiceNumber" class="control-label"></label>
-                <input asp-for="InvoiceNumber" class="form-control" />
-                <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                <label asp-for="Invoice.InvoiceNumber" class="control-label"></label>
+                <input asp-for="Invoice.InvoiceNumber" class="form-control" />
+                <span asp-validation-for="Invoice.InvoiceNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+                <label asp-for="Invoice.Date" class="control-label"></label>
+                <input asp-for="Invoice.Date" class="form-control" />
+                <span asp-validation-for="Invoice.Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TotalWithVAT" class="control-label"></label>
-                <input asp-for="TotalWithVAT" class="form-control" />
-                <span asp-validation-for="TotalWithVAT" class="text-danger"></span>
+                <label asp-for="Invoice.TotalWithVAT" class="control-label"></label>
+                <input asp-for="Invoice.TotalWithVAT" class="form-control" />
+                <span asp-validation-for="Invoice.TotalWithVAT" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TotalWithoutVAT" class="control-label"></label>
-                <input asp-for="TotalWithoutVAT" class="form-control" />
-                <span asp-validation-for="TotalWithoutVAT" class="text-danger"></span>
+                <label asp-for="Invoice.TotalWithoutVAT" class="control-label"></label>
+                <input asp-for="Invoice.TotalWithoutVAT" class="form-control" />
+                <span asp-validation-for="Invoice.TotalWithoutVAT" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VAT" class="control-label"></label>
-                <input asp-for="VAT" class="form-control" />
-                <span asp-validation-for="VAT" class="text-danger"></span>
+                <label asp-for="Invoice.VAT" class="control-label"></label>
+                <input asp-for="Invoice.VAT" class="form-control" />
+                <span asp-validation-for="Invoice.VAT" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
+                <label asp-for="Invoice.Comment" class="control-label"></label>
+                <input asp-for="Invoice.Comment" class="form-control" />
+                <span asp-validation-for="Invoice.Comment" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <label asp-for="Invoice.UserId" class="control-label"></label>
+                <select asp-for="Invoice.UserId" class="form-control" asp-items="Model.UserSelectList"></select>
+                <span asp-validation-for="Invoice.UserId" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Invoice.Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

@@ -1,4 +1,4 @@
-@model Domain.Identification
+@model IdentificationCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,36 +13,36 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DocumentNumber" class="control-label"></label>
-                <input asp-for="DocumentNumber" class="form-control" />
-                <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                <label asp-for="Identification.DocumentNumber" class="control-label"></label>
+                <input asp-for="Identification.DocumentNumber" class="form-control" />
+                <span asp-validation-for="Identification.DocumentNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Start" class="control-label"></label>
-                <input asp-for="Start" class="form-control" />
-                <span asp-validation-for="Start" class="text-danger"></span>
+                <label asp-for="Identification.Start" class="control-label"></label>
+                <input asp-for="Identification.Start" class="form-control" />
+                <span asp-validation-for="Identification.Start" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="End" class="control-label"></label>
-                <input asp-for="End" class="form-control" />
-                <span asp-validation-for="End" class="text-danger"></span>
+                <label asp-for="Identification.End" class="control-label"></label>
+                <input asp-for="Identification.End" class="form-control" />
+                <span asp-validation-for="Identification.End" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
+                <label asp-for="Identification.Comment" class="control-label"></label>
+                <input asp-for="Identification.Comment" class="form-control" />
+                <span asp-validation-for="Identification.Comment" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                <label asp-for="Identification.UserId" class="control-label"></label>
+                <select asp-for="Identification.UserId" class ="form-control" asp-items="Model.UserSelectList"></select>
             </div>
             <div class="form-group">
-                <label asp-for="IdentificationTypeId" class="control-label"></label>
-                <select asp-for="IdentificationTypeId" class ="form-control" asp-items="ViewBag.IdentificationTypeId"></select>
+                <label asp-for="Identification.IdentificationTypeId" class="control-label"></label>
+                <select asp-for="Identification.IdentificationTypeId" class ="form-control" asp-items="Model.IdentificationTypeSelectList"></select>
             </div>
             <div class="form-group">
-                <label asp-for="AppUserId" class="control-label"></label>
-                <select asp-for="AppUserId" class ="form-control" asp-items="ViewBag.AppUserId"></select>
+                <label asp-for="Identification.AppUserId" class="control-label"></label>
+                <select asp-for="Identification.AppUserId" class ="form-control" asp-items="Model.AppUserSelectList"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -24,7 +25,6 @@ namespace WebApp.Controllers
         {
             var hourlyRates = await _uow.HourlyRates.AllAsync();
 
-//            var appDbContext = _context.HourlyRates.Include(h => h.PriceList);
             return View(hourlyRates);
         }
 
@@ -35,10 +35,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var hourlyRate = await _context.HourlyRates
-//                .Include(h => h.PriceList)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var hourlyRate = await _uow.HourlyRates.FindAsync(id);
 
@@ -53,8 +49,12 @@ namespace WebApp.Controllers
         // GET: HourlyRates/Create
         public IActionResult Create()
         {
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id");
-            return View();
+            var vm = new HourlyRateCreateViewModel()
+            {
+                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "Id"),
+            };
+
+            return View(vm);
         }
 
         // POST: HourlyRates/Create
@@ -62,16 +62,17 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HourRate,Start,End,PriceListId,Id")] HourlyRate hourlyRate)
+        public async Task<IActionResult> Create(HourlyRateCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.HourlyRates.AddAsync(hourlyRate);
+                await _uow.HourlyRates.AddAsync(vm.HourlyRate);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", hourlyRate.PriceListId);
-            return View(hourlyRate);
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id", vm.HourlyRate.PriceListId);
+
+            return View(vm);
         }
 
         // GET: HourlyRates/Edit/5
@@ -87,8 +88,13 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", hourlyRate.PriceListId);
-            return View(hourlyRate);
+            
+            var vm = new HourlyRateEditViewModel()
+            {
+                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "Id", hourlyRate.PriceListId),
+            };
+            
+            return View(vm);
         }
 
         // POST: HourlyRates/Edit/5
@@ -96,22 +102,24 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HourRate,Start,End,PriceListId,Id")] HourlyRate hourlyRate)
+        public async Task<IActionResult> Edit(int id, HourlyRateEditViewModel vm)
         {
-            if (id != hourlyRate.Id)
+            if (id != vm.HourlyRate.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.HourlyRates.Update(hourlyRate);
+                _uow.HourlyRates.Update(vm.HourlyRate);
                 await _uow.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", hourlyRate.PriceListId);
-            return View(hourlyRate);
+            
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id", vm.HourlyRate.PriceListId);
+
+            return View(vm);
         }
 
         // GET: HourlyRates/Delete/5

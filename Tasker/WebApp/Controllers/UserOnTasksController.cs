@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,10 +27,6 @@ namespace WebApp.Controllers
         {
             var userOnTasks = await _uow.UserOnTasks.AllAsync();
 
-//            var appDbContext = _context.UserOnTasks
-//                .Include(u => u.AppUser).Include(u => u.Task)
-//                .Include(u => u.TaskGiver)
-//                .Include(u => u.Tasker);
             return View(userOnTasks);
         }
 
@@ -39,13 +37,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var userOnTask = await _context.UserOnTasks
-//                .Include(u => u.AppUser)
-//                .Include(u => u.Task)
-//                .Include(u => u.TaskGiver)
-//                .Include(u => u.Tasker)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var userOnTask = await _uow.UserOnTasks.FindAsync(id);
 
@@ -60,11 +51,16 @@ namespace WebApp.Controllers
         // GET: UserOnTasks/Create
         public IActionResult Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id");
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            var vm = new UserOnTaskCreateViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
+                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
+                TaskGiverSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
+                TaskerSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id")
+
+            };
+            
+            return View(vm);
         }
 
         // POST: UserOnTasks/Create
@@ -72,19 +68,22 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Start,End,TaskId,TaskGiverId,TaskerId,AppUserId,Id")] UserOnTask userOnTask)
+        public async Task<IActionResult> Create(UserOnTaskCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.UserOnTasks.AddAsync(userOnTask);
+                await _uow.UserOnTasks.AddAsync(vm.UserOnTask);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnTask.AppUserId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", userOnTask.TaskId);
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskGiverId);
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskerId);
-            return View(userOnTask);
+            
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.UserOnTask.AppUserId);
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", vm.UserOnTask.TaskId);
+            vm.TaskerSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", vm.UserOnTask.TaskerId);
+            vm.TaskGiverSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", vm.UserOnTask.TaskGiverId);
+
+            return View(vm);
         }
 
         // GET: UserOnTasks/Edit/5
@@ -100,11 +99,17 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnTask.AppUserId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", userOnTask.TaskId);
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskGiverId);
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskerId);
-            return View(userOnTask);
+            
+            var vm = new UserOnTaskEditViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", userOnTask.AppUserId),
+                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", userOnTask.TaskId),
+                TaskGiverSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", userOnTask.TaskGiverId),
+                TaskerSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", userOnTask.TaskerId)
+
+            };
+            
+            return View(vm);
         }
 
         // POST: UserOnTasks/Edit/5
@@ -112,25 +117,27 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Start,End,TaskId,TaskGiverId,TaskerId,AppUserId,Id")] UserOnTask userOnTask)
+        public async Task<IActionResult> Edit(int id, UserOnTaskEditViewModel vm)
         {
-            if (id != userOnTask.Id)
+            if (id != vm.UserOnTask.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.UserOnTasks.Update(userOnTask);
+                _uow.UserOnTasks.Update(vm.UserOnTask);
                 await _uow.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnTask.AppUserId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", userOnTask.TaskId);
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskGiverId);
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskerId);
-            return View(userOnTask);
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.UserOnTask.AppUserId);
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", vm.UserOnTask.TaskId);
+            vm.TaskerSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", vm.UserOnTask.TaskerId);
+            vm.TaskGiverSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", vm.UserOnTask.TaskGiverId);
+
+            return View(vm);
         }
 
         // GET: UserOnTasks/Delete/5

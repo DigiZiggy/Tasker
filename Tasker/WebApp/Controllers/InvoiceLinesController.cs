@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,10 +26,6 @@ namespace WebApp.Controllers
         {
             
             var invoiceLines = await _uow.InvoiceLines.AllAsync();
-
-//            var appDbContext = _context.InvoiceLines
-//                .Include(i => i.Invoice)
-//                .Include(i => i.Task);
             
             return View(invoiceLines);
         }
@@ -40,11 +37,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var invoiceLine = await _context.InvoiceLines
-//                .Include(i => i.Invoice)
-//                .Include(i => i.Task)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var invoiceLine = await _uow.InvoiceLines.FindAsync(id);
 
@@ -59,9 +51,13 @@ namespace WebApp.Controllers
         // GET: InvoiceLines/Create
         public IActionResult Create()
         {
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id");
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id");
-            return View();
+            var vm = new InvoiceLinesCreateViewModel()
+            {
+                InvoiceSelectList = new SelectList(_uow.BaseRepository<Invoice>().All(), "Id", "Id"),
+                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
+            };
+            
+            return View(vm);
         }
 
         // POST: InvoiceLines/Create
@@ -69,17 +65,21 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Price,Amount,VATpercentage,VAT,TotalWithoutVAT,Total,Comment,InvoiceId,TaskId,Id")] InvoiceLine invoiceLine)
+        public async Task<IActionResult> Create(InvoiceLinesCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.InvoiceLines.AddAsync(invoiceLine);
+                await _uow.InvoiceLines.AddAsync(vm.InvoiceLine);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", invoiceLine.InvoiceId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", invoiceLine.TaskId);
-            return View(invoiceLine);
+                                 
+            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id",
+                "Id", vm.InvoiceLine.InvoiceId);
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id",
+                "Id", vm.InvoiceLine.TaskId);
+            
+            return View(vm);
         }
 
         // GET: InvoiceLines/Edit/5
@@ -95,9 +95,14 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", invoiceLine.InvoiceId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", invoiceLine.TaskId);
-            return View(invoiceLine);
+            
+            var vm = new InvoiceLinesEditViewModel()
+            {
+                InvoiceSelectList = new SelectList(_uow.BaseRepository<Invoice>().All(), "Id", "Id", invoiceLine.InvoiceId),
+                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", invoiceLine.TaskId),
+            };
+            
+            return View(vm);
         }
 
         // POST: InvoiceLines/Edit/5
@@ -105,23 +110,27 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Price,Amount,VATpercentage,VAT,TotalWithoutVAT,Total,Comment,InvoiceId,TaskId,Id")] InvoiceLine invoiceLine)
+        public async Task<IActionResult> Edit(int id, InvoiceLinesEditViewModel vm)
         {
-            if (id != invoiceLine.Id)
+            if (id != vm.InvoiceLine.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.InvoiceLines.Update(invoiceLine);
+                _uow.InvoiceLines.Update(vm.InvoiceLine);
                 await _uow.SaveChangesAsync();
                     
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["InvoiceId"] = new SelectList(_context.Invoices, "Id", "Id", invoiceLine.InvoiceId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", invoiceLine.TaskId);
-            return View(invoiceLine);
+            
+            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id",
+                "Id", vm.InvoiceLine.InvoiceId);
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id",
+                "Id", vm.InvoiceLine.TaskId);
+
+            return View(vm);
         }
 
         // GET: InvoiceLines/Delete/5

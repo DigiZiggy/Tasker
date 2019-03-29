@@ -6,6 +6,7 @@ namespace WebApp.ViewModels
     public class UserCreateViewModel
     {
         public User User { get; set; }
+        public SelectList AppUserSelectList { get; set; }
         public SelectList HourlyRateSelectList { get; set; }
         public SelectList UserTypeSelectList { get; set; }
     }

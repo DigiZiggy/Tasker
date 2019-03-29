@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,8 +26,6 @@ namespace WebApp.Controllers
         {
             var prices = await _uow.Prices.AllAsync();
 
-//            var appDbContext = _context.Prices
-//                .Include(p => p.PriceList);
             return View(prices);
         }
 
@@ -37,10 +36,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var price = await _context.Prices
-//                .Include(p => p.PriceList)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var price = await _uow.Prices.FindAsync(id);
 
@@ -55,8 +50,13 @@ namespace WebApp.Controllers
         // GET: Prices/Create
         public IActionResult Create()
         {
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id");
-            return View();
+            var vm = new PriceCreateViewModel()
+            {
+                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "FirstName"),
+
+            };
+
+            return View(vm);
         }
 
         // POST: Prices/Create
@@ -64,16 +64,19 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Amount,Start,End,Comment,PriceListId,Id")] Price price)
+        public async Task<IActionResult> Create(PriceCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.Prices.AddAsync(price);
+                await _uow.Prices.AddAsync(vm.Price);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", price.PriceListId);
-            return View(price);
+            
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id",
+                "Id", vm.Price.PriceListId);
+
+            return View(vm);
         }
 
         // GET: Prices/Edit/5
@@ -89,8 +92,14 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", price.PriceListId);
-            return View(price);
+            
+            var vm = new PriceEditViewModel()
+            {
+                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "FirstName", price.PriceListId),
+
+            };
+
+            return View(vm);
         }
 
         // POST: Prices/Edit/5
@@ -98,22 +107,25 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Amount,Start,End,Comment,PriceListId,Id")] Price price)
+        public async Task<IActionResult> Edit(int id, PriceEditViewModel vm)
         {
-            if (id != price.Id)
+            if (id != vm.Price.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.Prices.Update(price);
+                _uow.Prices.Update(vm.Price);
                 await _uow.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", price.PriceListId);
-            return View(price);
+            
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id",
+                "Id", vm.Price.PriceListId);
+
+            return View(vm);
         }
 
         // GET: Prices/Delete/5

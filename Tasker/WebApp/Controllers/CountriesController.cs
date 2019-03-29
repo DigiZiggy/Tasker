@@ -36,9 +36,6 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-//            var country = await _context.Countries
-//                .FirstOrDefaultAsync(m => m.Id == id);
-
             var country = await _uow.Countries.FindAsync(id);
 
             if (country == null)

@@ -1,4 +1,4 @@
-@model Domain.HourlyRate
+@model HourlyRateEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,26 +13,26 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="HourRate" class="control-label"></label>
-                <input asp-for="HourRate" class="form-control" />
-                <span asp-validation-for="HourRate" class="text-danger"></span>
+                <label asp-for="HourlyRate.HourRate" class="control-label"></label>
+                <input asp-for="HourlyRate.HourRate" class="form-control" />
+                <span asp-validation-for="HourlyRate.HourRate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Start" class="control-label"></label>
-                <input asp-for="Start" class="form-control" />
-                <span asp-validation-for="Start" class="text-danger"></span>
+                <label asp-for="HourlyRate.Start" class="control-label"></label>
+                <input asp-for="HourlyRate.Start" class="form-control" />
+                <span asp-validation-for="HourlyRate.Start" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="End" class="control-label"></label>
-                <input asp-for="End" class="form-control" />
-                <span asp-validation-for="End" class="text-danger"></span>
+                <label asp-for="HourlyRate.End" class="control-label"></label>
+                <input asp-for="HourlyRate.End" class="form-control" />
+                <span asp-validation-for="HourlyRate.End" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PriceListId" class="control-label"></label>
-                <select asp-for="PriceListId" class="form-control" asp-items="ViewBag.PriceListId"></select>
-                <span asp-validation-for="PriceListId" class="text-danger"></span>
+                <label asp-for="HourlyRate.PriceListId" class="control-label"></label>
+                <select asp-for="HourlyRate.PriceListId" class="form-control" asp-items="Model.PriceListSelectList"></select>
+                <span asp-validation-for="HourlyRate.PriceListId" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="HourlyRate.Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

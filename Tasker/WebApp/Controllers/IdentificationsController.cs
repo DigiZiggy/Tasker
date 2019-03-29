@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,10 +27,6 @@ namespace WebApp.Controllers
         {
             var identifications = await _uow.Identifications.AllAsync();
 
-//            var appDbContext = _context.Identifications
-//                .Include(i => i.AppUser)
-//                .Include(i => i.IdentificationType)
-//                .Include(i => i.User);
             return View(identifications);
         }
 
@@ -39,12 +37,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var identification = await _context.Identifications
-//                .Include(i => i.AppUser)
-//                .Include(i => i.IdentificationType)
-//                .Include(i => i.User)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var identification = await _uow.Identifications.FindAsync(id);
 
@@ -58,11 +50,15 @@ namespace WebApp.Controllers
 
         // GET: Identifications/Create
         public IActionResult Create()
-        {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+        {     
+            var vm = new IdentificationCreateViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
+                IdentificationTypeSelectList = new SelectList(_uow.BaseRepository<IdentificationType>().All(), "Id", "Id"),
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id")
+            };
+            
+            return View(vm);
         }
 
         // POST: Identifications/Create
@@ -70,18 +66,21 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,AppUserId,Id")] Identification identification)
+        public async Task<IActionResult> Create(IdentificationCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.Identifications.AddAsync(identification);
+                await _uow.Identifications.AddAsync(vm.Identification);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", identification.AppUserId);
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", identification.UserId);
-            return View(identification);
+            
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.Identification.AppUserId);
+            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
+
+            return View(vm);
         }
 
         // GET: Identifications/Edit/5
@@ -97,10 +96,15 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", identification.AppUserId);
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", identification.UserId);
-            return View(identification);
+            
+            var vm = new IdentificationEditViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", identification.AppUserId),
+                IdentificationTypeSelectList = new SelectList(_uow.BaseRepository<IdentificationType>().All(), "Id", "Id", identification.IdentificationTypeId),
+                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", identification.UserId)
+            };
+           
+            return View(vm);
         }
 
         // POST: Identifications/Edit/5
@@ -108,24 +112,27 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,AppUserId,Id")] Identification identification)
+        public async Task<IActionResult> Edit(int id, IdentificationEditViewModel vm)
         {
-            if (id != identification.Id)
+            if (id != vm.Identification.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.Identifications.Update(identification);
+                _uow.Identifications.Update(vm.Identification);
                 await _uow.SaveChangesAsync();
   
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", identification.AppUserId);
-            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", identification.UserId);
-            return View(identification);
+            
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.Identification.AppUserId);
+            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
+
+            return View(vm);
         }
 
         // GET: Identifications/Delete/5

@@ -36,9 +36,6 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-//            var skill = await _context.Skills
-//                .FirstOrDefaultAsync(m => m.Id == id);
-
             var skill = await _uow.Skills.FindAsync(id);
 
             if (skill == null)

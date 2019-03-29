@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -25,9 +27,6 @@ namespace WebApp.Controllers
         {
             var reviews = await _uow.Reviews.AllAsync();
 
-//            var appDbContext = _context.Reviews
-//                .Include(r => r.AppUser)
-//                .Include(r => r.Task);
             return View(reviews);
         }
 
@@ -38,11 +37,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var review = await _context.Reviews
-//                .Include(r => r.AppUser)
-//                .Include(r => r.Task)
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var review = await _uow.Reviews.FindAsync(id);
 
@@ -57,9 +51,15 @@ namespace WebApp.Controllers
         // GET: Reviews/Create
         public IActionResult Create()
         {
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id");
-            return View();
+            
+            var vm = new ReviewCreateViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
+                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
+
+            };
+            
+            return View(vm);
         }
 
         // POST: Reviews/Create
@@ -67,17 +67,21 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Rating,Comment,TaskId,AppUserId,Id")] Review review)
+        public async Task<IActionResult> Create(ReviewCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await _uow.Reviews.AddAsync(review);
+                await _uow.Reviews.AddAsync(vm.Review);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", review.AppUserId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", review.TaskId);
-            return View(review);
+            
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.Review.AppUserId);
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id",
+                "Id", vm.Review.TaskId);
+
+            return View(vm);
         }
 
         // GET: Reviews/Edit/5
@@ -93,9 +97,15 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", review.AppUserId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", review.TaskId);
-            return View(review);
+            
+            var vm = new ReviewEditViewModel()
+            {
+                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", review.AppUserId),
+                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", review.TaskId),
+
+            };
+
+            return View(vm);
         }
 
         // POST: Reviews/Edit/5
@@ -103,23 +113,26 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Rating,Comment,TaskId,AppUserId,Id")] Review review)
+        public async Task<IActionResult> Edit(int id, ReviewEditViewModel vm)
         {
-            if (id != review.Id)
+            if (id != vm.Review.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _uow.Reviews.Update(review);
+                _uow.Reviews.Update(vm.Review);
                 await _uow.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", review.AppUserId);
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", review.TaskId);
-            return View(review);
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+                "FirstName", vm.Review.AppUserId);
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id",
+                "Id", vm.Review.TaskId);
+
+            return View(vm);
         }
 
         // GET: Reviews/Delete/5
