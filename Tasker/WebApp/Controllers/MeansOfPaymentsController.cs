@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,19 @@ namespace WebApp.Controllers
 {
     public class MeansOfPaymentsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public MeansOfPaymentsController(AppDbContext context)
+        public MeansOfPaymentsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: MeansOfPayments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.MeansOfPayments.ToListAsync());
+            var meansOfPayment = await _uow.MeansOfPayments.AllAsync();
+
+            return View(meansOfPayment);
         }
 
         // GET: MeansOfPayments/Details/5
@@ -33,8 +36,11 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var meansOfPayment = await _context.MeansOfPayments
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var meansOfPayment = await _context.MeansOfPayments
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var meansOfPayment = await _uow.MeansOfPayments.FindAsync(id);
+
             if (meansOfPayment == null)
             {
                 return NotFound();
@@ -58,8 +64,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(meansOfPayment);
-                await _context.SaveChangesAsync();
+                await _uow.MeansOfPayments.AddAsync(meansOfPayment);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(meansOfPayment);
@@ -73,7 +79,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var meansOfPayment = await _context.MeansOfPayments.FindAsync(id);
+            var meansOfPayment = await _uow.MeansOfPayments.FindAsync(id);
             if (meansOfPayment == null)
             {
                 return NotFound();
@@ -95,22 +101,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(meansOfPayment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MeansOfPaymentExists(meansOfPayment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.MeansOfPayments.Update(meansOfPayment);
+                await _uow.SaveChangesAsync();
+                    
                 return RedirectToAction(nameof(Index));
             }
             return View(meansOfPayment);
@@ -124,8 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var meansOfPayment = await _context.MeansOfPayments
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var meansOfPayment = await _uow.MeansOfPayments.FindAsync(id);
             if (meansOfPayment == null)
             {
                 return NotFound();
@@ -139,15 +131,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var meansOfPayment = await _context.MeansOfPayments.FindAsync(id);
-            _context.MeansOfPayments.Remove(meansOfPayment);
-            await _context.SaveChangesAsync();
+            _uow.MeansOfPayments.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool MeansOfPaymentExists(int id)
-        {
-            return _context.MeansOfPayments.Any(e => e.Id == id);
         }
     }
 }

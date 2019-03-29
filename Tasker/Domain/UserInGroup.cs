@@ -5,7 +5,7 @@ namespace Domain
 {
     public class UserInGroup : BaseEntity
     {
-        [Required]
+//        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,19 @@ namespace WebApp.Controllers
 {
     public class PriceListsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PriceListsController(AppDbContext context)
+        public PriceListsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: PriceLists
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PriceLists.ToListAsync());
+            var priceLists = await _uow.PriceLists.AllAsync();
+
+            return View(priceLists);
         }
 
         // GET: PriceLists/Details/5
@@ -33,8 +36,11 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var priceList = await _context.PriceLists
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var priceList = await _context.PriceLists
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var priceList = await _uow.PriceLists.FindAsync(id);
+
             if (priceList == null)
             {
                 return NotFound();
@@ -58,8 +64,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(priceList);
-                await _context.SaveChangesAsync();
+                await _uow.PriceLists.AddAsync(priceList);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(priceList);
@@ -73,7 +79,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var priceList = await _context.PriceLists.FindAsync(id);
+            var priceList = await _uow.PriceLists.FindAsync(id);
             if (priceList == null)
             {
                 return NotFound();
@@ -95,22 +101,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(priceList);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PriceListExists(priceList.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.PriceLists.Update(priceList);
+                await _uow.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(priceList);
@@ -124,8 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var priceList = await _context.PriceLists
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var priceList = await _uow.PriceLists.FindAsync(id);
             if (priceList == null)
             {
                 return NotFound();
@@ -139,15 +131,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var priceList = await _context.PriceLists.FindAsync(id);
-            _context.PriceLists.Remove(priceList);
-            await _context.SaveChangesAsync();
+            _uow.PriceLists.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PriceListExists(int id)
-        {
-            return _context.PriceLists.Any(e => e.Id == id);
         }
     }
 }

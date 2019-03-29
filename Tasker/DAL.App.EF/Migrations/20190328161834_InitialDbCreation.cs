@@ -57,8 +57,8 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CountryCode = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 64, nullable: false)
+                    CountryCode = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -71,7 +71,7 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Comment = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -85,7 +85,7 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Comment = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -99,7 +99,7 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Start = table.Column<DateTime>(nullable: false),
                     End = table.Column<DateTime>(nullable: false)
@@ -110,12 +110,27 @@ namespace DAL.App.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TaskTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Comment = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -129,7 +144,7 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Start = table.Column<DateTime>(nullable: false),
                     End = table.Column<DateTime>(nullable: false)
                 },
@@ -144,7 +159,7 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Comment = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -259,34 +274,12 @@ namespace DAL.App.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Skills",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    Comment = table.Column<string>(nullable: true),
-                    AppUserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Skills", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Skills_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cities",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     CountryId = table.Column<int>(nullable: false)
                 },
@@ -352,9 +345,9 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(maxLength: 64, nullable: false),
+                    Description = table.Column<string>(maxLength: 64, nullable: true),
                     TimeEstimate = table.Column<int>(nullable: false),
-                    Address = table.Column<string>(maxLength: 64, nullable: false),
+                    Address = table.Column<string>(maxLength: 64, nullable: true),
                     TaskTypeId = table.Column<int>(nullable: false),
                     AppUserId = table.Column<int>(nullable: false)
                 },
@@ -381,9 +374,9 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Street = table.Column<string>(maxLength: 64, nullable: false),
-                    District = table.Column<string>(maxLength: 64, nullable: false),
-                    PostalCode = table.Column<string>(maxLength: 64, nullable: false),
+                    Street = table.Column<string>(maxLength: 64, nullable: true),
+                    District = table.Column<string>(maxLength: 64, nullable: true),
+                    PostalCode = table.Column<string>(maxLength: 64, nullable: true),
                     CityId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -403,9 +396,9 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(maxLength: 64, nullable: false),
-                    LastName = table.Column<string>(maxLength: 64, nullable: false),
-                    Email = table.Column<string>(maxLength: 64, nullable: false),
+                    FirstName = table.Column<string>(maxLength: 64, nullable: true),
+                    LastName = table.Column<string>(maxLength: 64, nullable: true),
+                    Email = table.Column<string>(maxLength: 64, nullable: true),
                     Phone = table.Column<int>(nullable: false),
                     UserTypeId = table.Column<int>(nullable: false),
                     AppUserId = table.Column<int>(nullable: false),
@@ -441,7 +434,7 @@ namespace DAL.App.EF.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Rating = table.Column<int>(nullable: false),
-                    Comment = table.Column<string>(maxLength: 64, nullable: false),
+                    Comment = table.Column<string>(maxLength: 64, nullable: true),
                     TaskId = table.Column<int>(nullable: false),
                     AppUserId = table.Column<int>(nullable: false)
                 },
@@ -468,7 +461,7 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DocumentNumber = table.Column<string>(maxLength: 64, nullable: false),
+                    DocumentNumber = table.Column<string>(maxLength: 64, nullable: true),
                     Start = table.Column<DateTime>(nullable: false),
                     End = table.Column<DateTime>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
@@ -561,7 +554,8 @@ namespace DAL.App.EF.Migrations
                     Start = table.Column<DateTime>(nullable: false),
                     End = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
+                    AddressId = table.Column<int>(nullable: false),
+                    AppUserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -570,6 +564,12 @@ namespace DAL.App.EF.Migrations
                         name: "FK_UserOnAddresses_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserOnAddresses_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -590,11 +590,18 @@ namespace DAL.App.EF.Migrations
                     End = table.Column<DateTime>(nullable: false),
                     TaskId = table.Column<int>(nullable: false),
                     TaskGiverId = table.Column<int>(nullable: false),
-                    TaskerId = table.Column<int>(nullable: false)
+                    TaskerId = table.Column<int>(nullable: false),
+                    AppUserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserOnTasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserOnTasks_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserOnTasks_Users_TaskGiverId",
                         column: x => x.TaskGiverId,
@@ -621,16 +628,23 @@ namespace DAL.App.EF.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 64, nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
                     Start = table.Column<DateTime>(nullable: false),
                     End = table.Column<DateTime>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false),
-                    SkillId = table.Column<int>(nullable: false)
+                    SkillId = table.Column<int>(nullable: false),
+                    AppUserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserSkills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserSkills_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserSkills_Skills_SkillId",
                         column: x => x.SkillId,
@@ -816,11 +830,6 @@ namespace DAL.App.EF.Migrations
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Skills_AppUserId",
-                table: "Skills",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tasks_AppUserId",
                 table: "Tasks",
                 column: "AppUserId");
@@ -846,9 +855,19 @@ namespace DAL.App.EF.Migrations
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserOnAddresses_AppUserId",
+                table: "UserOnAddresses",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserOnAddresses_UserId",
                 table: "UserOnAddresses",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOnTasks_AppUserId",
+                table: "UserOnTasks",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserOnTasks_TaskGiverId",
@@ -879,6 +898,11 @@ namespace DAL.App.EF.Migrations
                 name: "IX_Users_UserTypeId",
                 table: "Users",
                 column: "UserTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSkills_AppUserId",
+                table: "UserSkills",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSkills_SkillId",

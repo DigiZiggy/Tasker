@@ -4,12 +4,12 @@ namespace Domain
 {
     public class Country : BaseEntity
     {
-        [Required]
+//        [Required]
         public string CountryCode { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Name { get; set; }
     }
 }

@@ -14,5 +14,23 @@ namespace DAL.App.EF.Repositories
         {
         }
 
+        public override async Task<IEnumerable<Address>> AllAsync()
+        {
+            return await RepositoryDbSet
+                .Include(a => a.City)
+                .ToListAsync();
+        }
+
+        public override async Task<Address> FindAsync(params object[] id)
+        {
+            var address = await base.FindAsync(id);
+
+            if (address != null)
+            {
+                await RepositoryDbContext.Entry(address).Reference(a => a.City).LoadAsync();
+            }
+
+            return address;
+        }
     }
 }

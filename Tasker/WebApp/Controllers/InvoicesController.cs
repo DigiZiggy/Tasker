@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,19 @@ namespace WebApp.Controllers
 {
     public class InvoicesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public InvoicesController(AppDbContext context)
+        public InvoicesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
-
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Invoices.Include(i => i.User);
-            return View(await appDbContext.ToListAsync());
+            var invoices = await _uow.Invoices.AllAsync();
+
+//            var appDbContext = _context.Invoices.Include(i => i.User);
+            return View(invoices);
         }
 
         // GET: Invoices/Details/5
@@ -34,9 +36,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var invoice = await _context.Invoices
+//                .Include(i => i.User)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var invoice = await _uow.Invoices.FindAsync(id);
+
             if (invoice == null)
             {
                 return NotFound();
@@ -48,7 +53,7 @@ namespace WebApp.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -61,11 +66,11 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(invoice);
-                await _context.SaveChangesAsync();
+                await _uow.Invoices.AddAsync(invoice);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", invoice.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", invoice.UserId);
             return View(invoice);
         }
 
@@ -77,12 +82,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices.FindAsync(id);
+            var invoice = await _uow.Invoices.FindAsync(id);
             if (invoice == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", invoice.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", invoice.UserId);
             return View(invoice);
         }
 
@@ -100,25 +105,12 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InvoiceExists(invoice.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Invoices.Update(invoice);
+                await _uow.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", invoice.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", invoice.UserId);
             return View(invoice);
         }
 
@@ -130,9 +122,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .Include(i => i.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var invoice = await _uow.Invoices.FindAsync(id);
             if (invoice == null)
             {
                 return NotFound();
@@ -146,15 +136,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var invoice = await _context.Invoices.FindAsync(id);
-            _context.Invoices.Remove(invoice);
-            await _context.SaveChangesAsync();
+            _uow.Invoices.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool InvoiceExists(int id)
-        {
-            return _context.Invoices.Any(e => e.Id == id);
         }
     }
 }

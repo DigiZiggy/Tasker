@@ -19,6 +19,8 @@ namespace DAL.App.EF.Repositories
         {
             return await RepositoryDbSet
                 .Include(a => a.AppUser)
+                .Include(u => u.HourlyRate)
+                .Include(u => u.UserType)
                 .Where(b => b.AppUserId == userId)
                 .ToListAsync();
         }
@@ -31,6 +33,8 @@ namespace DAL.App.EF.Repositories
             if (user != null)
             {
                 await RepositoryDbContext.Entry(user).Reference(u => u.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(user).Reference(u => u.HourlyRate).LoadAsync();
+                await RepositoryDbContext.Entry(user).Reference(u => u.UserType).LoadAsync();
             }
             return user;
         }

@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using Domain.Identity;
-using Identity;
-using Task = Domain.Task;
 
 namespace WebApp.Controllers
 {
@@ -26,9 +23,11 @@ namespace WebApp.Controllers
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
-//            var appDbContext = _context.Tasks.Include(t => t.TaskType);
-
             var tasks = await _uow.Tasks.AllAsync();
+
+//            var appDbContext = _context.Tasks
+//                .Include(t => t.AppUser)
+//                .Include(t => t.TaskType);
             return View(tasks);
         }
 
@@ -41,8 +40,10 @@ namespace WebApp.Controllers
             }
 
 //            var task = await _context.Tasks
+//                .Include(t => t.AppUser)
 //                .Include(t => t.TaskType)
 //                .FirstOrDefaultAsync(m => m.Id == id);
+
             var task = await _uow.Tasks.FindAsync(id);
 
             if (task == null)
@@ -56,7 +57,8 @@ namespace WebApp.Controllers
         // GET: Tasks/Create
         public IActionResult Create()
         {
-//            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Name");
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Id");
             return View();
         }
 
@@ -65,17 +67,16 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Description,TimeEstimate,Address,TaskTypeId,Id")] Domain.Task task)
+        public async Task<IActionResult> Create([Bind("Description,TimeEstimate,Address,TaskTypeId,AppUserId,Id")] Domain.Task task)
         {
-            task.AppUserId = User.GetUserId();
-
             if (ModelState.IsValid)
             {
                 await _uow.Tasks.AddAsync(task);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskTypeId"] = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Name", task.TaskTypeId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", task.AppUserId);
+            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Id", task.TaskTypeId);
             return View(task);
         }
 
@@ -92,8 +93,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId);
-            ViewData["TaskTypeId"] = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Name", task.TaskTypeId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", task.AppUserId);
+            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Id", task.TaskTypeId);
             return View(task);
         }
 
@@ -102,7 +103,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Description,TimeEstimate,Address,TaskTypeId,Id")] Domain.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Description,TimeEstimate,Address,TaskTypeId,AppUserId,Id")] Domain.Task task)
         {
             if (id != task.Id)
             {
@@ -113,11 +114,11 @@ namespace WebApp.Controllers
             {
                 _uow.Tasks.Update(task);
                 await _uow.SaveChangesAsync();
-    
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId);
-            ViewData["TaskTypeId"] = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Name", task.TaskTypeId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", task.AppUserId);
+            ViewData["TaskTypeId"] = new SelectList(_context.TaskTypes, "Id", "Id", task.TaskTypeId);
             return View(task);
         }
 
@@ -129,8 +130,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var task = await _uow.Tasks.FindAsync();
-
+            var task = await _uow.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound();

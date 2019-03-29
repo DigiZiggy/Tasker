@@ -8,15 +8,15 @@ namespace Domain
     {
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Description { get; set; }
         
-        [Required]
+//        [Required]
         public int TimeEstimate { get; set; }
 
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Address { get; set; }
         
         public int TaskTypeId { get; set; }

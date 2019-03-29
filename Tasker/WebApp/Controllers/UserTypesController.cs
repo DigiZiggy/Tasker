@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,19 @@ namespace WebApp.Controllers
 {
     public class UserTypesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserTypesController(AppDbContext context)
+        public UserTypesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: UserTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserTypes.ToListAsync());
+            var userTypes = await _uow.UserTypes.AllAsync();
+
+            return View(userTypes);
         }
 
         // GET: UserTypes/Details/5
@@ -33,8 +36,11 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userType = await _context.UserTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var userType = await _context.UserTypes
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var userType = await _uow.UserTypes.FindAsync(id);
+
             if (userType == null)
             {
                 return NotFound();
@@ -58,8 +64,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userType);
-                await _context.SaveChangesAsync();
+                await _uow.UserTypes.AddAsync(userType);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(userType);
@@ -73,7 +79,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userType = await _context.UserTypes.FindAsync(id);
+            var userType = await _uow.UserTypes.FindAsync(id);
             if (userType == null)
             {
                 return NotFound();
@@ -95,22 +101,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userType);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserTypeExists(userType.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.UserTypes.Update(userType);
+                await _uow.SaveChangesAsync();
+               
                 return RedirectToAction(nameof(Index));
             }
             return View(userType);
@@ -124,8 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userType = await _context.UserTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userType = await _uow.UserTypes.FindAsync(id);
             if (userType == null)
             {
                 return NotFound();
@@ -139,15 +131,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userType = await _context.UserTypes.FindAsync(id);
-            _context.UserTypes.Remove(userType);
-            await _context.SaveChangesAsync();
+            _uow.UserTypes.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserTypeExists(int id)
-        {
-            return _context.UserTypes.Any(e => e.Id == id);
         }
     }
 }

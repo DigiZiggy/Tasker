@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication.ExtendedProtection;
+using Domain.Identity;
 
 namespace Domain
 {
@@ -8,10 +9,10 @@ namespace Domain
     {
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Name { get; set; }
         
-        [Required]
+//        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Comment { get; set; }
@@ -21,5 +22,8 @@ namespace Domain
 
         public int SkillId { get; set; }
         public Skill Skill { get; set; }
+        
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,22 @@ namespace WebApp.Controllers
 {
     public class UserInGroupsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserInGroupsController(AppDbContext context)
+        public UserInGroupsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: UserInGroups
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserInGroups.Include(u => u.User).Include(u => u.UserGroup);
-            return View(await appDbContext.ToListAsync());
+            var userInGroups = await _uow.UserInGroups.AllAsync();
+
+//            var appDbContext = _context.UserInGroups
+//                .Include(u => u.User)
+//                .Include(u => u.UserGroup);
+            return View(userInGroups);
         }
 
         // GET: UserInGroups/Details/5
@@ -34,10 +39,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userInGroup = await _context.UserInGroups
-                .Include(u => u.User)
-                .Include(u => u.UserGroup)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var userInGroup = await _context.UserInGroups
+//                .Include(u => u.User)
+//                .Include(u => u.UserGroup)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var userInGroup = await _uow.UserInGroups.FindAsync(id);
+
             if (userInGroup == null)
             {
                 return NotFound();
@@ -49,8 +57,8 @@ namespace WebApp.Controllers
         // GET: UserInGroups/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id");
             return View();
         }
 
@@ -63,12 +71,12 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userInGroup);
-                await _context.SaveChangesAsync();
+                await _uow.UserInGroups.AddAsync(userInGroup);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userInGroup.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", userInGroup.UserGroupId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userInGroup.UserId);
+            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id", userInGroup.UserGroupId);
             return View(userInGroup);
         }
 
@@ -80,13 +88,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userInGroup = await _context.UserInGroups.FindAsync(id);
+            var userInGroup = await _uow.UserInGroups.FindAsync(id);
             if (userInGroup == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userInGroup.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", userInGroup.UserGroupId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userInGroup.UserId);
+            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id", userInGroup.UserGroupId);
             return View(userInGroup);
         }
 
@@ -104,26 +112,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userInGroup);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserInGroupExists(userInGroup.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.UserInGroups.Update(userInGroup);
+                await _uow.SaveChangesAsync();
+   
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userInGroup.UserId);
-            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Name", userInGroup.UserGroupId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userInGroup.UserId);
+            ViewData["UserGroupId"] = new SelectList(_context.UserGroups, "Id", "Id", userInGroup.UserGroupId);
             return View(userInGroup);
         }
 
@@ -135,10 +130,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userInGroup = await _context.UserInGroups
-                .Include(u => u.User)
-                .Include(u => u.UserGroup)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userInGroup = await _uow.UserInGroups.FindAsync(id);
             if (userInGroup == null)
             {
                 return NotFound();
@@ -152,15 +144,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userInGroup = await _context.UserInGroups.FindAsync(id);
-            _context.UserInGroups.Remove(userInGroup);
-            await _context.SaveChangesAsync();
+            _uow.UserInGroups.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserInGroupExists(int id)
-        {
-            return _context.UserInGroups.Any(e => e.Id == id);
         }
     }
 }

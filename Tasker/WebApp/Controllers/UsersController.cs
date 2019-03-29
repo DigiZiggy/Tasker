@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
-using Contracts.DAL.App.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using Domain.Identity;
 using Identity;
-using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
     public class UsersController : Controller
     {
         private readonly IAppUnitOfWork _uow;
@@ -28,14 +24,12 @@ namespace WebApp.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-//            var users = await _context.Users
+            var users = await _uow.Users.AllAsync(User.GetUserId());
+
+//            var appDbContext = _context.Users
 //                .Include(u => u.AppUser)
 //                .Include(u => u.HourlyRate)
-//                .Include(u => u.UserType)
-//                .Where(u => u.AppUserId == User.GetUserId()).ToListAsync();
-//            
-            var users = await _uow.Users.AllAsync(User.GetUserId());
-            
+//                .Include(u => u.UserType);
             return View(users);
         }
 
@@ -54,7 +48,7 @@ namespace WebApp.Controllers
 //                .FirstOrDefaultAsync(m => m.Id == id);
 
             var user = await _uow.Users.FindAsync(id);
-            
+
             if (user == null)
             {
                 return NotFound();
@@ -66,6 +60,9 @@ namespace WebApp.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id");
+            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Id");
             return View();
         }
 
@@ -84,7 +81,9 @@ namespace WebApp.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-     
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
+            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
+            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Id", user.UserTypeId);
             return View(user);
         }
 
@@ -101,9 +100,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId);
-            ViewData["HourlyRateId"] = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId);
-            ViewData["UserTypeId"] = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Name", user.UserTypeId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
+            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
+            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Id", user.UserTypeId);
             return View(user);
         }
 
@@ -123,12 +122,12 @@ namespace WebApp.Controllers
             {
                 _uow.Users.Update(user);
                 await _uow.SaveChangesAsync();
-   
+                    
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId);
-            ViewData["HourlyRateId"] = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId);
-            ViewData["UserTypeId"] = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Name", user.UserTypeId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", user.AppUserId);
+            ViewData["HourlyRateId"] = new SelectList(_context.HourlyRates, "Id", "Id", user.HourlyRateId);
+            ViewData["UserTypeId"] = new SelectList(_context.UserTypes, "Id", "Id", user.UserTypeId);
             return View(user);
         }
 
@@ -140,7 +139,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var user = await _uow.Users.FindAsync();
+            var user = await _uow.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -158,6 +157,5 @@ namespace WebApp.Controllers
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

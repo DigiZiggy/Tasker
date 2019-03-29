@@ -25,15 +25,12 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("CityId");
 
                     b.Property<string>("District")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -53,7 +50,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("CountryId");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -68,11 +64,9 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CountryCode")
-                        .IsRequired();
+                    b.Property<string>("CountryCode");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -110,7 +104,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Comment");
 
                     b.Property<string>("DocumentNumber")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<DateTime>("End");
@@ -140,7 +133,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Comment");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -295,7 +287,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Comment");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -361,7 +352,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<DateTime>("End");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<DateTime>("Start");
@@ -379,7 +369,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("AppUserId");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<int>("Rating");
@@ -400,19 +389,14 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AppUserId");
-
                     b.Property<string>("Comment");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Skills");
                 });
@@ -423,13 +407,11 @@ namespace DAL.App.EF.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<int>("AppUserId");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<int>("TaskTypeId");
@@ -453,7 +435,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Comment");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -469,17 +450,14 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("AppUserId");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<int>("HourlyRateId");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<int>("Phone");
@@ -505,7 +483,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<DateTime>("End");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<DateTime>("Start");
@@ -544,6 +521,8 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("AddressId");
 
+                    b.Property<int>("AppUserId");
+
                     b.Property<DateTime>("End");
 
                     b.Property<DateTime>("Start");
@@ -554,6 +533,8 @@ namespace DAL.App.EF.Migrations
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("UserOnAddresses");
@@ -563,6 +544,8 @@ namespace DAL.App.EF.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AppUserId");
 
                     b.Property<DateTime>("End");
 
@@ -575,6 +558,8 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("TaskerId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("TaskGiverId");
 
@@ -590,12 +575,13 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AppUserId");
+
                     b.Property<string>("Comment");
 
                     b.Property<DateTime>("End");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<int>("SkillId");
@@ -605,6 +591,8 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("SkillId");
 
@@ -621,7 +609,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Comment");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -811,14 +798,6 @@ namespace DAL.App.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Domain.Skill", b =>
-                {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("Domain.Task", b =>
                 {
                     b.HasOne("Domain.Identity.AppUser", "AppUser")
@@ -870,6 +849,11 @@ namespace DAL.App.EF.Migrations
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Domain.Identity.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -878,6 +862,11 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.UserOnTask", b =>
                 {
+                    b.HasOne("Domain.Identity.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Domain.User", "TaskGiver")
                         .WithMany()
                         .HasForeignKey("TaskGiverId")
@@ -896,6 +885,11 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.UserSkill", b =>
                 {
+                    b.HasOne("Domain.Identity.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Domain.Skill", "Skill")
                         .WithMany()
                         .HasForeignKey("SkillId")

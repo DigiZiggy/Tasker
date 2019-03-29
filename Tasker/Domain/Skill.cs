@@ -7,12 +7,10 @@ namespace Domain
     {
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
         public string Comment { get; set; }
         
-        public int AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
     }
 }

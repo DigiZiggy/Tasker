@@ -6,12 +6,12 @@ namespace Domain
 {
     public class Review : BaseEntity
     {
-        [Required]
+//        [Required]
         public int Rating { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Comment { get; set; }
 
         public int TaskId { get; set; }

@@ -1,12 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Identity;
 
 namespace Domain
 {
     public class UserOnTask : BaseEntity
     {
-        [Required]
+//        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 
@@ -19,6 +20,9 @@ namespace Domain
         
         [ForeignKey("TaskerId")]
         public int TaskerId { get; set; }
-        public User Tasker { get; set; }        
+        public User Tasker { get; set; }   
+        
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

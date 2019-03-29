@@ -9,20 +9,20 @@ namespace Domain
     {
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string FirstName { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string LastName { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Email { get; set; }
         
-        [Required]
+//        [Required]
         public int Phone { get; set; }
 
         public int UserTypeId { get; set; }

@@ -24,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.TaskType)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,7 +43,10 @@
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TaskType.Name)
+                @Html.DisplayFor(modelItem => item.TaskType.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppUser.FirstName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

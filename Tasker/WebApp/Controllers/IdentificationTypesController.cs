@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,19 @@ namespace WebApp.Controllers
 {
     public class IdentificationTypesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public IdentificationTypesController(AppDbContext context)
+        public IdentificationTypesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: IdentificationTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.IdentificationTypes.ToListAsync());
+            var identificationTypes = await _uow.IdentificationTypes.AllAsync();
+
+            return View(identificationTypes);
         }
 
         // GET: IdentificationTypes/Details/5
@@ -33,8 +36,11 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identificationType = await _context.IdentificationTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var identificationType = await _context.IdentificationTypes
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var identificationType = await _uow.IdentificationTypes.FindAsync(id);
+
             if (identificationType == null)
             {
                 return NotFound();
@@ -58,8 +64,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(identificationType);
-                await _context.SaveChangesAsync();
+                await _uow.IdentificationTypes.AddAsync(identificationType);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(identificationType);
@@ -73,7 +79,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identificationType = await _context.IdentificationTypes.FindAsync(id);
+            var identificationType = await _uow.IdentificationTypes.FindAsync(id);
             if (identificationType == null)
             {
                 return NotFound();
@@ -95,22 +101,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(identificationType);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!IdentificationTypeExists(identificationType.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.IdentificationTypes.Update(identificationType);
+                await _uow.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(identificationType);
@@ -124,8 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identificationType = await _context.IdentificationTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var identificationType = _uow.IdentificationTypes.FindAsync(id);
             if (identificationType == null)
             {
                 return NotFound();
@@ -139,15 +131,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var identificationType = await _context.IdentificationTypes.FindAsync(id);
-            _context.IdentificationTypes.Remove(identificationType);
-            await _context.SaveChangesAsync();
+            _uow.IdentificationTypes.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool IdentificationTypeExists(int id)
-        {
-            return _context.IdentificationTypes.Any(e => e.Id == id);
         }
     }
 }

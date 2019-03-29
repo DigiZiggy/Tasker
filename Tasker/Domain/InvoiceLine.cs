@@ -4,16 +4,16 @@ namespace Domain
 {
     public class InvoiceLine : BaseEntity
     {
-        [Required]
+//        [Required]
         public decimal Price { get; set; }
         
-        [Required]
+//        [Required]
         public int Amount { get; set; }
         public decimal VATpercentage { get; set; }
         public decimal VAT { get; set; }
         public decimal TotalWithoutVAT { get; set; }
         
-        [Required]
+//        [Required]
         public decimal Total { get; set; }
         public string Comment { get; set; }
 

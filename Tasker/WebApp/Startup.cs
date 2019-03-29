@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,29 +45,7 @@ namespace WebApp
                     Configuration.GetConnectionString("MySqlConnection")));
 
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
-//            services.AddScoped<ICityRepository, CityRepository>();
-//            services.AddScoped<ICountryRepository, CountryRepository>();
-//            services.AddScoped<IHourlyRateRepository, HourlyRateRepository>();
-//            services.AddScoped<IIdentificationRepository, IdentificationRepository>();
-//            services.AddScoped<IIdentificationTypeRepository, IdentificationTypeRepository>();
-//            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-//            services.AddScoped<IInvoiceLineRepository, InvoiceLineRepository>();
-//            services.AddScoped<IMeansOfPaymentRepository, MeansOfPaymentRepository>();
-//            services.AddScoped<IPaymentRepository, PaymentRepository>();
-//            services.AddScoped<IPriceRepository, PriceRepository>();
-//            services.AddScoped<IPriceListRepository, PriceListRepository>();
-//            services.AddScoped<IReviewRepository, ReviewRepository>();
-//            services.AddScoped<ISkillRepository, SkillRepository>();
-//            services.AddScoped<ITaskRepository, TaskRepository>();
-//            services.AddScoped<ITaskTypeRepository, TaskTypeRepository>();
-//            services.AddScoped<IUserRepository, UserRepository>();
-//            services.AddScoped<IUserGroupRepository, UserGroupRepository>();      
-//            services.AddScoped<IUserInGroupRepository, UserInGroupRepository>();
-//            services.AddScoped<IUserOnAddressRepository, UserOnAddressRepository>();
-//            services.AddScoped<IUserOnTaskRepository, UserOnTaskRepository>();
-//            services.AddScoped<IUserSkillRepository, UserSkillRepository>();
-//            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
-            
+           
             services.AddDefaultIdentity<AppUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<AppDbContext>();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,19 @@ namespace WebApp.Controllers
 {
     public class CitiesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CitiesController(AppDbContext context)
+        public CitiesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
-
         // GET: Cities
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Cities.Include(c => c.Country);
-            return View(await appDbContext.ToListAsync());
+            var cities = await _uow.Cities.AllAsync();
+
+//            var appDbContext = _context.Cities.Include(c => c.Country);
+            return View(cities);
         }
 
         // GET: Cities/Details/5
@@ -34,9 +36,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities
-                .Include(c => c.Country)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var city = await _context.Cities
+//                .Include(c => c.Country)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var city = await _uow.Cities.FindAsync(id);
+
             if (city == null)
             {
                 return NotFound();
@@ -48,7 +53,7 @@ namespace WebApp.Controllers
         // GET: Cities/Create
         public IActionResult Create()
         {
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "CountryCode");
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id");
             return View();
         }
 
@@ -61,11 +66,11 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(city);
-                await _context.SaveChangesAsync();
+                await _uow.Cities.AddAsync(city);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "CountryCode", city.CountryId);
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
             return View(city);
         }
 
@@ -77,12 +82,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities.FindAsync(id);
+            var city = await _uow.Cities.FindAsync(id);
             if (city == null)
             {
                 return NotFound();
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "CountryCode", city.CountryId);
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
             return View(city);
         }
 
@@ -100,25 +105,12 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(city);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CityExists(city.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.Cities.Update(city);
+                await _uow.SaveChangesAsync();
+                    
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "CountryCode", city.CountryId);
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
             return View(city);
         }
 
@@ -130,9 +122,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var city = await _context.Cities
-                .Include(c => c.Country)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var city = await _uow.Cities.FindAsync(id);
             if (city == null)
             {
                 return NotFound();
@@ -146,15 +136,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var city = await _context.Cities.FindAsync(id);
-            _context.Cities.Remove(city);
-            await _context.SaveChangesAsync();
+            _uow.Cities.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CityExists(int id)
-        {
-            return _context.Cities.Any(e => e.Id == id);
         }
     }
 }

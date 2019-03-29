@@ -8,10 +8,10 @@ namespace Domain
     {
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string DocumentNumber { get; set; }
         
-        [Required]
+//        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Comment { get; set; }

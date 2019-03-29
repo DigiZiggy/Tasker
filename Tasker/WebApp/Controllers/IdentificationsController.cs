@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using Identity;
 
 namespace WebApp.Controllers
 {
@@ -24,12 +23,12 @@ namespace WebApp.Controllers
         // GET: Identifications
         public async Task<IActionResult> Index()
         {
-//            var appDbContext = _context.Identifications
-//                .Include(i => i.IdentificationType)
-//                .Include(i => i.User);
-
             var identifications = await _uow.Identifications.AllAsync();
 
+//            var appDbContext = _context.Identifications
+//                .Include(i => i.AppUser)
+//                .Include(i => i.IdentificationType)
+//                .Include(i => i.User);
             return View(identifications);
         }
 
@@ -42,6 +41,7 @@ namespace WebApp.Controllers
             }
 
 //            var identification = await _context.Identifications
+//                .Include(i => i.AppUser)
 //                .Include(i => i.IdentificationType)
 //                .Include(i => i.User)
 //                .FirstOrDefaultAsync(m => m.Id == id);
@@ -59,8 +59,9 @@ namespace WebApp.Controllers
         // GET: Identifications/Create
         public IActionResult Create()
         {
-//            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Name");
-//            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -69,18 +70,17 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,Id")] Identification identification)
+        public async Task<IActionResult> Create([Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,AppUserId,Id")] Identification identification)
         {
-            identification.AppUserId = User.GetUserId();
-
             if (ModelState.IsValid)
             {
                 await _uow.Identifications.AddAsync(identification);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentificationTypeId"] = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Name", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Email", identification.UserId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", identification.AppUserId);
+            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id", identification.IdentificationTypeId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", identification.UserId);
             return View(identification);
         }
 
@@ -97,8 +97,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentificationTypeId"] = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Name", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Email", identification.UserId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", identification.AppUserId);
+            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id", identification.IdentificationTypeId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", identification.UserId);
             return View(identification);
         }
 
@@ -107,7 +108,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,Id")] Identification identification)
+        public async Task<IActionResult> Edit(int id, [Bind("DocumentNumber,Start,End,Comment,UserId,IdentificationTypeId,AppUserId,Id")] Identification identification)
         {
             if (id != identification.Id)
             {
@@ -118,11 +119,12 @@ namespace WebApp.Controllers
             {
                 _uow.Identifications.Update(identification);
                 await _uow.SaveChangesAsync();
-                
+  
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentificationTypeId"] = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Name", identification.IdentificationTypeId);
-            ViewData["UserId"] = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Email", identification.UserId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", identification.AppUserId);
+            ViewData["IdentificationTypeId"] = new SelectList(_context.IdentificationTypes, "Id", "Id", identification.IdentificationTypeId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", identification.UserId);
             return View(identification);
         }
 
@@ -134,8 +136,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _uow.Identifications.FindAsync();
-
+            var identification = await _uow.Identifications.FindAsync(id);
             if (identification == null)
             {
                 return NotFound();
@@ -153,6 +154,5 @@ namespace WebApp.Controllers
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

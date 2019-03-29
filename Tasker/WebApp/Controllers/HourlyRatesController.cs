@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,19 @@ namespace WebApp.Controllers
 {
     public class HourlyRatesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public HourlyRatesController(AppDbContext context)
+        public HourlyRatesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
-
         // GET: HourlyRates
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.HourlyRates.Include(h => h.PriceList);
-            return View(await appDbContext.ToListAsync());
+            var hourlyRates = await _uow.HourlyRates.AllAsync();
+
+//            var appDbContext = _context.HourlyRates.Include(h => h.PriceList);
+            return View(hourlyRates);
         }
 
         // GET: HourlyRates/Details/5
@@ -34,9 +36,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var hourlyRate = await _context.HourlyRates
-                .Include(h => h.PriceList)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var hourlyRate = await _context.HourlyRates
+//                .Include(h => h.PriceList)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
+
             if (hourlyRate == null)
             {
                 return NotFound();
@@ -48,7 +53,7 @@ namespace WebApp.Controllers
         // GET: HourlyRates/Create
         public IActionResult Create()
         {
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Name");
+            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id");
             return View();
         }
 
@@ -61,11 +66,11 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(hourlyRate);
-                await _context.SaveChangesAsync();
+                await _uow.HourlyRates.AddAsync(hourlyRate);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Name", hourlyRate.PriceListId);
+            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", hourlyRate.PriceListId);
             return View(hourlyRate);
         }
 
@@ -77,12 +82,12 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var hourlyRate = await _context.HourlyRates.FindAsync(id);
+            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
             {
                 return NotFound();
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Name", hourlyRate.PriceListId);
+            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", hourlyRate.PriceListId);
             return View(hourlyRate);
         }
 
@@ -100,25 +105,12 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(hourlyRate);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HourlyRateExists(hourlyRate.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.HourlyRates.Update(hourlyRate);
+                await _uow.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Name", hourlyRate.PriceListId);
+            ViewData["PriceListId"] = new SelectList(_context.PriceLists, "Id", "Id", hourlyRate.PriceListId);
             return View(hourlyRate);
         }
 
@@ -130,9 +122,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var hourlyRate = await _context.HourlyRates
-                .Include(h => h.PriceList)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
             {
                 return NotFound();
@@ -146,15 +136,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hourlyRate = await _context.HourlyRates.FindAsync(id);
-            _context.HourlyRates.Remove(hourlyRate);
-            await _context.SaveChangesAsync();
+            _uow.HourlyRates.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool HourlyRateExists(int id)
-        {
-            return _context.HourlyRates.Any(e => e.Id == id);
         }
     }
 }

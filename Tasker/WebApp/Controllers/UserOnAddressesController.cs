@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,22 @@ namespace WebApp.Controllers
 {
     public class UserOnAddressesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserOnAddressesController(AppDbContext context)
+        public UserOnAddressesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
-
         // GET: UserOnAddresses
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserOnAddresses.Include(u => u.Address).Include(u => u.User);
-            return View(await appDbContext.ToListAsync());
+            var userOnAddresses = await _uow.UserOnAddresses.AllAsync();
+
+//            var appDbContext = _context.UserOnAddresses
+//                .Include(u => u.Address)
+//                .Include(u => u.AppUser)
+//                .Include(u => u.User);
+            return View(userOnAddresses);
         }
 
         // GET: UserOnAddresses/Details/5
@@ -33,11 +38,15 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+//
+//            var userOnAddress = await _context.UserOnAddresses
+//                .Include(u => u.Address)
+//                .Include(u => u.AppUser)
+//                .Include(u => u.User)
+//                .FirstOrDefaultAsync(m => m.Id == id);
 
-            var userOnAddress = await _context.UserOnAddresses
-                .Include(u => u.Address)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
+
             if (userOnAddress == null)
             {
                 return NotFound();
@@ -49,8 +58,9 @@ namespace WebApp.Controllers
         // GET: UserOnAddresses/Create
         public IActionResult Create()
         {
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "District");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id");
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -59,16 +69,17 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Start,End,UserId,AddressId,Id")] UserOnAddress userOnAddress)
+        public async Task<IActionResult> Create([Bind("Start,End,UserId,AddressId,AppUserId,Id")] UserOnAddress userOnAddress)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userOnAddress);
-                await _context.SaveChangesAsync();
+                await _uow.UserOnAddresses.AddAsync(userOnAddress);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "District", userOnAddress.AddressId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userOnAddress.UserId);
+            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", userOnAddress.AddressId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnAddress.AppUserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userOnAddress.UserId);
             return View(userOnAddress);
         }
 
@@ -80,13 +91,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _context.UserOnAddresses.FindAsync(id);
+            var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
             if (userOnAddress == null)
             {
                 return NotFound();
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "District", userOnAddress.AddressId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userOnAddress.UserId);
+            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", userOnAddress.AddressId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnAddress.AppUserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userOnAddress.UserId);
             return View(userOnAddress);
         }
 
@@ -95,7 +107,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Start,End,UserId,AddressId,Id")] UserOnAddress userOnAddress)
+        public async Task<IActionResult> Edit(int id, [Bind("Start,End,UserId,AddressId,AppUserId,Id")] UserOnAddress userOnAddress)
         {
             if (id != userOnAddress.Id)
             {
@@ -104,26 +116,14 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userOnAddress);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserOnAddressExists(userOnAddress.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.UserOnAddresses.Update(userOnAddress);
+                await _uow.SaveChangesAsync();
+  
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "District", userOnAddress.AddressId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userOnAddress.UserId);
+            ViewData["AddressId"] = new SelectList(_context.Addresses, "Id", "Id", userOnAddress.AddressId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnAddress.AppUserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userOnAddress.UserId);
             return View(userOnAddress);
         }
 
@@ -135,10 +135,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _context.UserOnAddresses
-                .Include(u => u.Address)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
             if (userOnAddress == null)
             {
                 return NotFound();
@@ -152,15 +149,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userOnAddress = await _context.UserOnAddresses.FindAsync(id);
-            _context.UserOnAddresses.Remove(userOnAddress);
-            await _context.SaveChangesAsync();
+            _uow.UserOnAddresses.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserOnAddressExists(int id)
-        {
-            return _context.UserOnAddresses.Any(e => e.Id == id);
         }
     }
 }

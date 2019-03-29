@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using Contracts.DAL.Base.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -13,45 +14,11 @@ namespace DAL.App.EF.Repositories
         public CountryRepository(DbContext dbContext) : base(dbContext)
         {
         }
-
-        public IEnumerable<User> All()
+        public override async Task<IEnumerable<Country>> AllAsync()
         {
-            throw new System.NotImplementedException();
+            return await RepositoryDbSet
+                .ToListAsync();
         }
-
-        public Task<IEnumerable<User>> AllAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public User Find(params object[] id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<User> FindAsync(params object[] id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Add(User entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task AddAsync(User entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public User Update(User entity)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Remove(User entity)
-        {
-            throw new System.NotImplementedException();
-        }
+       
     }
 }

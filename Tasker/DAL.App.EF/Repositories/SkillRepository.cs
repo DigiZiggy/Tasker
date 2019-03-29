@@ -13,24 +13,11 @@ namespace DAL.App.EF.Repositories
         public SkillRepository(DbContext dbContext) : base(dbContext)
         {
         }
-        
-        public async Task<IEnumerable<Skill>> AllAsync(int userId)
+
+        public override async Task<IEnumerable<Skill>> AllAsync()
         {
             return await RepositoryDbSet
-                .Include(a => a.AppUser)
-                .Where(b => b.AppUserId == userId)
-                .ToListAsync();
-        }
-
-        public override async Task<Skill> FindAsync(params object[] id)
-        {
-            var skill = await base.FindAsync(id);
-
-            if (skill != null)
-            {
-                await RepositoryDbContext.Entry(skill).Reference(u => u.AppUser).LoadAsync();
-            }
-            return skill;
+                .ToListAsync();         
         }
     }
 }

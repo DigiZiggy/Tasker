@@ -13,23 +13,28 @@ namespace DAL.App.EF.Repositories
         public IdentificationRepository(DbContext dbContext) : base(dbContext)
         {
         }
-        
-        public async Task<IEnumerable<Identification>> AllAsync(int userId)
+
+        public override async Task<IEnumerable<Identification>> AllAsync()
         {
             return await RepositoryDbSet
-                .Include(a => a.AppUser)
-                .Where(b => b.AppUserId == userId)
-                .ToListAsync();
+                .Include(i => i.AppUser)
+                .Include(i => i.IdentificationType)
+                .Include(i => i.User)
+                .ToListAsync();  
         }
-
+        
         public override async Task<Identification> FindAsync(params object[] id)
         {
             var identification = await base.FindAsync(id);
 
             if (identification != null)
             {
-                await RepositoryDbContext.Entry(identification).Reference(u => u.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(identification).Reference(i => i.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(identification).Reference(i => i.IdentificationType).LoadAsync();
+                await RepositoryDbContext.Entry(identification).Reference(i => i.User).LoadAsync();
+
             }
+
             return identification;
         }
     }

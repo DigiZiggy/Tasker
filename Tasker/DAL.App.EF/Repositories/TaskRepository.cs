@@ -14,24 +14,26 @@ namespace DAL.App.EF.Repositories
     {
         public TaskRepository(DbContext dbContext) : base(dbContext)
         {
-        }       
-
-        public async Task<IEnumerable<Task>> AllAsync(int userId)
-        {
-            return await RepositoryDbSet
-                .Include(a => a.AppUser)
-                .Where(b => b.AppUserId == userId)
-                .ToListAsync();
         }
 
+        public override async Task<IEnumerable<Task>> AllAsync()
+        {
+            return await RepositoryDbSet
+                .Include(t => t.AppUser)
+                .Include(t => t.TaskType)
+                .ToListAsync();          
+        }
+        
         public override async Task<Task> FindAsync(params object[] id)
         {
             var task = await base.FindAsync(id);
 
             if (task != null)
             {
-                await RepositoryDbContext.Entry(task).Reference(u => u.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(task).Reference(t => t.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(task).Reference(t => t.TaskType).LoadAsync();
             }
+
             return task;
         }
     }

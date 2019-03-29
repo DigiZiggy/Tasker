@@ -13,23 +13,25 @@ namespace DAL.App.EF.Repositories
         public ReviewRepository(DbContext dbContext) : base(dbContext)
         {
         }
-        
-        public async Task<IEnumerable<Review>> AllAsync(int userId)
+
+        public override async Task<IEnumerable<Review>> AllAsync()
         {
             return await RepositoryDbSet
-                .Include(a => a.AppUser)
-                .Where(b => b.AppUserId == userId)
-                .ToListAsync();
+                .Include(r => r.AppUser)
+                .Include(r => r.Task)
+                .ToListAsync();          
         }
-
+        
         public override async Task<Review> FindAsync(params object[] id)
         {
             var review = await base.FindAsync(id);
 
             if (review != null)
             {
-                await RepositoryDbContext.Entry(review).Reference(u => u.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(review).Reference(r => r.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(review).Reference(r => r.Task).LoadAsync();
             }
+
             return review;
         }
     }

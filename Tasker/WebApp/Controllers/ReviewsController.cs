@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using Domain.Identity;
-using Identity;
-using Task = Domain.Task;
 
 namespace WebApp.Controllers
 {
@@ -26,10 +23,11 @@ namespace WebApp.Controllers
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-//            var appDbContext = _context.Reviews.Include(r => r.Task);
-
             var reviews = await _uow.Reviews.AllAsync();
 
+//            var appDbContext = _context.Reviews
+//                .Include(r => r.AppUser)
+//                .Include(r => r.Task);
             return View(reviews);
         }
 
@@ -42,6 +40,7 @@ namespace WebApp.Controllers
             }
 
 //            var review = await _context.Reviews
+//                .Include(r => r.AppUser)
 //                .Include(r => r.Task)
 //                .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -58,7 +57,8 @@ namespace WebApp.Controllers
         // GET: Reviews/Create
         public IActionResult Create()
         {
-//            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address");
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id");
             return View();
         }
 
@@ -67,17 +67,16 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Rating,Comment,TaskId,Id")] Review review)
+        public async Task<IActionResult> Create([Bind("Rating,Comment,TaskId,AppUserId,Id")] Review review)
         {
-            review.AppUserId = User.GetUserId();
-
             if (ModelState.IsValid)
             {
                 await _uow.Reviews.AddAsync(review);
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Address", review.TaskId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", review.AppUserId);
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", review.TaskId);
             return View(review);
         }
 
@@ -94,7 +93,8 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["TaskId"] = new SelectList(await _uow.BaseRepository<Task>().AllAsync(), "Id", "Address", review.TaskId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", review.AppUserId);
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", review.TaskId);
             return View(review);
         }
 
@@ -103,7 +103,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Rating,Comment,TaskId,Id")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("Rating,Comment,TaskId,AppUserId,Id")] Review review)
         {
             if (id != review.Id)
             {
@@ -114,11 +114,11 @@ namespace WebApp.Controllers
             {
                 _uow.Reviews.Update(review);
                 await _uow.SaveChangesAsync();
-                
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", review.AppUserId);
-            ViewData["TaskId"] = new SelectList(await _uow.BaseRepository<Task>().AllAsync(), "Id", "Address", review.TaskId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", review.AppUserId);
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", review.TaskId);
             return View(review);
         }
 
@@ -130,8 +130,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var review = await _uow.Reviews.FindAsync();
-
+            var review = await _uow.Reviews.FindAsync(id);
             if (review == null)
             {
                 return NotFound();
@@ -149,6 +148,5 @@ namespace WebApp.Controllers
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

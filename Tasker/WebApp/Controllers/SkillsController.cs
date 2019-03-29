@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using Domain.Identity;
-using Identity;
 
 namespace WebApp.Controllers
 {
@@ -40,6 +38,7 @@ namespace WebApp.Controllers
 
 //            var skill = await _context.Skills
 //                .FirstOrDefaultAsync(m => m.Id == id);
+
             var skill = await _uow.Skills.FindAsync(id);
 
             if (skill == null)
@@ -63,8 +62,6 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,Comment,Id")] Skill skill)
         {
-            skill.AppUserId = User.GetUserId();
-
             if (ModelState.IsValid)
             {
                 await _uow.Skills.AddAsync(skill);
@@ -106,7 +103,7 @@ namespace WebApp.Controllers
             {
                 _uow.Skills.Update(skill);
                 await _uow.SaveChangesAsync();
-                
+ 
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);
@@ -120,8 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _uow.Skills.FindAsync();
-
+            var skill = await _uow.Skills.FindAsync(id);
             if (skill == null)
             {
                 return NotFound();
@@ -139,6 +135,5 @@ namespace WebApp.Controllers
             await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

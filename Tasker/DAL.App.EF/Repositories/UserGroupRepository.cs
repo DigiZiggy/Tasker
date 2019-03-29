@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
@@ -10,5 +12,10 @@ namespace DAL.App.EF.Repositories
         public UserGroupRepository(DbContext dbContext) : base(dbContext)
         {
         }
+
+        public override async Task<IEnumerable<UserGroup>> AllAsync()
+        {
+            return await RepositoryDbSet
+                .ToListAsync();         }
     }
 }

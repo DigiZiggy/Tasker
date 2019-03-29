@@ -2,28 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Identity;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     public class UserSkillsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserSkillsController(AppDbContext context)
+        public UserSkillsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: UserSkills
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserSkills.Include(u => u.Skill).Include(u => u.User);
-            return View(await appDbContext.ToListAsync());
+            var userSkills = await _uow.UserSills.AllAsync();
+
+//            var appDbContext = _context.UserSkills
+//                .Include(u => u.AppUser)
+//                .Include(u => u.Skill)
+//                .Include(u => u.User);
+            return View(userSkills);
         }
 
         // GET: UserSkills/Details/5
@@ -34,10 +42,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _context.UserSkills
-                .Include(u => u.Skill)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var userSkill = await _context.UserSkills
+//                .Include(u => u.AppUser)
+//                .Include(u => u.Skill)
+//                .Include(u => u.User)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var userSkill = await _uow.UserSills.FindAsync(id);
+
             if (userSkill == null)
             {
                 return NotFound();
@@ -49,9 +61,15 @@ namespace WebApp.Controllers
         // GET: UserSkills/Create
         public IActionResult Create()
         {
-            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
-            return View();
+            var vm = new UserSkillCreateViewModel()
+            {
+                UserSelectList = new SelectList(_uow.Users.Where(p => p.AppUserId == User.GetUserId()), "Id", "FirstName"),
+                SkillSelectList = new SelectList(_uow.Skills, "Id", "Id"),
+                AppUserSelectList = new SelectList(_uow.Users, "Id", "Id")
+
+            };
+ 
+            return View(vm);
         }
 
         // POST: UserSkills/Create
@@ -59,17 +77,24 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Start,End,Comment,UserId,SkillId,Id")] UserSkill userSkill)
+        public async Task<IActionResult> Create(UserSkillCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userSkill);
-                await _context.SaveChangesAsync();
+                await _uow.UserSills.AddAsync(vm.UserSkill);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Name", userSkill.SkillId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userSkill.UserId);
-            return View(userSkill);
+
+            vm.UserSelectList = new SelectList(_uow.Users.Where(p => p.AppUserId == User.GetUserId()), "Id",
+                "FirstName", vm.UserSkill.UserId);
+            vm.SkillSelectList = new SelectList(_uow.Skills, "Id", "Id", vm.UserSkill.SkillId);
+            vm.AppUserSelectList = new SelectList(_uow.Users, "Id", "Id", vm.UserSkill.AppUserId);
+
+//            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userSkill.AppUserId);
+//            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Id", userSkill.SkillId);
+//            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userSkill.UserId);
+            return View(vm);
         }
 
         // GET: UserSkills/Edit/5
@@ -80,13 +105,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _context.UserSkills.FindAsync(id);
+            var userSkill = await _uow.UserSills.FindAsync(id);
             if (userSkill == null)
             {
                 return NotFound();
             }
-            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Name", userSkill.SkillId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userSkill.UserId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userSkill.AppUserId);
+            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Id", userSkill.SkillId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userSkill.UserId);
             return View(userSkill);
         }
 
@@ -95,7 +121,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Start,End,Comment,UserId,SkillId,Id")] UserSkill userSkill)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Start,End,Comment,UserId,SkillId,AppUserId,Id")] UserSkill userSkill)
         {
             if (id != userSkill.Id)
             {
@@ -104,26 +130,14 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userSkill);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserSkillExists(userSkill.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.UserSills.Update(userSkill);
+                await _uow.SaveChangesAsync();
+                    
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Name", userSkill.SkillId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userSkill.UserId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userSkill.AppUserId);
+            ViewData["SkillId"] = new SelectList(_context.Skills, "Id", "Id", userSkill.SkillId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userSkill.UserId);
             return View(userSkill);
         }
 
@@ -135,10 +149,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _context.UserSkills
-                .Include(u => u.Skill)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userSkill = await _uow.UserSills.FindAsync(id);
             if (userSkill == null)
             {
                 return NotFound();
@@ -152,15 +163,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userSkill = await _context.UserSkills.FindAsync(id);
-            _context.UserSkills.Remove(userSkill);
-            await _context.SaveChangesAsync();
+            _uow.UserSills.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserSkillExists(int id)
-        {
-            return _context.UserSkills.Any(e => e.Id == id);
         }
     }
 }

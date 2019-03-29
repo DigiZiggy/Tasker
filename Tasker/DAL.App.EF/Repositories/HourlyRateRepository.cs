@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
@@ -9,6 +11,25 @@ namespace DAL.App.EF.Repositories
     {
         public HourlyRateRepository(DbContext dbContext) : base(dbContext)
         {
+        }
+
+        public override async Task<IEnumerable<HourlyRate>> AllAsync()
+        {
+            return await RepositoryDbSet
+                .Include(h => h.PriceList)
+                .ToListAsync();        
+        }
+        
+        public override async Task<HourlyRate> FindAsync(params object[] id)
+        {
+            var hourlyRate = await base.FindAsync(id);
+
+            if (hourlyRate != null)
+            {
+                await RepositoryDbContext.Entry(hourlyRate).Reference(h => h.PriceList).LoadAsync();
+            }
+
+            return hourlyRate;
         }
     }
 }

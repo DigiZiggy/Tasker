@@ -5,10 +5,10 @@ namespace Domain
 {
     public class HourlyRate : BaseEntity
     {
-        [Required]
+//        [Required]
         public decimal HourRate { get; set; }
         
-        [Required]
+//        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 

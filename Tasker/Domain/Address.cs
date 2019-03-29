@@ -6,17 +6,17 @@ namespace Domain
     {
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string Street { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string District { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-        [Required]
+//        [Required]
         public string PostalCode { get; set; }
         
         public int CityId { get; set; }

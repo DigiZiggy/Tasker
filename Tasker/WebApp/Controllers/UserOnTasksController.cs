@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,23 @@ namespace WebApp.Controllers
 {
     public class UserOnTasksController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserOnTasksController(AppDbContext context)
+        public UserOnTasksController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: UserOnTasks
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserOnTasks.Include(u => u.Task).Include(u => u.TaskGiver).Include(u => u.Tasker);
-            return View(await appDbContext.ToListAsync());
+            var userOnTasks = await _uow.UserOnTasks.AllAsync();
+
+//            var appDbContext = _context.UserOnTasks
+//                .Include(u => u.AppUser).Include(u => u.Task)
+//                .Include(u => u.TaskGiver)
+//                .Include(u => u.Tasker);
+            return View(userOnTasks);
         }
 
         // GET: UserOnTasks/Details/5
@@ -34,11 +40,15 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnTask = await _context.UserOnTasks
-                .Include(u => u.Task)
-                .Include(u => u.TaskGiver)
-                .Include(u => u.Tasker)
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var userOnTask = await _context.UserOnTasks
+//                .Include(u => u.AppUser)
+//                .Include(u => u.Task)
+//                .Include(u => u.TaskGiver)
+//                .Include(u => u.Tasker)
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var userOnTask = await _uow.UserOnTasks.FindAsync(id);
+
             if (userOnTask == null)
             {
                 return NotFound();
@@ -50,9 +60,10 @@ namespace WebApp.Controllers
         // GET: UserOnTasks/Create
         public IActionResult Create()
         {
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address");
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Email");
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id");
+            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -61,17 +72,18 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Start,End,TaskId,TaskGiverId,TaskerId,Id")] UserOnTask userOnTask)
+        public async Task<IActionResult> Create([Bind("Start,End,TaskId,TaskGiverId,TaskerId,AppUserId,Id")] UserOnTask userOnTask)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userOnTask);
-                await _context.SaveChangesAsync();
+                await _uow.UserOnTasks.AddAsync(userOnTask);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address", userOnTask.TaskId);
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Email", userOnTask.TaskGiverId);
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Email", userOnTask.TaskerId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnTask.AppUserId);
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", userOnTask.TaskId);
+            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskGiverId);
+            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskerId);
             return View(userOnTask);
         }
 
@@ -83,14 +95,15 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnTask = await _context.UserOnTasks.FindAsync(id);
+            var userOnTask = await _uow.UserOnTasks.FindAsync(id);
             if (userOnTask == null)
             {
                 return NotFound();
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address", userOnTask.TaskId);
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Email", userOnTask.TaskGiverId);
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Email", userOnTask.TaskerId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnTask.AppUserId);
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", userOnTask.TaskId);
+            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskGiverId);
+            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskerId);
             return View(userOnTask);
         }
 
@@ -99,7 +112,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Start,End,TaskId,TaskGiverId,TaskerId,Id")] UserOnTask userOnTask)
+        public async Task<IActionResult> Edit(int id, [Bind("Start,End,TaskId,TaskGiverId,TaskerId,AppUserId,Id")] UserOnTask userOnTask)
         {
             if (id != userOnTask.Id)
             {
@@ -108,27 +121,15 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userOnTask);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserOnTaskExists(userOnTask.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.UserOnTasks.Update(userOnTask);
+                await _uow.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Address", userOnTask.TaskId);
-            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Email", userOnTask.TaskGiverId);
-            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Email", userOnTask.TaskerId);
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "FirstName", userOnTask.AppUserId);
+            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Id", userOnTask.TaskId);
+            ViewData["TaskGiverId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskGiverId);
+            ViewData["TaskerId"] = new SelectList(_context.Users, "Id", "Id", userOnTask.TaskerId);
             return View(userOnTask);
         }
 
@@ -140,11 +141,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnTask = await _context.UserOnTasks
-                .Include(u => u.Task)
-                .Include(u => u.TaskGiver)
-                .Include(u => u.Tasker)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var userOnTask = await _uow.UserOnTasks.FindAsync(id);
             if (userOnTask == null)
             {
                 return NotFound();
@@ -158,15 +155,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userOnTask = await _context.UserOnTasks.FindAsync(id);
-            _context.UserOnTasks.Remove(userOnTask);
-            await _context.SaveChangesAsync();
+            _uow.UserOnTasks.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserOnTaskExists(int id)
-        {
-            return _context.UserOnTasks.Any(e => e.Id == id);
         }
     }
 }

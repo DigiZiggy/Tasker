@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿﻿using System.Data.Common;
 using System.Data.Entity.Migrations.Model;
 using System.Linq;
 using System.Security.Authentication.ExtendedProtection;

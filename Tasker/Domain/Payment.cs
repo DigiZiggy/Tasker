@@ -5,13 +5,13 @@ namespace Domain
 {
     public class Payment : BaseEntity
     {
-        [Required]
+//        [Required]
         public int PaymentCode { get; set; }
         
-        [Required]
+//        [Required]
         public DateTime TimeOfPayment { get; set; }
         
-        [Required]
+//        [Required]
         public decimal Total { get; set; }
         public string Comment { get; set; }
 

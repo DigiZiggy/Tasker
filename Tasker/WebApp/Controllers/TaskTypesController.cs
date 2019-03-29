@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +13,19 @@ namespace WebApp.Controllers
 {
     public class TaskTypesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public TaskTypesController(AppDbContext context)
+        public TaskTypesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: TaskTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TaskTypes.ToListAsync());
+            var taskTypes = await _uow.TaskTypes.AllAsync();
+
+            return View(taskTypes);
         }
 
         // GET: TaskTypes/Details/5
@@ -33,8 +36,11 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var taskType = await _context.TaskTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+//            var taskType = await _context.TaskTypes
+//                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var taskType = await _uow.TaskTypes.FindAsync(id);
+
             if (taskType == null)
             {
                 return NotFound();
@@ -58,8 +64,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(taskType);
-                await _context.SaveChangesAsync();
+                await _uow.TaskTypes.AddAsync(taskType);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(taskType);
@@ -73,7 +79,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var taskType = await _context.TaskTypes.FindAsync(id);
+            var taskType = await _uow.TaskTypes.FindAsync(id);
             if (taskType == null)
             {
                 return NotFound();
@@ -95,22 +101,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(taskType);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaskTypeExists(taskType.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _uow.TaskTypes.Update(taskType);
+                await _uow.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(taskType);
@@ -124,8 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var taskType = await _context.TaskTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var taskType = await _uow.TaskTypes.FindAsync(id);
             if (taskType == null)
             {
                 return NotFound();
@@ -139,15 +131,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var taskType = await _context.TaskTypes.FindAsync(id);
-            _context.TaskTypes.Remove(taskType);
-            await _context.SaveChangesAsync();
+            _uow.TaskTypes.Remove(id);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TaskTypeExists(int id)
-        {
-            return _context.TaskTypes.Any(e => e.Id == id);
         }
     }
 }

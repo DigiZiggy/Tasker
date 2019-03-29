@@ -141,4 +141,67 @@
       <Folder Include="ApiControllers" />
     </ItemGroup>
 
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\Addresses\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Addresses\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Addresses\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Addresses\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Addresses\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Countries\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Countries\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Countries\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Countries\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Countries\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Identifications\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Identifications\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Identifications\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Identifications\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Identifications\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceLines\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceLines\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceLines\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceLines\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\InvoiceLines\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\MeansOfPayments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\MeansOfPayments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\MeansOfPayments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\MeansOfPayments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\MeansOfPayments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\PriceLists\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\PriceLists\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\PriceLists\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\PriceLists\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\PriceLists\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Reviews\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Reviews\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Reviews\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Reviews\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Reviews\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Tasks\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Tasks\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Tasks\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Tasks\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Tasks\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserGroups\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserGroups\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserGroups\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserGroups\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserGroups\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserOnAddresses\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserOnAddresses\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserOnAddresses\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserOnAddresses\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserOnAddresses\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Users\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Users\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Users\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Users\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Users\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserTypes\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserTypes\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserTypes\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserTypes\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\UserTypes\Index.cshtml" />
+    </ItemGroup>
+
 </Project>
