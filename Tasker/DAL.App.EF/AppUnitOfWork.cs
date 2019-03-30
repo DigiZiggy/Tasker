@@ -71,9 +71,10 @@ namespace DAL.App.EF
         }
         
         
-        public AppUnitOfWork(AppDbContext appDbContext)
+        public AppUnitOfWork(IDataContext dataContext, IRepositoryProvider repositoryProvider)
         {
-            _appDbContext = appDbContext;
+            _appDbContext = (dataContext as AppDbContext) ?? throw new ArgumentNullException(nameof(dataContext));
+            _repositoryProvider = repositoryProvider;
         }
 
         public virtual int SaveChanges()
