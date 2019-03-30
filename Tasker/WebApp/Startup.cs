@@ -4,10 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
-using DAL;
+ using Contracts.DAL.Base;
+ using Contracts.DAL.Base.Helpers;
+ using DAL;
 using DAL.App.EF;
-using DAL.App.EF.Repositories;
-using Domain.Identity;
+ using DAL.App.EF.Helpers;
+ using DAL.App.EF.Repositories;
+ using DAL.Base.EF.Helpers;
+ using Domain.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -44,8 +48,11 @@ namespace WebApp
                 options.UseMySql(
                     Configuration.GetConnectionString("MySqlConnection")));
 
+            services.AddScoped<IDataContext, AppDbContext>();
+            services.AddSingleton<IRepositoryFactory, AppRepositoryFactory>();
+            services.AddScoped<IRepositoryProvider, BaseRepositoryProvider>();
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
-           
+                           
             services.AddDefaultIdentity<AppUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<AppDbContext>();
