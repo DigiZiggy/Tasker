@@ -47,11 +47,11 @@ namespace WebApp.Controllers
         }
 
         // GET: Invoices/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new InvoiceCreateViewModel()
             {
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id"),
 
             };
             
@@ -94,7 +94,7 @@ namespace WebApp.Controllers
             
             var vm = new InvoiceEditViewModel()
             {
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", invoice.UserId),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", invoice.UserId),
 
             };
             

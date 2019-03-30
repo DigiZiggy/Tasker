@@ -47,11 +47,11 @@ namespace WebApp.Controllers
         }
 
         // GET: Cities/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new CityCreateViewModel()
             {
-                CountrySelectList = new SelectList(_uow.BaseRepository<Country>().All(), "Id", "Id"),
+                CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id"),
             };
 
             return View(vm);
@@ -91,7 +91,7 @@ namespace WebApp.Controllers
             }
             var vm = new CityEditViewModel()
             {
-                CountrySelectList = new SelectList(_uow.BaseRepository<Country>().All(), "Id", "Id", city.CountryId),
+                CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id", city.CountryId),
             };
             
             return View(vm);

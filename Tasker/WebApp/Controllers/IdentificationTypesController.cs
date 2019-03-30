@@ -23,9 +23,7 @@ namespace WebApp.Controllers
         // GET: IdentificationTypes
         public async Task<IActionResult> Index()
         {
-            var identificationTypes = await _uow.IdentificationTypes.AllAsync();
-
-            return View(identificationTypes);
+            return View(await _uow.IdentificationTypes.AllAsync());
         }
 
         // GET: IdentificationTypes/Details/5
@@ -35,9 +33,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-//            var identificationType = await _context.IdentificationTypes
-//                .FirstOrDefaultAsync(m => m.Id == id);
 
             var identificationType = await _uow.IdentificationTypes.FindAsync(id);
 
@@ -116,8 +111,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            
+            var identificationType = await _uow.IdentificationTypes.FindAsync(id);
 
-            var identificationType = _uow.IdentificationTypes.FindAsync(id);
             if (identificationType == null)
             {
                 return NotFound();

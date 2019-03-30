@@ -49,13 +49,13 @@ namespace WebApp.Controllers
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             
             var vm = new ReviewCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id"),
 
             };
             
@@ -100,8 +100,8 @@ namespace WebApp.Controllers
             
             var vm = new ReviewEditViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", review.AppUserId),
-                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", review.TaskId),
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", review.AppUserId),
+                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", review.TaskId),
 
             };
 

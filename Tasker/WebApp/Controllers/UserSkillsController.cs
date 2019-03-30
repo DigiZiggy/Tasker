@@ -50,13 +50,13 @@ namespace WebApp.Controllers
         }
 
         // GET: UserSkills/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new UserSkillCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                SkillSelectList = new SelectList(_uow.BaseRepository<Skill>().All(), "Id", "Id"),
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id")
 
             };
  

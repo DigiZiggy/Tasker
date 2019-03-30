@@ -48,12 +48,12 @@ namespace WebApp.Controllers
         }
 
         // GET: UserInGroups/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new UserInGroupCreateViewModel()
             {
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id"),
-                UserGroupSelectList = new SelectList(_uow.BaseRepository<UserGroup>().All(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id"),
+                UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id"),
             };
             
             return View(vm);
@@ -96,8 +96,8 @@ namespace WebApp.Controllers
             
             var vm = new UserInGroupEditViewModel()
             {
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", userInGroup.UserId),
-                UserGroupSelectList = new SelectList(_uow.BaseRepository<UserGroup>().All(), "Id", "Id", userInGroup.UserGroupId),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", userInGroup.UserId),
+                UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id", userInGroup.UserGroupId),
             };
             return View(vm);
         }

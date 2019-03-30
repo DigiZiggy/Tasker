@@ -47,11 +47,11 @@ namespace WebApp.Controllers
         }
 
         // GET: HourlyRates/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new HourlyRateCreateViewModel()
             {
-                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "Id"),
+                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id"),
             };
 
             return View(vm);
@@ -91,7 +91,7 @@ namespace WebApp.Controllers
             
             var vm = new HourlyRateEditViewModel()
             {
-                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "Id", hourlyRate.PriceListId),
+                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id", hourlyRate.PriceListId),
             };
             
             return View(vm);

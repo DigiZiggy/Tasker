@@ -48,14 +48,14 @@ namespace WebApp.Controllers
         }
 
         // GET: UserOnAddresses/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             
             var vm = new UserOnAddressCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                AddressSelectList = new SelectList(_uow.BaseRepository<Address>().All(), "Id", "Id"),
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id")
             };
          
             return View(vm);
@@ -99,9 +99,9 @@ namespace WebApp.Controllers
             
             var vm = new UserOnAddressEditViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", userOnAddress.AppUserId),
-                AddressSelectList = new SelectList(_uow.BaseRepository<Address>().All(), "Id", "Id", userOnAddress.AddressId),
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", userOnAddress.UserId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", userOnAddress.AppUserId),
+                AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id", userOnAddress.AddressId),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", userOnAddress.UserId)
             };
             
             return View(vm);

@@ -179,11 +179,9 @@ namespace DAL.App.EF.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<bool>("LockoutEnabled");

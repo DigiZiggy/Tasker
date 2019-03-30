@@ -202,6 +202,11 @@
       <UpToDateCheckInput Remove="Views\UserTypes\Details.cshtml" />
       <UpToDateCheckInput Remove="Views\UserTypes\Edit.cshtml" />
       <UpToDateCheckInput Remove="Views\UserTypes\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\IdentificationTypes\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\IdentificationTypes\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\IdentificationTypes\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\IdentificationTypes\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\IdentificationTypes\Index.cshtml" />
     </ItemGroup>
 
 </Project>

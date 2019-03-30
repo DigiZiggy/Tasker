@@ -43,8 +43,8 @@ namespace DAL.App.EF.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(maxLength: 64, nullable: false),
-                    LastName = table.Column<string>(maxLength: 64, nullable: false)
+                    FirstName = table.Column<string>(maxLength: 64, nullable: true),
+                    LastName = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {

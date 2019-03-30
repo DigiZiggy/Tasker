@@ -5,7 +5,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IUserRepository : IBaseRepositoryAsync<User>
     {
         Task<IEnumerable<User>> AllAsync(int userId);
 

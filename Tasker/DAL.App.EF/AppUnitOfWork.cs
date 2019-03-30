@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
+using Contracts.DAL.Base;
+using Contracts.DAL.Base.Helpers;
 using Contracts.DAL.Base.Repositories;
 using DAL.App.EF.Repositories;
 using DAL.Base.EF.Repositories;
@@ -12,76 +14,62 @@ namespace DAL.App.EF
     public class AppUnitOfWork : IAppUnitOfWork
     {
         private readonly AppDbContext _appDbContext;
-        
-        private readonly Dictionary<Type, object> _repositoryCache = new Dictionary<Type, object>();
+
+        private readonly IRepositoryProvider _repositoryProvider;
 
         public IAddressRepository Addresses =>
-            GetOrCreateRepository((AppDbContext dataContext) => new AddressRepository(dataContext));
+            _repositoryProvider.GetRepository<IAddressRepository>();
         public ICityRepository Cities => 
-            GetOrCreateRepository((AppDbContext dataContext) => new CityRepository(dataContext));
-
+            _repositoryProvider.GetRepository<ICityRepository>();
         public ICountryRepository Countries => 
-            GetOrCreateRepository((AppDbContext dataContext) => new CountryRepository(dataContext));
+            _repositoryProvider.GetRepository<ICountryRepository>();
         public IHourlyRateRepository HourlyRates => 
-            GetOrCreateRepository((AppDbContext dataContext) => new HourlyRateRepository(dataContext));
+            _repositoryProvider.GetRepository<IHourlyRateRepository>();
         public IIdentificationRepository Identifications => 
-            GetOrCreateRepository((AppDbContext dataContext) => new IdentificationRepository(dataContext));
+            _repositoryProvider.GetRepository<IIdentificationRepository>();
         public IIdentificationTypeRepository IdentificationTypes => 
-            GetOrCreateRepository((AppDbContext dataContext) => new IdentificationTypeRepository(dataContext));
+            _repositoryProvider.GetRepository<IIdentificationTypeRepository>();
         public IInvoiceRepository Invoices => 
-            GetOrCreateRepository((AppDbContext dataContext) => new InvoiceRepository(dataContext));
+            _repositoryProvider.GetRepository<IInvoiceRepository>();
         public IInvoiceLineRepository InvoiceLines => 
-            GetOrCreateRepository((AppDbContext dataContext) => new InvoiceLineRepository(dataContext));
+            _repositoryProvider.GetRepository<IInvoiceLineRepository>();
         public IMeansOfPaymentRepository MeansOfPayments => 
-            GetOrCreateRepository((AppDbContext dataContext) => new MeansOfPaymentRepository(dataContext));
+            _repositoryProvider.GetRepository<IMeansOfPaymentRepository>();
         public IPaymentRepository Payments => 
-            GetOrCreateRepository((AppDbContext dataContext) => new PaymentRepository(dataContext));
+            _repositoryProvider.GetRepository<IPaymentRepository>();
         public IPriceListRepository PriceLists => 
-            GetOrCreateRepository((AppDbContext dataContext) => new PriceListRepository(dataContext));
+            _repositoryProvider.GetRepository<IPriceListRepository>();
         public IPriceRepository Prices => 
-            GetOrCreateRepository((AppDbContext dataContext) => new PriceRepository(dataContext));
+            _repositoryProvider.GetRepository<IPriceRepository>();
         public IReviewRepository Reviews => 
-            GetOrCreateRepository((AppDbContext dataContext) => new ReviewRepository(dataContext));
+            _repositoryProvider.GetRepository<IReviewRepository>();
         public ISkillRepository Skills => 
-            GetOrCreateRepository((AppDbContext dataContext) => new SkillRepository(dataContext));
+            _repositoryProvider.GetRepository<ISkillRepository>();
         public ITaskRepository Tasks => 
-            GetOrCreateRepository((AppDbContext dataContext) => new TaskRepository(dataContext));
+            _repositoryProvider.GetRepository<ITaskRepository>();
         public ITaskTypeRepository TaskTypes => 
-            GetOrCreateRepository((AppDbContext dataContext) => new TaskTypeRepository(dataContext));
+            _repositoryProvider.GetRepository<ITaskTypeRepository>();
         public IUserGroupRepository UserGroups => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserGroupRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserGroupRepository>();
         public IUserInGroupRepository UserInGroups => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserInGroupRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserInGroupRepository>();
         public IUserOnAddressRepository UserOnAddresses => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserOnAddressRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserOnAddressRepository>();
         public IUserOnTaskRepository UserOnTasks => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserOnTaskRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserOnTaskRepository>();
         public IUserRepository Users => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserRepository>();
         public IUserSkillRepository UserSills => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserSkillRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserSkillRepository>();
         public IUserTypeRepository UserTypes => 
-            GetOrCreateRepository((AppDbContext dataContext) => new UserTypeRepository(dataContext));
+            _repositoryProvider.GetRepository<IUserTypeRepository>();
 
         
-        public IBaseRepository<TEntity> BaseRepository<TEntity>() where TEntity : class, new()
+        public IBaseRepositoryAsync<TEntity> BaseRepository<TEntity>() where TEntity : class, IBaseEntity, new()
         {
-            return GetOrCreateRepository((AppDbContext dataContext) => new BaseRepository<TEntity>(dataContext));
+            return _repositoryProvider.GetRepositoryForEntity<TEntity>();
         }
         
-
-        private TRepository GetOrCreateRepository<TRepository>(Func<AppDbContext, TRepository> factoryMethod)
-        {
-            _repositoryCache.TryGetValue(typeof(TRepository), out var repoObject);
-            if (repoObject != null)
-            {
-                return (TRepository) repoObject;
-            }
-
-            repoObject = factoryMethod(_appDbContext);
-            _repositoryCache[typeof(TRepository)] = repoObject;
-            return (TRepository) repoObject;
-        }
         
         public AppUnitOfWork(AppDbContext appDbContext)
         {

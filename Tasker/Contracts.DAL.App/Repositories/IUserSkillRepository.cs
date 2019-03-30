@@ -3,7 +3,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IUserSkillRepository : IBaseRepository<UserSkill>
+    public interface IUserSkillRepository : IBaseRepositoryAsync<UserSkill>
     {
         
     }

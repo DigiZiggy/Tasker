@@ -48,11 +48,11 @@ namespace WebApp.Controllers
         }
 
         // GET: Addresses/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new AddressCreateViewModel()
             {
-                CitySelectList = new SelectList(_uow.BaseRepository<City>().All(), "Id", "Id"),
+                CitySelectList = new SelectList(await _uow.BaseRepository<City>().AllAsync(), "Id", "Id"),
             };
             return View(vm);
         }
@@ -92,7 +92,7 @@ namespace WebApp.Controllers
             
             var vm = new AddressEditViewModel()
             {
-                CitySelectList = new SelectList(_uow.BaseRepository<City>().All(), "Id", "Id", address.CityId),
+                CitySelectList = new SelectList(await _uow.BaseRepository<City>().AllAsync(), "Id", "Id", address.CityId),
             };
             
             return View(vm);

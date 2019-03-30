@@ -49,13 +49,13 @@ namespace WebApp.Controllers
         }
 
         // GET: Identifications/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {     
             var vm = new IdentificationCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                IdentificationTypeSelectList = new SelectList(_uow.BaseRepository<IdentificationType>().All(), "Id", "Id"),
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id")
             };
             
             return View(vm);
@@ -99,9 +99,9 @@ namespace WebApp.Controllers
             
             var vm = new IdentificationEditViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", identification.AppUserId),
-                IdentificationTypeSelectList = new SelectList(_uow.BaseRepository<IdentificationType>().All(), "Id", "Id", identification.IdentificationTypeId),
-                UserSelectList = new SelectList(_uow.BaseRepository<User>().All(), "Id", "Id", identification.UserId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", identification.AppUserId),
+                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id", identification.IdentificationTypeId),
+                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", identification.UserId)
             };
            
             return View(vm);

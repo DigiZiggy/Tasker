@@ -3,7 +3,8 @@ using System.Data.Entity.Migrations.Model;
 using System.Linq;
 using System.Security.Authentication.ExtendedProtection;
 using System.Security.Cryptography.X509Certificates;
-using Domain;
+ using Contracts.DAL.Base;
+ using Domain;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ using Action = System.Action;
 
 namespace DAL.App.EF
 {
-    public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
+    public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IDataContext
     {
         public DbSet<Address> Addresses { get; set; }
         public DbSet<City> Cities { get; set; }

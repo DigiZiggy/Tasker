@@ -49,12 +49,12 @@ namespace WebApp.Controllers
         }
 
         // GET: Tasks/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new TaskCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                TaskTypeSelectList = new SelectList(_uow.BaseRepository<TaskType>().All(), "Id", "Id"),
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                TaskTypeSelectList = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Id"),
 
             };
 
@@ -99,8 +99,8 @@ namespace WebApp.Controllers
             
             var vm = new TaskEditViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", task.AppUserId),
-                TaskTypeSelectList = new SelectList(_uow.BaseRepository<TaskType>().All(), "Id", "Id", task.TaskTypeId),
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId),
+                TaskTypeSelectList = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Id", task.TaskTypeId),
 
             };
 

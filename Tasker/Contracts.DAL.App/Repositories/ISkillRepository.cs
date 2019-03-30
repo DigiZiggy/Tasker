@@ -5,7 +5,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface ISkillRepository : IBaseRepository<Skill>
+    public interface ISkillRepository : IBaseRepositoryAsync<Skill>
     {
         
     }

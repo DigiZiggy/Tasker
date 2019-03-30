@@ -49,14 +49,14 @@ namespace WebApp.Controllers
         }
 
         // GET: UserOnTasks/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new UserOnTaskCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
-                TaskGiverSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
-                TaskerSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id"),
+                TaskGiverSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id"),
+                TaskerSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id")
 
             };
             
@@ -102,10 +102,10 @@ namespace WebApp.Controllers
             
             var vm = new UserOnTaskEditViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", userOnTask.AppUserId),
-                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", userOnTask.TaskId),
-                TaskGiverSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", userOnTask.TaskGiverId),
-                TaskerSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", userOnTask.TaskerId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", userOnTask.AppUserId),
+                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", userOnTask.TaskId),
+                TaskGiverSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", userOnTask.TaskGiverId),
+                TaskerSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", userOnTask.TaskerId)
 
             };
             

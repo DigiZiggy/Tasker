@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
+using Contracts.DAL.Base;
 using Contracts.DAL.Base.Repositories;
 using DAL.Base.EF.Repositories;
 using Domain;
@@ -12,7 +13,7 @@ namespace DAL.App.EF.Repositories
 {
     public class TaskRepository : BaseRepository<Task>, ITaskRepository
     {
-        public TaskRepository(DbContext dbContext) : base(dbContext)
+        public TaskRepository(IDataContext dataContext) : base(dataContext)
         {
         }
 

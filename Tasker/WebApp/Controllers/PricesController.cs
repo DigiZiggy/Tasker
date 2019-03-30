@@ -48,11 +48,11 @@ namespace WebApp.Controllers
         }
 
         // GET: Prices/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new PriceCreateViewModel()
             {
-                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "FirstName"),
+                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "FirstName"),
 
             };
 
@@ -95,7 +95,7 @@ namespace WebApp.Controllers
             
             var vm = new PriceEditViewModel()
             {
-                PriceListSelectList = new SelectList(_uow.BaseRepository<PriceList>().All(), "Id", "FirstName", price.PriceListId),
+                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "FirstName", price.PriceListId),
 
             };
 

@@ -5,7 +5,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IIdentificationRepository : IBaseRepository<Identification>
+    public interface IIdentificationRepository : IBaseRepositoryAsync<Identification>
     {
         
     }

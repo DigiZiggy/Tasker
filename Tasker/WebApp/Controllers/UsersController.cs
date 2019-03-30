@@ -50,13 +50,13 @@ namespace WebApp.Controllers
         }
 
         // GET: Users/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new UserCreateViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName"),
-                HourlyRateSelectList = new SelectList(_uow.BaseRepository<HourlyRate>().All(), "Id", "Id"),
-                UserTypeSelectList = new SelectList(_uow.BaseRepository<UserType>().All(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
+                HourlyRateSelectList = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id"),
+                UserTypeSelectList = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Id")
 
             };
             
@@ -103,9 +103,9 @@ namespace WebApp.Controllers
             
             var vm = new UserEditViewModel()
             {
-                AppUserSelectList = new SelectList(_uow.BaseRepository<AppUser>().All(), "Id", "FirstName", user.AppUserId),
-                HourlyRateSelectList = new SelectList(_uow.BaseRepository<HourlyRate>().All(), "Id", "Id", user.HourlyRateId),
-                UserTypeSelectList = new SelectList(_uow.BaseRepository<UserType>().All(), "Id", "Id", user.UserTypeId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId),
+                HourlyRateSelectList = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId),
+                UserTypeSelectList = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Id", user.UserTypeId)
 
             };
             

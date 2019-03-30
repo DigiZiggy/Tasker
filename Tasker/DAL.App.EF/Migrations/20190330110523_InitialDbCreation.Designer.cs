@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.App.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190328161834_InitialDbCreation")]
+    [Migration("20190330110523_InitialDbCreation")]
     partial class InitialDbCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,11 +181,9 @@ namespace DAL.App.EF.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<bool>("LockoutEnabled");

@@ -3,7 +3,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IUserInGroupRepository : IBaseRepository<UserInGroup>
+    public interface IUserInGroupRepository : IBaseRepositoryAsync<UserInGroup>
     {
         
     }

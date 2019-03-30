@@ -5,7 +5,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IReviewRepository : IBaseRepository<Review>
+    public interface IReviewRepository : IBaseRepositoryAsync<Review>
     {
     }
 }

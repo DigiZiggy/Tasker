@@ -5,7 +5,7 @@ using Task = Domain.Task;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface ITaskRepository : IBaseRepository<Task>
+    public interface ITaskRepository : IBaseRepositoryAsync<Task>
     {
     }
 }

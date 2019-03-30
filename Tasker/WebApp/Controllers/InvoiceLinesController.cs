@@ -49,12 +49,12 @@ namespace WebApp.Controllers
         }
 
         // GET: InvoiceLines/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new InvoiceLinesCreateViewModel()
             {
-                InvoiceSelectList = new SelectList(_uow.BaseRepository<Invoice>().All(), "Id", "Id"),
-                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id"),
+                InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id", "Id"),
+                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id"),
             };
             
             return View(vm);
@@ -98,8 +98,8 @@ namespace WebApp.Controllers
             
             var vm = new InvoiceLinesEditViewModel()
             {
-                InvoiceSelectList = new SelectList(_uow.BaseRepository<Invoice>().All(), "Id", "Id", invoiceLine.InvoiceId),
-                TaskSelectList = new SelectList(_uow.BaseRepository<Domain.Task>().All(), "Id", "Id", invoiceLine.TaskId),
+                InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id", "Id", invoiceLine.InvoiceId),
+                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", invoiceLine.TaskId),
             };
             
             return View(vm);
