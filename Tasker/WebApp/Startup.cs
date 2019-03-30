@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,9 +53,15 @@ namespace WebApp
             services.AddScoped<IRepositoryProvider, BaseRepositoryProvider>();
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
                            
-            services.AddDefaultIdentity<AppUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<AppDbContext>();
+            /*
+              services.AddDefaultIdentity<AppUser>()
+                  .AddDefaultUI(UIFramework.Bootstrap4)
+                  .AddEntityFrameworkStores<AppDbContext>();
+  */
+            services
+                .AddIdentity<AppUser, AppRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
                 {

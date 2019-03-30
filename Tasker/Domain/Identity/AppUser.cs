@@ -12,12 +12,12 @@ namespace Domain.Identity
    
         [MaxLength(64)]
         [MinLength(1)]
-//        [Required]
+        [Required]
         public string FirstName { get; set; }
         
         [MaxLength(64)]
         [MinLength(1)]
-//        [Required]
+        [Required]
         public string LastName { get; set; }
 
     }
