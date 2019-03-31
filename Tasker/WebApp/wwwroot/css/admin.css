@@ -1,8 +1,8 @@
 .navbar__container {
     z-index: 3;
     width: 100%;
-    padding: 10px 12px 0;
-    background: white;
+    padding: 2px 12px 2px 12px;
+    background: #fff;
     border-bottom: 1px solid #b1b9c3;
 }
 
