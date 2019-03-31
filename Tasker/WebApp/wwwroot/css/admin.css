@@ -1,0 +1,40 @@
+.navbar__container {
+    z-index: 3;
+    width: 100%;
+    padding: 10px 12px 0;
+    background: white;
+    border-bottom: 1px solid #b1b9c3;
+}
+
+.navbar__logo {
+    color: #f8b612;
+}
+
+a.navbar__logo:hover, a.navbar__logo:focus, a.navbar__logo:visited {
+    text-decoration: none;
+    cursor: pointer;
+    color: #f8b612;
+}
+
+.btn-primary {
+    background-color: #00e3e5;
+    border-color: #00e3e5;
+}
+
+.btn-primary:hover {
+    background-color: #01c5c6;
+    border-color: #01c5c6;
+}
+
+.container {
+    padding: 20px 0px 20px 0px;
+}
+
+.container h1 {
+    font-size: 1.75rem;
+}
+
+
+form {
+    padding: 20px 0px;
+}
