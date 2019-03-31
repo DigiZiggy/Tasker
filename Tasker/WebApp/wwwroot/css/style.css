@@ -31,7 +31,6 @@
     padding: 0.625em 1.5em;
     border: 1px solid #40A8A1;
     border-radius: 5px;
-    
     text-decoration: none;
 }
 
@@ -45,13 +44,29 @@
 }
 
 .hero {
-    background-image: url("../assets/helphand.jpg");
+    background-image: url("../assets/helphand.jpg"), linear-gradient(rgba(255,255,255,0.2),rgba(255,255,255,0.2));
+    background-blend-mode: overlay;
     height: 100vh;
     width: 100vw;
-    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero h1 {
+    font-size: 80px;
+    margin-top: 1.5em;
+    color: #4ECDC4;
+    text-shadow: 2px 2px white;
+
+}
+
+.hero h1,
+.hero h4 {
+    font-weight: 200;
 }
 
 .page__register {
@@ -61,21 +76,95 @@
     width: 100vw;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     background-size: cover;
     position: relative;
 }
 
 .register__form {
-    width: 35%;
+    float: left;
+    margin-top: 2%;
+    width: 30%;
     margin-left: 10%;
     padding: 30px 60px 20px 30px;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 7px;
 }
 
-.register__form h4 {
-    font-size: 12px;
+.login__form h1,
+.register__form h1 {
+    font-weight: lighter;
 }
+
+.login__form h4,
+.login__form .form-group label,
+.register__form h4 {
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+.login__form h1,
+.login__form h4 {
+    text-align: center;
+}
+
+.login__form #forgot-password {
+    font-size: 16px;
+    font-weight: lighter;
+    text-align: right;
+}
+
+.login__form #forgot-password a {
+    color: #4ECDC4;
+    text-decoration: none;
+}
+
+.login__form #forgot-password a:hover {
+    color: #4ECDC4;
+
+}
+
+.register__form .form-group {
+    margin: 30px 0px 30px 0px;
+}
+
+.login__form .btn-primary,
+.register__form .btn-primary {
+    width: 100%;
+    margin-bottom: 1em;
+    background-color: #4ECDC4;
+    border-color: #4ECDC4;
+}
+
+.login__form .btn-primary:hover,
+.register__form .btn-primary:hover {
+    background-color: #40A8A1;
+    border-color: #40A8A1;
+}
+
+
+.page__login {
+    background-image: url("../assets/cowork.jpg"), linear-gradient(rgba(255,255,255,0.3),rgba(255,255,255,0.3));
+    background-blend-mode: overlay;
+    height: 100vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.login__form {
+    float: left;
+    margin-top: 4%;
+    width: 40%;
+    margin-left: 30%;
+    padding: 30px 60px 20px 30px;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 7px;
+}
+
 
 @media (min-width: 768px) {
 
