@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class MeansOfPaymentsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public MeansOfPaymentsController(AppDbContext context)
+        public MeansOfPaymentsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/MeansOfPayments
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MeansOfPayment>>> GetMeansOfPayments()
         {
-            return await _context.MeansOfPayments.ToListAsync();
+            var result = await _uow.MeansOfPayments.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/MeansOfPayments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MeansOfPayment>> GetMeansOfPayment(int id)
         {
-            var meansOfPayment = await _context.MeansOfPayments.FindAsync(id);
+            var meansOfPayment = await _uow.MeansOfPayments.FindAsync(id);
 
             if (meansOfPayment == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(meansOfPayment).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MeansOfPaymentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.MeansOfPayments.Update(meansOfPayment);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<MeansOfPayment>> PostMeansOfPayment(MeansOfPayment meansOfPayment)
         {
-            _context.MeansOfPayments.Add(meansOfPayment);
-            await _context.SaveChangesAsync();
+            await _uow.MeansOfPayments.AddAsync(meansOfPayment);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetMeansOfPayment", new { id = meansOfPayment.Id }, meansOfPayment);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<MeansOfPayment>> DeleteMeansOfPayment(int id)
         {
-            var meansOfPayment = await _context.MeansOfPayments.FindAsync(id);
+            var meansOfPayment = await _uow.MeansOfPayments.FindAsync(id);
             if (meansOfPayment == null)
             {
                 return NotFound();
             }
 
-            _context.MeansOfPayments.Remove(meansOfPayment);
-            await _context.SaveChangesAsync();
+            _uow.MeansOfPayments.Remove(meansOfPayment);
+            await _uow.SaveChangesAsync();
 
             return meansOfPayment;
-        }
-
-        private bool MeansOfPaymentExists(int id)
-        {
-            return _context.MeansOfPayments.Any(e => e.Id == id);
         }
     }
 }

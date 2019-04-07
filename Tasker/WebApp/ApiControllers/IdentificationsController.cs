@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class IdentificationsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public IdentificationsController(AppDbContext context)
+        public IdentificationsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Identifications
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Identification>>> GetIdentifications()
         {
-            return await _context.Identifications.ToListAsync();
+            var result = await _uow.Identifications.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/Identifications/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Identification>> GetIdentification(int id)
         {
-            var identification = await _context.Identifications.FindAsync(id);
+            var identification = await _uow.Identifications.FindAsync(id);
 
             if (identification == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(identification).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IdentificationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.Identifications.Update(identification);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Identification>> PostIdentification(Identification identification)
         {
-            _context.Identifications.Add(identification);
-            await _context.SaveChangesAsync();
+            await _uow.Identifications.AddAsync(identification);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetIdentification", new { id = identification.Id }, identification);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Identification>> DeleteIdentification(int id)
         {
-            var identification = await _context.Identifications.FindAsync(id);
+            var identification = await _uow.Identifications.FindAsync(id);
             if (identification == null)
             {
                 return NotFound();
             }
 
-            _context.Identifications.Remove(identification);
-            await _context.SaveChangesAsync();
+            _uow.Identifications.Remove(identification);
+            await _uow.SaveChangesAsync();
 
             return identification;
-        }
-
-        private bool IdentificationExists(int id)
-        {
-            return _context.Identifications.Any(e => e.Id == id);
         }
     }
 }

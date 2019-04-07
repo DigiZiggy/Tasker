@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class IdentificationTypesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public IdentificationTypesController(AppDbContext context)
+        public IdentificationTypesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/IdentificationTypes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IdentificationType>>> GetIdentificationTypes()
         {
-            return await _context.IdentificationTypes.ToListAsync();
+            var result = await _uow.IdentificationTypes.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/IdentificationTypes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<IdentificationType>> GetIdentificationType(int id)
         {
-            var identificationType = await _context.IdentificationTypes.FindAsync(id);
+            var identificationType = await _uow.IdentificationTypes.FindAsync(id);
 
             if (identificationType == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(identificationType).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IdentificationTypeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.IdentificationTypes.Update(identificationType);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<IdentificationType>> PostIdentificationType(IdentificationType identificationType)
         {
-            _context.IdentificationTypes.Add(identificationType);
-            await _context.SaveChangesAsync();
+            await _uow.IdentificationTypes.AddAsync(identificationType);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetIdentificationType", new { id = identificationType.Id }, identificationType);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<IdentificationType>> DeleteIdentificationType(int id)
         {
-            var identificationType = await _context.IdentificationTypes.FindAsync(id);
+            var identificationType = await _uow.IdentificationTypes.FindAsync(id);
             if (identificationType == null)
             {
                 return NotFound();
             }
 
-            _context.IdentificationTypes.Remove(identificationType);
-            await _context.SaveChangesAsync();
+            _uow.IdentificationTypes.Remove(identificationType);
+            await _uow.SaveChangesAsync();
 
             return identificationType;
-        }
-
-        private bool IdentificationTypeExists(int id)
-        {
-            return _context.IdentificationTypes.Any(e => e.Id == id);
         }
     }
 }

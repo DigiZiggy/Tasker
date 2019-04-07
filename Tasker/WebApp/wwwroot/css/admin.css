@@ -26,11 +26,11 @@ a.navbar__logo:hover, a.navbar__logo:focus, a.navbar__logo:visited {
     border-color: #01c5c6;
 }
 
-.container {
+.admin__container {
     padding: 20px 0px 20px 0px;
 }
 
-.container h1 {
+.admin__container h1 {
     font-size: 1.75rem;
 }
 

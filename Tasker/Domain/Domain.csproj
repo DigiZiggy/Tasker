@@ -1,22 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-    </PropertyGroup>
+<PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+</PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
-      <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0-preview.19073.11" />
-    </ItemGroup>
+<ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.2.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+</ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Identity.Stores, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-        <HintPath>..\..\..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.identity.stores\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Identity.Stores.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Contracts.DAL.Base\Contracts.DAL.Base.csproj" />
-    </ItemGroup>
+<ItemGroup>
+    <ProjectReference Include="..\Contracts.DAL.Base\Contracts.DAL.Base.csproj" />
+</ItemGroup>
 
 </Project>

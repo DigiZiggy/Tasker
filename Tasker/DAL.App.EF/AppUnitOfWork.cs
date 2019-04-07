@@ -7,11 +7,12 @@ using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
 using Contracts.DAL.Base.Repositories;
 using DAL.App.EF.Repositories;
+using DAL.Base.EF;
 using DAL.Base.EF.Repositories;
 
 namespace DAL.App.EF
 {
-    public class AppUnitOfWork : IAppUnitOfWork
+    public class AppUnitOfWork : BaseUnitOfWork, IAppUnitOfWork
     {
         private readonly AppDbContext _appDbContext;
 
@@ -71,7 +72,7 @@ namespace DAL.App.EF
         }
         
         
-        public AppUnitOfWork(IDataContext dataContext, IRepositoryProvider repositoryProvider)
+        public AppUnitOfWork(AppDbContext dbContext, IDataContext dataContext, IRepositoryProvider repositoryProvider) : base(dbContext)
         {
             _appDbContext = (dataContext as AppDbContext) ?? throw new ArgumentNullException(nameof(dataContext));
             _repositoryProvider = repositoryProvider;
@@ -82,7 +83,7 @@ namespace DAL.App.EF
             return _appDbContext.SaveChanges();
         }
 
-        public virtual async Task<int> SaveChangesAsync()
+        public new virtual async Task<int> SaveChangesAsync()
         {
             return await _appDbContext.SaveChangesAsync();
         }

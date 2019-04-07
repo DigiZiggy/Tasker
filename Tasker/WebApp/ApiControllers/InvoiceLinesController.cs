@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class InvoiceLinesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public InvoiceLinesController(AppDbContext context)
+        public InvoiceLinesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/InvoiceLines
         [HttpGet]
         public async Task<ActionResult<IEnumerable<InvoiceLine>>> GetInvoiceLines()
         {
-            return await _context.InvoiceLines.ToListAsync();
+            var result = await _uow.InvoiceLines.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/InvoiceLines/5
         [HttpGet("{id}")]
         public async Task<ActionResult<InvoiceLine>> GetInvoiceLine(int id)
         {
-            var invoiceLine = await _context.InvoiceLines.FindAsync(id);
+            var invoiceLine = await _uow.InvoiceLines.FindAsync(id);
 
             if (invoiceLine == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(invoiceLine).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InvoiceLineExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.InvoiceLines.Update(invoiceLine);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<InvoiceLine>> PostInvoiceLine(InvoiceLine invoiceLine)
         {
-            _context.InvoiceLines.Add(invoiceLine);
-            await _context.SaveChangesAsync();
+            await _uow.InvoiceLines.AddAsync(invoiceLine);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetInvoiceLine", new { id = invoiceLine.Id }, invoiceLine);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<InvoiceLine>> DeleteInvoiceLine(int id)
         {
-            var invoiceLine = await _context.InvoiceLines.FindAsync(id);
+            var invoiceLine = await _uow.InvoiceLines.FindAsync(id);
             if (invoiceLine == null)
             {
                 return NotFound();
             }
 
-            _context.InvoiceLines.Remove(invoiceLine);
-            await _context.SaveChangesAsync();
+            _uow.InvoiceLines.Remove(invoiceLine);
+            await _uow.SaveChangesAsync();
 
             return invoiceLine;
-        }
-
-        private bool InvoiceLineExists(int id)
-        {
-            return _context.InvoiceLines.Any(e => e.Id == id);
         }
     }
 }

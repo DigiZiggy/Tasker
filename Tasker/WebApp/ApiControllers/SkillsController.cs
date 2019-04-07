@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class SkillsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public SkillsController(AppDbContext context)
+        public SkillsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/Skills
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Skill>>> GetSkills()
         {
-            return await _context.Skills.ToListAsync();
+            var result = await _uow.Skills.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Skill>> GetSkill(int id)
         {
-            var skill = await _context.Skills.FindAsync(id);
+            var skill = await _uow.Skills.FindAsync(id);
 
             if (skill == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(skill).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SkillExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.Skills.Update(skill);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Skill>> PostSkill(Skill skill)
         {
-            _context.Skills.Add(skill);
-            await _context.SaveChangesAsync();
+            await _uow.Skills.AddAsync(skill);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetSkill", new { id = skill.Id }, skill);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Skill>> DeleteSkill(int id)
         {
-            var skill = await _context.Skills.FindAsync(id);
+            var skill = await _uow.Skills.FindAsync(id);
             if (skill == null)
             {
                 return NotFound();
             }
 
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
+            _uow.Skills.Remove(skill);
+            await _uow.SaveChangesAsync();
 
             return skill;
-        }
-
-        private bool SkillExists(int id)
-        {
-            return _context.Skills.Any(e => e.Id == id);
         }
     }
 }

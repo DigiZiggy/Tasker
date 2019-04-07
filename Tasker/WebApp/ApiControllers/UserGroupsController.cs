@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class UserGroupsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public UserGroupsController(AppDbContext context)
+        public UserGroupsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/UserGroups
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserGroup>>> GetUserGroups()
         {
-            return await _context.UserGroups.ToListAsync();
+            var result = await _uow.UserGroups.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/UserGroups/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserGroup>> GetUserGroup(int id)
         {
-            var userGroup = await _context.UserGroups.FindAsync(id);
+            var userGroup = await _uow.UserGroups.FindAsync(id);
 
             if (userGroup == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(userGroup).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserGroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.UserGroups.Update(userGroup);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<UserGroup>> PostUserGroup(UserGroup userGroup)
         {
-            _context.UserGroups.Add(userGroup);
-            await _context.SaveChangesAsync();
+            await _uow.UserGroups.AddAsync(userGroup);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetUserGroup", new { id = userGroup.Id }, userGroup);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserGroup>> DeleteUserGroup(int id)
         {
-            var userGroup = await _context.UserGroups.FindAsync(id);
+            var userGroup = await _uow.UserGroups.FindAsync(id);
             if (userGroup == null)
             {
                 return NotFound();
             }
 
-            _context.UserGroups.Remove(userGroup);
-            await _context.SaveChangesAsync();
+            _uow.UserGroups.Remove(userGroup);
+            await _uow.SaveChangesAsync();
 
             return userGroup;
-        }
-
-        private bool UserGroupExists(int id)
-        {
-            return _context.UserGroups.Any(e => e.Id == id);
         }
     }
 }

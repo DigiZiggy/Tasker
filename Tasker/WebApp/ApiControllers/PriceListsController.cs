@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.DAL.App;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +15,27 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class PriceListsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PriceListsController(AppDbContext context)
+        public PriceListsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: api/PriceLists
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PriceList>>> GetPriceLists()
         {
-            return await _context.PriceLists.ToListAsync();
+            var result = await _uow.PriceLists.AllAsync();
+            return Ok(result);
+            
         }
 
         // GET: api/PriceLists/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PriceList>> GetPriceList(int id)
         {
-            var priceList = await _context.PriceLists.FindAsync(id);
+            var priceList = await _uow.PriceLists.FindAsync(id);
 
             if (priceList == null)
             {
@@ -51,23 +54,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(priceList).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PriceListExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _uow.PriceLists.Update(priceList);
+            await _uow.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +64,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<PriceList>> PostPriceList(PriceList priceList)
         {
-            _context.PriceLists.Add(priceList);
-            await _context.SaveChangesAsync();
+            await _uow.PriceLists.AddAsync(priceList);
+            await _uow.SaveChangesAsync();
 
             return CreatedAtAction("GetPriceList", new { id = priceList.Id }, priceList);
         }
@@ -86,21 +74,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<PriceList>> DeletePriceList(int id)
         {
-            var priceList = await _context.PriceLists.FindAsync(id);
+            var priceList = await _uow.PriceLists.FindAsync(id);
             if (priceList == null)
             {
                 return NotFound();
             }
 
-            _context.PriceLists.Remove(priceList);
-            await _context.SaveChangesAsync();
+            _uow.PriceLists.Remove(priceList);
+            await _uow.SaveChangesAsync();
 
             return priceList;
-        }
-
-        private bool PriceListExists(int id)
-        {
-            return _context.PriceLists.Any(e => e.Id == id);
         }
     }
 }
