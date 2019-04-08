@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {ITaskType} from "../interfaces/ITaskType";
+import {TaskTypesService} from "../services/tasktype-service";
 
 export var log = LogManager.getLogger('TaskTypes.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private taskTypes : ITaskType[] = [];
+
+  constructor(
+    private taskTypesService : TaskTypesService
+  ) {
     log.debug('constructor');
+    this.taskTypes.push({id: 99, taskTypeValue: 'testing', taskTypeCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.taskTypesService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.taskTypes = jsonData;
+      }
+    );
   }
 
   detached() {

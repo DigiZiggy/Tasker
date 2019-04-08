@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {SkillsService} from "../services/skill-service";
+import {ISkill} from "../interfaces/ISkill";
 
 export var log = LogManager.getLogger('Skills.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private skill : ISkill;
+
+  constructor(
+    private router: Router,
+    private skillsService : SkillsService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.skillsService.delete(this.skill.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("skillsIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.skillsService.fetch(params.id).then(
+      skill => {
+        log.debug('skill', skill);
+        this.skill = skill;
+      }
+    );
+
   }
 
   canDeactivate() {

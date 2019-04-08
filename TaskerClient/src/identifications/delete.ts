@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {IdentificationsService} from "../services/identifications-service";
+import {IIdentification} from "../interfaces/IIdentification";
 
 export var log = LogManager.getLogger('Identifications.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private identification : IIdentification;
+
+  constructor(
+    private router: Router,
+    private identificationsService : IdentificationsService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.identificationsService.delete(this.identification.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("identificationsIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.identificationsService.fetch(params.id).then(
+      identification => {
+        log.debug('identification', identification);
+        this.identification = identification;
+      }
+    );
+
   }
 
   canDeactivate() {

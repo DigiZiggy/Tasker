@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {TaskTypesService} from "../services/tasktype-service";
+import {ITaskType} from "../interfaces/ITaskType";
 
 export var log = LogManager.getLogger('TaskTypes.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private taskType : ITaskType;
+
+  constructor(
+    private router: Router,
+    private taskTypesService : TaskTypesService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.taskTypesService.delete(this.taskType.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("taskTypesIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.taskTypesService.fetch(params.id).then(
+      taskType => {
+        log.debug('taskType', taskType);
+        this.taskType = taskType;
+      }
+    );
+
   }
 
   canDeactivate() {

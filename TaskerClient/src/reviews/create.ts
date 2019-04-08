@@ -1,14 +1,37 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {IReview} from "../interfaces/IReview";
+import {ReviewsService} from "../services/review-service";
 
 export var log = LogManager.getLogger('Reviews.Create');
 
+@autoinject
 export class Create {
 
-  constructor() {
+  private review : IReview;
+
+  constructor(
+    private router: Router,
+    private reviewsService : ReviewsService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void {
+    log.debug('review', this.review);
+    this.reviewsService.post(this.review).then(
+      response => {
+        if (response.status == 201) {
+          this.router.navigateToRoute("pricesIndex")
+        } else {
+          log.error("Error in response " + response);
+        }
+      }
+    );
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {

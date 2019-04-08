@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {ICountry} from "../interfaces/ICountry";
+import {CountriesService} from "../services/countries-services";
 
 export var log = LogManager.getLogger('Countries.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private countries : ICountry[] = [];
+
+  constructor(
+    private countriesService : CountriesService
+  ) {
     log.debug('constructor');
+    this.countries.push({id: 99, countryValue: 'testing', countryCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.countriesService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.countries = jsonData;
+      }
+    );
   }
 
   detached() {

@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {IHourlyRate} from "../interfaces/IHourlyRate";
+import {HourlyRatesService} from "../services/hourlyrates-services";
 
 export var log = LogManager.getLogger('HourlyRates.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private hourlyRates : IHourlyRate[] = [];
+
+  constructor(
+    private hourlyRatesService : HourlyRatesService
+  ) {
     log.debug('constructor');
+    this.hourlyRates.push({id: 99, hourlyRateValue: 'testing', hourlyRateCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.hourlyRatesService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.hourlyRates = jsonData;
+      }
+    );
   }
 
   detached() {

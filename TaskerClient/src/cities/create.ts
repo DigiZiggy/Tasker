@@ -1,18 +1,18 @@
 import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
 import {ICity} from "../interfaces/ICity";
-import {AddressesService} from "../services/cities-service";
+import {CitiesService} from "../services/cities-service";
 
-export var log = LogManager.getLogger('Addresses.Create');
+export var log = LogManager.getLogger('Cities.Create');
 
 @autoinject
 export class Create {
 
-  private address : IAddress;
+  private city : ICity;
 
   constructor(
     private router: Router,
-    private addressesService : AddressesService
+    private citiesService : CitiesService
   ) {
     log.debug('constructor');
   }
@@ -20,11 +20,11 @@ export class Create {
 
   // ============ View Methods ==============
   submit():void {
-    log.debug('address', this.address);
-    this.addressesService.post(this.address).then(
+    log.debug('city', this.city);
+    this.citiesService.post(this.city).then(
       response => {
         if (response.status == 201) {
-          this.router.navigateToRoute("addressesIndex")
+          this.router.navigateToRoute("citiesIndex")
         } else {
           log.error("Error in response " + response);
         }

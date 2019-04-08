@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {IInvoiceLine} from "../interfaces/IInvoiceLine";
+import {InvoiceLinesService} from "../services/invoicelines-service";
 
 export var log = LogManager.getLogger('InvoiceLines.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private invoiceLines : IInvoiceLine[] = [];
+
+  constructor(
+    private invoiceLinesService : InvoiceLinesService
+  ) {
     log.debug('constructor');
+    this.invoiceLines.push({id: 99, invoiceLineValue: 'testing', invoiceLineCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.invoiceLinesService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.invoiceLines = jsonData;
+      }
+    );
   }
 
   detached() {

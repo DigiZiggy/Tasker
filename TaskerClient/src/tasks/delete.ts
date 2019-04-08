@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {TasksService} from "../services/task-service";
+import {ITask} from "../interfaces/ITask";
 
 export var log = LogManager.getLogger('Tasks.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private task : ITask;
+
+  constructor(
+    private router: Router,
+    private tasksService : TasksService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.tasksService.delete(this.task.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("tasksIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.tasksService.fetch(params.id).then(
+      task => {
+        log.debug('task', task);
+        this.task = task;
+      }
+    );
+
   }
 
   canDeactivate() {

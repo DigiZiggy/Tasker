@@ -1,14 +1,37 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {ITaskType} from "../interfaces/ITaskType";
+import {TaskTypesService} from "../services/tasktype-service";
 
 export var log = LogManager.getLogger('TaskTypes.Create');
 
+@autoinject
 export class Create {
 
-  constructor() {
+  private taskType : ITaskType;
+
+  constructor(
+    private router: Router,
+    private taskTypesService : TaskTypesService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void {
+    log.debug('taskType', this.taskType);
+    this.taskTypesService.post(this.taskType).then(
+      response => {
+        if (response.status == 201) {
+          this.router.navigateToRoute("TaskTypesIndex")
+        } else {
+          log.error("Error in response " + response);
+        }
+      }
+    );
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {

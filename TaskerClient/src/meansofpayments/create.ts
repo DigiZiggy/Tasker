@@ -1,14 +1,37 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {IMeansOfPayment} from "../interfaces/IMeansOfPayment";
+import {MeansOfPaymentsService} from "../services/meansofpayment-service";
 
 export var log = LogManager.getLogger('MeansOfPayments.Create');
 
+@autoinject
 export class Create {
 
-  constructor() {
+  private meansOfPayment : IMeansOfPayment;
+
+  constructor(
+    private router: Router,
+    private meansOfPaymentsService : MeansOfPaymentsService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void {
+    log.debug('meansOfPayment', this.meansOfPayment);
+    this.meansOfPaymentsService.post(this.meansOfPayment).then(
+      response => {
+        if (response.status == 201) {
+          this.router.navigateToRoute("MeansOfPaymentsIndex")
+        } else {
+          log.error("Error in response " + response);
+        }
+      }
+    );
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {

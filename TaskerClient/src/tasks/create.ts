@@ -1,14 +1,37 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {ITask} from "../interfaces/ITask";
+import {TasksService} from "../services/task-service";
 
 export var log = LogManager.getLogger('Tasks.Create');
 
+@autoinject
 export class Create {
 
-  constructor() {
+  private task : ITask;
+
+  constructor(
+    private router: Router,
+    private tasksService : TasksService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void {
+    log.debug('task', this.task);
+    this.tasksService.post(this.task).then(
+      response => {
+        if (response.status == 201) {
+          this.router.navigateToRoute("TasksIndex")
+        } else {
+          log.error("Error in response " + response);
+        }
+      }
+    );
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {

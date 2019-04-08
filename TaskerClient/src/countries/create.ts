@@ -1,14 +1,37 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {ICountry} from "../interfaces/ICountry";
+import {CountriesService} from "../services/countries-services";
 
 export var log = LogManager.getLogger('Countries.Create');
 
+@autoinject
 export class Create {
 
-  constructor() {
+  private country : ICountry;
+
+  constructor(
+    private router: Router,
+    private countriesService : CountriesService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void {
+    log.debug('country', this.country);
+    this.countriesService.post(this.country).then(
+      response => {
+        if (response.status == 201) {
+          this.router.navigateToRoute("countriesIndex")
+        } else {
+          log.error("Error in response " + response);
+        }
+      }
+    );
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {

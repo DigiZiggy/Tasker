@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {UserOnTasksService} from "../services/userontask-service";
+import {IUserOnTask} from "../interfaces/IUserOnTask";
 
 export var log = LogManager.getLogger('UserOnTasks.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private userOnTask : IUserOnTask;
+
+  constructor(
+    private router: Router,
+    private userOnTasksService : UserOnTasksService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.userOnTasksService.delete(this.userOnTask.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("userOnTasksIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.userOnTasksService.fetch(params.id).then(
+      userOnTask => {
+        log.debug('userOnTask', userOnTask);
+        this.userOnTask = userOnTask;
+      }
+    );
+
   }
 
   canDeactivate() {

@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {IUserSkill} from "../interfaces/IUserSkill";
+import {UserSkillsService} from "../services/userskill-service";
 
 export var log = LogManager.getLogger('UserSkills.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private userSkills : IUserSkill[] = [];
+
+  constructor(
+    private userSkillsService : UserSkillsService
+  ) {
     log.debug('constructor');
+    this.userSkills.push({id: 99, userSkillValue: 'testing', userSkillCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.userSkillsService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.userSkills = jsonData;
+      }
+    );
   }
 
   detached() {

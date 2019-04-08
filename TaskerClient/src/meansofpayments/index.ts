@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {IMeansOfPayment} from "../interfaces/IMeansOfPayment";
+import {MeansOfPaymentsService} from "../services/meansofpayment-service";
 
 export var log = LogManager.getLogger('MeansOfPayments.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private meansOfPayments : IMeansOfPayment[] = [];
+
+  constructor(
+    private meansOfPaymentsService : MeansOfPaymentsService
+  ) {
     log.debug('constructor');
+    this.meansOfPayments.push({id: 99, meansOfPaymentValue: 'testing', meansOfPaymentCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.meansOfPaymentsService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.meansOfPayments = jsonData;
+      }
+    );
   }
 
   detached() {

@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {IIdentification} from "../interfaces/IIdentification";
+import {IdentificationsService} from "../services/identifications-service";
 
 export var log = LogManager.getLogger('Identifications.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private identifications : IIdentification[] = [];
+
+  constructor(
+    private identificationsService : IdentificationsService
+  ) {
     log.debug('constructor');
+    this.identifications.push({id: 99, identificationValue: 'testing', identificationCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.identificationsService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.identifications = jsonData;
+      }
+    );
   }
 
   detached() {

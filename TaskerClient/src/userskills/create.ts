@@ -1,14 +1,37 @@
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {IUserSkill} from "../interfaces/IUserSkill";
+import {UserSkillsService} from "../services/userskill-service";
 
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+export var log = LogManager.getLogger('UserOnTasks.Create');
 
-export var log = LogManager.getLogger('UserSkills.Create');
-
+@autoinject
 export class Create {
 
-  constructor() {
+  private userSkill : IUserSkill;
+
+  constructor(
+    private router: Router,
+    private userSkillsService : UserSkillsService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void {
+    log.debug('userSkill', this.userSkill);
+    this.userSkillsService.post(this.userSkill).then(
+      response => {
+        if (response.status == 201) {
+          this.router.navigateToRoute("UserSkillsIndex")
+        } else {
+          log.error("Error in response " + response);
+        }
+      }
+    );
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {

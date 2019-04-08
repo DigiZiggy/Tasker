@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {PaymentsService} from "../services/payment-service";
+import {IPayment} from "../interfaces/IPayment";
 
 export var log = LogManager.getLogger('Payments.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private payment : IPayment;
+
+  constructor(
+    private router: Router,
+    private paymentsService : PaymentsService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.paymentsService.delete(this.payment.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("paymentsIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.paymentsService.fetch(params.id).then(
+      payment => {
+        log.debug('payment', payment);
+        this.payment = payment;
+      }
+    );
+
   }
 
   canDeactivate() {

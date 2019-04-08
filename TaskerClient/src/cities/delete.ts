@@ -1,14 +1,34 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {CitiesService} from "../services/cities-service";
+import {ICity} from "../interfaces/ICity";
 
 export var log = LogManager.getLogger('Cities.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private city : ICity;
+
+  constructor(
+    private router: Router,
+    private citiesService : CitiesService
+  ) {
     log.debug('constructor');
   }
+
+
+  // ============ View Methods ==============
+  submit():void{
+    this.citiesService.delete(this.city.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("citiesIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+
 
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.citiesService.fetch(params.id).then(
+      city => {
+        log.debug('city', city);
+        this.city = city;
+      }
+    );
+
   }
 
   canDeactivate() {

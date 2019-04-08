@@ -1,13 +1,20 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {IPrice} from "../interfaces/IPrice";
+import {PricesService} from "../services/price-service";
 
 export var log = LogManager.getLogger('Prices.Index');
 
+@autoinject
 export class Index {
 
-  constructor() {
+  private prices : IPrice[] = [];
+
+  constructor(
+    private pricesService : PricesService
+  ) {
     log.debug('constructor');
+    this.prices.push({id: 99, priceValue: 'testing', priceCount: 2});
   }
 
   // ============ View LifeCycle events ==============
@@ -21,6 +28,12 @@ export class Index {
 
   attached() {
     log.debug('attached');
+    this.pricesService.fetchAll().then(
+      jsonData => {
+        log.debug('jsonData', jsonData);
+        this.prices = jsonData;
+      }
+    );
   }
 
   detached() {
