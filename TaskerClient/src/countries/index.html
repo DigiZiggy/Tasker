@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>Countries - Index</h1>
+
+  <p>
+    <a route-href="route: countriesCreate">Countries - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Countries
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="country of countries">
+      <td>
+        <!-- string interpolation -->
+        ${country.countryValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${country.countryCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: countriesEdit; params.bind: {id: country.id}">Edit</a> |
+        <a route-href="route: countriesDetails; params.bind: {id: country.id}">Details</a> |
+        <a route-href="route: countriesDelete; params.bind: {id: country.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

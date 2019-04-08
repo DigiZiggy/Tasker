@@ -76,7 +76,17 @@ using Microsoft.Extensions.DependencyInjection;
                 }
             );
                 
-//            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsAllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                    });
+                
+            });
 
             services
                 .AddMvc()
@@ -119,6 +129,7 @@ using Microsoft.Extensions.DependencyInjection;
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+            app.UseCors("CorsAllowAll");
 
             app.UseMvc(routes =>
             {

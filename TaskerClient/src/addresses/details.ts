@@ -1,12 +1,19 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {AddressesService} from "../services/addresses-service";
+import {IAddress} from "../interfaces/IAddress";
 
 export var log = LogManager.getLogger('Addresses.Details');
 
+@autoinject
 export class Details {
 
-  constructor() {
+  private address : IAddress | null = null;
+
+  constructor(
+    private router: Router,
+    private addressesService : AddressesService
+  ) {
     log.debug('constructor');
   }
 
@@ -37,7 +44,14 @@ export class Details {
   }
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
-    log.debug('activate');
+    log.debug('activate', params);
+    this.addressesService.fetch(params.id).then(
+      address => {
+        log.debug('address', address);
+        this.address = address;
+      }
+    );
+
   }
 
   canDeactivate() {

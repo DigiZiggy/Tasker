@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>Addresses - Index</h1>
+
+  <p>
+    <a route-href="route: addressesCreate">Addresses - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Addresses
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="address of addresses">
+      <td>
+        <!-- string interpolation -->
+        ${address.addressValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${address.addressCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: addressesEdit; params.bind: {id: address.id}">Edit</a> |
+        <a route-href="route: addressesDetails; params.bind: {id: address.id}">Details</a> |
+        <a route-href="route: addressesDelete; params.bind: {id: address.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

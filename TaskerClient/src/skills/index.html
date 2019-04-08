@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>Skills - Index</h1>
+
+  <p>
+    <a route-href="route: killsCreate">Skills - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Skills
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="skill of skills">
+      <td>
+        <!-- string interpolation -->
+        ${skill.skillValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${skill.skillCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: skillsEdit; params.bind: {id: skill.id}">Edit</a> |
+        <a route-href="route: skillsDetails; params.bind: {id: skill.id}">Details</a> |
+        <a route-href="route: skillsDelete; params.bind: {id: skill.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

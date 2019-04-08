@@ -1,15 +1,38 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {IAddress} from "../interfaces/IAddress";
+import {AddressesService} from "../services/addresses-service";
 
 export var log = LogManager.getLogger('Addresses.Create');
 
+@autoinject
 export class Create {
+  
+  private address : IAddress;
 
-  constructor() {
+  constructor(
+    private router: Router,
+    private addressesService : AddressesService
+  ) {
     log.debug('constructor');
   }
 
+
+  // ============ View Methods ==============
+  submit():void {
+      log.debug('address', this.address);
+      this.addressesService.post(this.address).then(
+        response => {
+          if (response.status == 201) {
+            this.router.navigateToRoute("addressesIndex")
+          } else {
+            log.error("Error in response " + response);
+          }
+        }
+      );
+  }
+  
+  
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
     log.debug('created');

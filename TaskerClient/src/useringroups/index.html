@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>User In Groups - Index</h1>
+
+  <p>
+    <a route-href="route: userInGroupsCreate">User In Groups - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        User In Groups
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="userInGroup of userInGroups">
+      <td>
+        <!-- string interpolation -->
+        ${userInGroup.userInGroupValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${userInGroup.userInGroupCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: userInGroupsEdit; params.bind: {id: userInGroup.id}">Edit</a> |
+        <a route-href="route: userInGroupsDetails; params.bind: {id: userInGroup.id}">Details</a> |
+        <a route-href="route: userInGroupsDelete; params.bind: {id: userInGroup.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

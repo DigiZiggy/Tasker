@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>Tasks - Index</h1>
+
+  <p>
+    <a route-href="route: tasksCreate">Tasks - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Tasks
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="task of tasks">
+      <td>
+        <!-- string interpolation -->
+        ${task.taskValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${task.taskCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: tasksEdit; params.bind: {id: task.id}">Edit</a> |
+        <a route-href="route: tasksDetails; params.bind: {id: task.id}">Details</a> |
+        <a route-href="route: tasksDelete; params.bind: {id: task.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

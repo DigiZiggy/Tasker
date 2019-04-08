@@ -1,12 +1,18 @@
-
-import {LogManager, View} from "aurelia-framework";
+import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {AddressesService} from "../services/addresses-service";
+import {IAddress} from "../interfaces/IAddress";
 
 export var log = LogManager.getLogger('Addresses.Edit');
 
+@autoinject
 export class Edit {
 
-  constructor() {
+  private address : IAddress;
+
+  constructor(
+    private addressesService : AddressesService
+  ) {
     log.debug('constructor');
   }
 

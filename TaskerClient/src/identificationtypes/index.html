@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>IdentificationTypes - Index</h1>
+
+  <p>
+    <a route-href="route: identificationTypesCreate">IdentificationTypes - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Identification Types
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="identificationType of identificationTypes">
+      <td>
+        <!-- string interpolation -->
+        ${identificationType.identificationTypeValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${identificationType.identificationTypeCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: identificationTypesEdit; params.bind: {id: identificationType.id}">Edit</a> |
+        <a route-href="route: identificationTypesDetails; params.bind: {id: identificationType.id}">Details</a> |
+        <a route-href="route: identificationTypesDelete; params.bind: {id: identificationType.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

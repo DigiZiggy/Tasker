@@ -1,3 +1,23 @@
 <template>
-  Details
+
+  <h1>Details</h1>
+
+  <div>
+    <h4>Address</h4>
+    <hr />
+    <dl class="row">
+      <dt class = "col-sm-2">
+        AddressValue
+      </dt>
+      <dd class = "col-sm-10">
+        ${address.addressValue}
+      </dd>
+    </dl>
+  </div>
+  <div>
+    <!-- if.bind - add/remove element to dom based on predicate -->
+    <a if.bind="address != null" route-href="route: addressesEdit; params.bind: {id: address.id}">Edit</a> |
+    <a route-href="route: addressesIndex">Back to List</a>
+  </div>
+
 </template>

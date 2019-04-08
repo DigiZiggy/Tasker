@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>InvoiceLines - Index</h1>
+
+  <p>
+    <a route-href="route: invoiceLinesCreate">InvoiceLines - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Invoice Lines
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="invoiceLine of invoiceLines">
+      <td>
+        <!-- string interpolation -->
+        ${invoiceLine.invoiceLineValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoiceLine.invoiceLineCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: invoiceLinesEdit; params.bind: {id: invoiceLine.id}">Edit</a> |
+        <a route-href="route: invoiceLinesDetails; params.bind: {id: invoiceLine.id}">Details</a> |
+        <a route-href="route: invoiceLinesDelete; params.bind: {id: invoiceLine.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>HourlyRates - Index</h1>
+
+  <p>
+    <a route-href="route: hourlyRatesCreate">HourlyRates - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        HourlyRates
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="hourlyRate of hourlyRates">
+      <td>
+        <!-- string interpolation -->
+        ${hourlyRate.hourlyRateValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${hourlyRate.hourlyRateCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: hourlyRatesEdit; params.bind: {id: hourlyRate.id}">Edit</a> |
+        <a route-href="route: hourlyRatesDetails; params.bind: {id: hourlyRate.id}">Details</a> |
+        <a route-href="route: hourlyRatesDelete; params.bind: {id: hourlyRate.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>

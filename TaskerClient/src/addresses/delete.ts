@@ -1,15 +1,35 @@
-
-import {LogManager, View} from "aurelia-framework";
-import {RouteConfig, NavigationInstruction} from "aurelia-router";
+import {LogManager, View, autoinject} from "aurelia-framework";
+import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
+import {AddressesService} from "../services/addresses-service";
+import {IAddress} from "../interfaces/IAddress";
 
 export var log = LogManager.getLogger('Addresses.Delete');
 
+@autoinject
 export class Delete {
 
-  constructor() {
+  private address : IAddress;
+
+  constructor(
+    private router: Router,
+    private addressesService : AddressesService
+  ) {
     log.debug('constructor');
   }
 
+
+  // ============ View Methods ==============
+  submit():void{
+    this.addressesService.delete(this.address.id).then(response => {
+      if (response.status == 200) {
+        this.router.navigateToRoute("addressesIndex");
+      } else {
+        log.debug('response', response);
+      }
+    });
+  }
+  
+  
   // ============ View LifeCycle events ==============
   created(owningView: View, myView: View) {
     log.debug('created');
@@ -38,6 +58,13 @@ export class Delete {
 
   activate(params: any, routerConfig: RouteConfig, navigationInstruction: NavigationInstruction) {
     log.debug('activate');
+    this.addressesService.fetch(params.id).then(
+      address => {
+        log.debug('address', address);
+        this.address = address;
+      }
+    );
+
   }
 
   canDeactivate() {

@@ -1,3 +1,42 @@
 <template>
-  Index
+
+  <h1>Prices - Index</h1>
+
+  <p>
+    <a route-href="route: pricesCreate">Prices - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        Value
+      </th>
+      <th>
+        Prices
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over contactTypes -->
+    <tr repeat.for="price of prices">
+      <td>
+        <!-- string interpolation -->
+        ${price.priceValue}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${price.priceCount}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: pricesEdit; params.bind: {id: price.id}">Edit</a> |
+        <a route-href="route: pricesDetails; params.bind: {id: price.id}">Details</a> |
+        <a route-href="route: pricesDelete; params.bind: {id: price.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
 </template>
