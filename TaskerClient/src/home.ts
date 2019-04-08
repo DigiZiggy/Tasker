@@ -1,7 +1,7 @@
 import {LogManager, View} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction} from "aurelia-router";
 
-export var log = LogManager.getLogger('MainRouter');
+export var log = LogManager.getLogger('Home');
 
 export class Home {
   
