@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class PaymentsController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,9 +27,21 @@ namespace WebApp.ApiControllers
 
         // GET: api/Payments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
+        public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPayments()
         {
-            var result = await _uow.Payments.AllAsync();
+            var result = new List<PaymentDTO>();
+            var payments = await _uow.Payments.AllAsync();
+            foreach (var payment in payments)
+            {
+                result.Add(new PaymentDTO()
+                {
+                    Id = payment.Id,
+                    PaymentCode = payment.PaymentCode,
+                    TimeOfPayment = payment.TimeOfPayment,
+                    Total = payment.Total,
+                    Comment = payment.Comment
+                });   
+            }
             return Ok(result);
             
         }

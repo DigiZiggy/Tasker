@@ -9,24 +9,24 @@
     <thead>
     <tr>
       <th>
-        Value
+        From when
       </th>
       <th>
-        User On Tasks
+        Till when
       </th>
       <th></th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over userOnTasks -->
     <tr repeat.for="userOnTask of userOnTasks">
       <td>
         <!-- string interpolation -->
-        ${userOnTask.userOnTaskValue}
+        ${userOnTask.Start}
       </td>
       <td>
         <!-- string interpolation -->
-        ${userOnTask.userOnTaskCount}
+        ${userOnTask.End}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

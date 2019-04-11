@@ -9,24 +9,30 @@
     <thead>
     <tr>
       <th>
-        Value
-      </th>
-      <th>
         Skills
       </th>
-      <th></th>
+      <th>
+        Descriptions
+      </th>
+      <th>
+        Comments
+      </th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over skills -->
     <tr repeat.for="skill of skills">
       <td>
         <!-- string interpolation -->
-        ${skill.skillValue}
+        ${skill.Name}
       </td>
       <td>
         <!-- string interpolation -->
-        ${skill.skillCount}
+        ${skill.Description}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${skill.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

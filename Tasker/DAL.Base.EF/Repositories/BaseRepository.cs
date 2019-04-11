@@ -15,12 +15,19 @@ namespace DAL.Base.EF.Repositories
         protected readonly DbContext RepositoryDbContext;
         protected readonly DbSet<TEntity> RepositoryDbSet;
         
-        public BaseRepository(IDataContext dataContext)
+//        public BaseRepository(IDataContext dataContext)
+//        {
+//            RepositoryDbContext = (dataContext as DbContext)?? throw new ArgumentNullException(nameof(dataContext));
+//            RepositoryDbSet = RepositoryDbContext.Set<TEntity>();
+//        }
+        
+        public  BaseRepository(IDataContext repositoryDbContext)
         {
-            RepositoryDbContext = (dataContext as DbContext)?? throw new ArgumentNullException(nameof(dataContext));
+            RepositoryDbContext = (DbContext) repositoryDbContext ;
+            // get the dbset by type from db context
             RepositoryDbSet = RepositoryDbContext.Set<TEntity>();
         }
-        
+
         public virtual IEnumerable<TEntity> All()
         {
             return RepositoryDbSet.ToList();
@@ -63,7 +70,7 @@ namespace DAL.Base.EF.Repositories
 
         public virtual void Remove(params object[] id)
         {
-            RepositoryDbSet.Remove(Find(id));
+            RepositoryDbSet.Remove(FindAsync(id).Result);
         }
 
     }

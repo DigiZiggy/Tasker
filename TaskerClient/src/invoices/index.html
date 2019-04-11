@@ -9,24 +9,44 @@
     <thead>
     <tr>
       <th>
-        Value
+        Invoice Number
       </th>
       <th>
-        Invoices
+        Date
       </th>
-      <th></th>
+      <th>
+        Total without VAT
+      </th>
+      <th>
+        VAT
+      </th>
+      <th>
+        Total
+      </th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over invoices -->
     <tr repeat.for="invoice of invoices">
       <td>
         <!-- string interpolation -->
-        ${invoice.invoiceValue}
+        ${invoice.InvoiceNumber}
       </td>
       <td>
         <!-- string interpolation -->
-        ${invoice.invoiceCount}
+        ${invoice.Date}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoice.TotalWithoutVAT}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoice.VAT}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoice.TotalWithVAT}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

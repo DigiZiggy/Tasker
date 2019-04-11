@@ -9,24 +9,24 @@
     <thead>
     <tr>
       <th>
-        Value
+        Means of Payments
       </th>
       <th>
-        Means Of Payments
+        Comments
       </th>
       <th></th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over meansOfPayments -->
     <tr repeat.for="meansOfPayment of meansOfPayments">
       <td>
         <!-- string interpolation -->
-        ${meansOfPayment.meansOfPaymentValue}
+        ${meansOfPayment.Name}
       </td>
       <td>
         <!-- string interpolation -->
-        ${meansOfPayment.meansOfPaymentCount}
+        ${meansOfPayment.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

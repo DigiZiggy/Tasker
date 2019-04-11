@@ -9,12 +9,20 @@
     <thead>
     <tr>
       <th>
-        Value
+        Price
       </th>
       <th>
-        Invoice Lines
+        Amount
       </th>
-      <th></th>
+      <th>
+        Total Without VAT
+      </th>
+      <th>
+        VAT
+      </th>
+      <th>
+        Total
+      </th>
     </tr>
     </thead>
     <tbody>
@@ -22,11 +30,23 @@
     <tr repeat.for="invoiceLine of invoiceLines">
       <td>
         <!-- string interpolation -->
-        ${invoiceLine.invoiceLineValue}
+        ${invoiceLine.Price}
       </td>
       <td>
         <!-- string interpolation -->
-        ${invoiceLine.invoiceLineCount}
+        ${invoiceLine.Amount}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoiceLine.TotalWithoutVAT}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoiceLine.VAT}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${invoiceLine.Tota}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

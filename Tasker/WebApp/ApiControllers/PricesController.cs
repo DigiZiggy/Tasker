@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class PricesController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,9 +27,21 @@ namespace WebApp.ApiControllers
 
         // GET: api/Prices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Price>>> GetPrices()
+        public async Task<ActionResult<IEnumerable<PriceDTO>>> GetPrices()
         {
-            var result = await _uow.Prices.AllAsync();
+            var result = new List<PriceDTO>();
+            var prices = await _uow.Prices.AllAsync();
+            foreach (var price in prices)
+            {
+                result.Add(new PriceDTO()
+                {
+                    Id = price.Id,
+                    Amount = price.Amount,
+                    Start = price.Start,
+                    End = price.End,
+                    Comment = price.Comment
+                });   
+            }
             return Ok(result);
             
         }

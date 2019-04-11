@@ -9,10 +9,10 @@
     <thead>
     <tr>
       <th>
-        Value
+        Start
       </th>
       <th>
-        User On Addresses
+        End
       </th>
       <th></th>
     </tr>
@@ -22,11 +22,11 @@
     <tr repeat.for="userOnAddress of userOnAddresses">
       <td>
         <!-- string interpolation -->
-        ${userOnAddress.userOnAddressValue}
+        ${userOnAddress.Start}
       </td>
       <td>
         <!-- string interpolation -->
-        ${userOnAddress.userOnAddressCount}
+        ${userOnAddress.End}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class IdentificationsController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,11 +27,22 @@ namespace WebApp.ApiControllers
 
         // GET: api/Identifications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Identification>>> GetIdentifications()
+        public async Task<ActionResult<IEnumerable<IdentificationDTO>>> GetIdentifications()
         {
-            var result = await _uow.Identifications.AllAsync();
-            return Ok(result);
+            var result = new List<IdentificationDTO>();
+            var identifications = await _uow.Identifications.AllAsync();
+            foreach (var identification in identifications)
+            {
+                result.Add(new IdentificationDTO()
+                {
+                    Id = identification.Id,
+                    DocumentNumber = identification.DocumentNumber,
+                    Start = identification.Start,
+                    End = identification.End
+                });   
+            }              
             
+            return Ok(result);           
         }
 
         // GET: api/Identifications/5

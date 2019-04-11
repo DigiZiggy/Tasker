@@ -9,24 +9,24 @@
     <thead>
     <tr>
       <th>
-        Value
+        Ratings
       </th>
       <th>
-        Reviews
+        Comments
       </th>
       <th></th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over reviews -->
     <tr repeat.for="review of reviews">
       <td>
         <!-- string interpolation -->
-        ${review.reviewValue}
+        ${review.Rating}
       </td>
       <td>
         <!-- string interpolation -->
-        ${review.reviewCount}
+        ${review.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

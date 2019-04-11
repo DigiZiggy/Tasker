@@ -9,24 +9,30 @@
     <thead>
     <tr>
       <th>
-        Value
+        Names
       </th>
       <th>
-        Price Lists
+        Description
       </th>
-      <th></th>
+      <th>
+        Start Date
+      </th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over priceLists -->
     <tr repeat.for="priceList of priceLists">
       <td>
         <!-- string interpolation -->
-        ${priceList.priceListValue}
+        ${priceList.Name}
       </td>
       <td>
         <!-- string interpolation -->
-        ${priceLists.priceListCount}
+        ${priceLists.Description}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${priceLists.Start}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

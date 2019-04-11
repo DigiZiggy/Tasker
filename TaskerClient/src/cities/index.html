@@ -9,24 +9,24 @@
     <thead>
     <tr>
       <th>
-        Value
+        Cities
       </th>
       <th>
-        Cities
+        Comment
       </th>
       <th></th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over cities -->
     <tr repeat.for="city of cities">
       <td>
         <!-- string interpolation -->
-        ${city.cityValue}
+        ${city.Name}
       </td>
       <td>
         <!-- string interpolation -->
-        ${city.cityCount}
+        ${city.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

@@ -9,24 +9,30 @@
     <thead>
     <tr>
       <th>
-        Value
+        Street
       </th>
       <th>
-        Addresses
+        District
       </th>
-      <th></th>
+      <th>
+        PostalCode
+      </th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over addresses -->
     <tr repeat.for="address of addresses">
       <td>
         <!-- string interpolation -->
-        ${address.addressValue}
+        ${address.Street}
       </td>
       <td>
         <!-- string interpolation -->
-        ${address.addressCount}
+        ${address.District}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${address.PostalCode}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

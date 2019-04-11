@@ -12,5 +12,4 @@ export class AppConfig {
   constructor() {
     log.debug('constructor');
   }
-
 }

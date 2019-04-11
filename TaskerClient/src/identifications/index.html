@@ -9,24 +9,30 @@
     <thead>
     <tr>
       <th>
-        Value
+        Document Number
       </th>
       <th>
-        Identifications
+        When Added
       </th>
-      <th></th>
+      <th>
+        Comments
+      </th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over identifications -->
     <tr repeat.for="identification of identifications">
       <td>
         <!-- string interpolation -->
-        ${identification.identificationValue}
+        ${identification.DocumentNumber}
       </td>
       <td>
         <!-- string interpolation -->
-        ${identification.identificationCount}
+        ${identification.Start}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${identification.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

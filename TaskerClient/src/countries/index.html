@@ -9,24 +9,24 @@
     <thead>
     <tr>
       <th>
-        Value
+        Country Codes
       </th>
       <th>
-        Countries
+        Country Names
       </th>
       <th></th>
     </tr>
     </thead>
     <tbody>
-    <!-- repeat this tr element, iterate over contactTypes -->
+    <!-- repeat this tr element, iterate over countries -->
     <tr repeat.for="country of countries">
       <td>
         <!-- string interpolation -->
-        ${country.countryValue}
+        ${country.countryCode}
       </td>
       <td>
         <!-- string interpolation -->
-        ${country.countryCount}
+        ${country.Name}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

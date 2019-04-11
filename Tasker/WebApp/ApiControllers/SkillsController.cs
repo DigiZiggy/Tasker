@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class SkillsController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,9 +27,20 @@ namespace WebApp.ApiControllers
 
         // GET: api/Skills
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Skill>>> GetSkills()
+        public async Task<ActionResult<IEnumerable<SkillDTO>>> GetSkills()
         {
-            var result = await _uow.Skills.AllAsync();
+            var result = new List<SkillDTO>();
+            var skills = await _uow.Skills.AllAsync();
+            foreach (var skill in skills)
+            {
+                result.Add(new SkillDTO()
+                {
+                    Id = skill.Id,
+                    Name = skill.Name,
+                    Description = skill.Description,
+                    Comment = skill.Comment
+                });   
+            }   
             return Ok(result);
             
         }

@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class CountriesController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,11 +27,21 @@ namespace WebApp.ApiControllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<IEnumerable<CountryDTO>>> GetCountries()
         {
-            var result = await _uow.Countries.AllAsync();
-            return Ok(result);
-            
+            var result = new List<CountryDTO>();
+            var countries = await _uow.Countries.AllAsync();
+            foreach (var country in countries)
+            {
+                result.Add(new CountryDTO()
+                {
+                    Id = country.Id,
+                    Name = country.Name,
+                    CountryCode = country.CountryCode
+                });   
+            }
+
+            return Ok(result);          
         }
 
         // GET: api/Countries/5

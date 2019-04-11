@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class CitiesController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,11 +27,21 @@ namespace WebApp.ApiControllers
 
         // GET: api/Cities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<ActionResult<IEnumerable<CityDTO>>> GetCities()
         {
-            var result = await _uow.Cities.AllAsync();
-            return Ok(result);
-            
+            var result = new List<CityDTO>();
+            var cities = await _uow.Cities.AllAsync();
+            foreach (var city in cities)
+            {
+                result.Add(new CityDTO()
+                {
+                    Id = city.Id,
+                    Name = city.Name,
+                    Comment = city.Comment
+                });   
+            }
+
+            return Ok(result);             
         }
 
         // GET: api/Cities/5

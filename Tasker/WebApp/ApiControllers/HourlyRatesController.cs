@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HourlyRatesController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,9 +26,20 @@ namespace WebApp.ApiControllers
 
         // GET: api/HourlyRates
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HourlyRate>>> GetHourlyRates()
+        public async Task<ActionResult<IEnumerable<HourlyRateDTO>>> GetHourlyRates()
         {
-            var result = await _uow.HourlyRates.AllAsync();
+            var result = new List<HourlyRateDTO>();
+            var hourlyRates = await _uow.HourlyRates.AllAsync();
+            foreach (var hourlyRate in hourlyRates)
+            {
+                result.Add(new HourlyRateDTO()
+                {
+                    Id = hourlyRate.Id,
+                    HourRate = hourlyRate.HourRate,
+                    Start = hourlyRate.Start,
+                    End = hourlyRate.End
+                });   
+            }            
             return Ok(result);
             
         }

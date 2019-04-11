@@ -13,6 +13,8 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class UserOnAddressesController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;

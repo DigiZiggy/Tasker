@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class ReviewsController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,11 +27,21 @@ namespace WebApp.ApiControllers
 
         // GET: api/Reviews
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
+        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
         {
-            var result = await _uow.Reviews.AllAsync();
-            return Ok(result);
+            var result = new List<ReviewDTO>();
+            var reviews = await _uow.Reviews.AllAsync();
+            foreach (var review in reviews)
+            {
+                result.Add(new ReviewDTO()
+                {
+                    Id = review.Id,
+                    Rating = review.Rating,
+                    Comment = review.Comment
+                });   
+            }   
             
+            return Ok(result);           
         }
 
         // GET: api/Reviews/5

@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using DTO;
 
 namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
     public class TasksController : ControllerBase
     {
         private readonly IAppUnitOfWork _uow;
@@ -24,9 +27,21 @@ namespace WebApp.ApiControllers
 
         // GET: api/Tasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Domain.Task>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<TaskDTO>>> GetTasks()
         {
-            var result = await _uow.Tasks.AllAsync();
+            var result = new List<TaskDTO>();
+            var tasks = await _uow.Tasks.AllAsync();
+            foreach (var task in tasks)
+            {
+                result.Add(new TaskDTO()
+                {
+                    Id = task.Id,
+                    Description = task.Description,
+                    TimeEstimate = task.TimeEstimate,
+                    Address = task.Address
+                });   
+            }
+            
             return Ok(result);
         }
 

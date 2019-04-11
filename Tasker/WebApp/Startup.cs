@@ -26,6 +26,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
  using Microsoft.IdentityModel.Tokens;
+ using Newtonsoft.Json;
  using WebApp.Helpers;
 
   namespace WebApp
@@ -102,7 +103,7 @@ using Microsoft.Extensions.DependencyInjection;
                 }).AddJsonOptions(options =>
                 {
                     //options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-//                    options.SerializerSettings.Formatting = Formatting.Indented;
+                    options.SerializerSettings.Formatting = Formatting.Indented;
                 });
             
             services.ConfigureApplicationCookie(options =>

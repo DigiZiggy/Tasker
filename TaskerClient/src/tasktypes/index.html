@@ -9,10 +9,10 @@
     <thead>
     <tr>
       <th>
-        Value
+        Name
       </th>
       <th>
-        TaskTypes
+        Comment
       </th>
       <th></th>
     </tr>
@@ -22,11 +22,11 @@
     <tr repeat.for="tasktype of tasktypes">
       <td>
         <!-- string interpolation -->
-        ${tasktype.tasktypeValue}
+        ${tasktype.Name}
       </td>
       <td>
         <!-- string interpolation -->
-        ${tasktype.tasktypeCount}
+        ${tasktype.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->
