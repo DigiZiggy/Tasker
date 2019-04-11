@@ -6,6 +6,7 @@ using Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using WebApp.Areas.Identity.Pages.Account;
 
 namespace WebApp.ApiControllers.Identity
 {
@@ -13,9 +14,9 @@ namespace WebApp.ApiControllers.Identity
     [ApiController]
     public class AccountController : ControllerBase
     {
-        
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        
         private readonly IConfiguration _configuration;
 
         public AccountController(SignInManager<AppUser> signInManager, IConfiguration configuration, UserManager<AppUser> userManager)
@@ -26,49 +27,57 @@ namespace WebApp.ApiControllers.Identity
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> Login([FromBody]LoginDTO model)
+        public async Task<ActionResult<string>> Login([FromBody] LoginDTO model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            
+            var appUser = await _userManager.FindByEmailAsync(model.Email);
+            
+            if (appUser == null)
+            {
+                // user is not found, return 403
+                return StatusCode(403);
+            }
+            
+            // do not log user in, just check that the password is ok
+            var result = await _signInManager.CheckPasswordSignInAsync(appUser, model.Password, false);
+
             if (result.Succeeded)
             {
-
-                var appUser = await _userManager.FindByEmailAsync(model.Email);
-                var claims = await _userManager.GetClaimsAsync(appUser);
+                // create claims based user 
+                var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(appUser);
                 
+                // get the Json Web Token
                 var jwt = JwtHelper.GenerateJwt(
-                    claims,
+                    claimsPrincipal.Claims, 
                     _configuration["JWT:Key"], 
-                    _configuration["JWT:Issuer"],
+                    _configuration["JWT:Issuer"], 
                     int.Parse(_configuration["JWT:ExpireDays"]));
-                
-                return Ok(jwt);
+                return Ok(new {token = jwt});
             }
 
             return StatusCode(403);
         }
         
         [HttpPost]
-        public async Task<string> Register([FromBody]RegisterDTO model)
+        public async Task<string> Register([FromBody] RegisterDTO model)
         {
             return "foo";
         }
+
 
         public class LoginDTO
         {
             public string Email { get; set; }
             public string Password { get; set; }
-            
         }
-        
+
         public class RegisterDTO
         {
             public string Email { get; set; }
-            
+
             [Required]
             [MinLength(6)]
             public string Password { get; set; }
-            
-        }
-        
+        }      
     }
-}
+}  

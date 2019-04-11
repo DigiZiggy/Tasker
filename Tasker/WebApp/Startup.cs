@@ -1,7 +1,9 @@
 ﻿﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+ using System.IdentityModel.Tokens.Jwt;
+ using System.Linq;
+ using System.Text;
+ using System.Threading.Tasks;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
  using Contracts.DAL.Base;
@@ -23,7 +25,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-  using WebApp.Helpers;
+ using Microsoft.IdentityModel.Tokens;
+ using WebApp.Helpers;
 
   namespace WebApp
 {
@@ -96,6 +99,10 @@ using Microsoft.Extensions.DependencyInjection;
                     options.AllowAreas = true;
                     options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
                     options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+                }).AddJsonOptions(options =>
+                {
+                    //options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+//                    options.SerializerSettings.Formatting = Formatting.Indented;
                 });
             
             services.ConfigureApplicationCookie(options =>
@@ -107,6 +114,23 @@ using Microsoft.Extensions.DependencyInjection;
 
             services.AddSingleton<IEmailSender, EmailSender>();
 
+            // =============== JWT support ===============
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            services
+                .AddAuthentication()
+                .AddCookie(options => { options.SlidingExpiration = true; })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["JWT:Issuer"],
+                        ValidAudience = Configuration["JWT:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"])),
+                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

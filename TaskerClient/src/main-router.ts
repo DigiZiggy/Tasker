@@ -20,6 +20,11 @@ export class MainRouter {
       [
         {route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('home'), nav: true, title: 'Home'},
 
+        {route: 'identity/login', name: 'identity' + 'Login', moduleId: PLATFORM.moduleName('identity/login'), nav: false, title: 'Login'},
+        {route: 'identity/register', name: 'identity' + 'Register', moduleId: PLATFORM.moduleName('identity/register'), nav: false, title: 'Register'},
+        {route: 'identity/logout', name: 'identity' + 'Logout', moduleId: PLATFORM.moduleName('identity/logout'), nav: false, title: 'Logout'},
+
+
         {route: ['addresses/index', 'addresses'], name: 'addresses' + 'Index', moduleId: PLATFORM.moduleName('addresses/index'), nav: false, title: 'Addresses'},
         {route: 'addresses/create', name: 'addresses' + 'Create', moduleId: PLATFORM.moduleName('addresses/create'), nav: false, title: 'Addresses Create'},
         {route: 'addresses/edit/:id', name: 'addresses' + 'Edit', moduleId: PLATFORM.moduleName('addresses/edit'), nav: false, title: 'Addresses Edit'},
