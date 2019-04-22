@@ -1,0 +1,54 @@
+@model WebApp.ViewModels.UserOnAddressEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>UserOnAddress</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserOnAddress.Start" class="control-label"></label>
+                <input asp-for="UserOnAddress.Start" class="form-control" />
+                <span asp-validation-for="UserOnAddress.Start" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserOnAddress.End" class="control-label"></label>
+                <input asp-for="UserOnAddress.End" class="form-control" />
+                <span asp-validation-for="UserOnAddress.End" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserOnAddress.UserId" class="control-label"></label>
+                <select asp-for="UserOnAddress.UserId" class="form-control" asp-items="Model.UserSelectList"></select>
+                <span asp-validation-for="UserOnAddress.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserOnAddress.AddressId" class="control-label"></label>
+                <select asp-for="UserOnAddress.AddressId" class="form-control" asp-items="Model.AddressSelectList"></select>
+                <span asp-validation-for="UserOnAddress.AddressId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserOnAddress.AppUserId" class="control-label"></label>
+                <select asp-for="UserOnAddress.AppUserId" class="form-control" asp-items="Model.AppUserSelectList"></select>
+                <span asp-validation-for="UserOnAddress.AppUserId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="UserOnAddress.Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

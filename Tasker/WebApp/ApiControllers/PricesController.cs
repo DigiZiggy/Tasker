@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using DTO;
 
 namespace WebApp.ApiControllers
 {
@@ -29,20 +29,21 @@ namespace WebApp.ApiControllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PriceDTO>>> GetPrices()
         {
-            var result = new List<PriceDTO>();
-            var prices = await _uow.Prices.AllAsync();
-            foreach (var price in prices)
-            {
-                result.Add(new PriceDTO()
-                {
-                    Id = price.Id,
-                    Amount = price.Amount,
-                    Start = price.Start,
-                    End = price.End,
-                    Comment = price.Comment
-                });   
-            }
-            return Ok(result);
+//            var result = new List<PriceDTO>();
+//            var prices = await _uow.Prices.AllAsync();
+//            foreach (var price in prices)
+//            {
+//                result.Add(new PriceDTO()
+//                {
+//                    Id = price.Id,
+//                    Amount = price.Amount,
+//                    Start = price.Start,
+//                    End = price.End,
+//                    Comment = price.Comment
+//                });   
+//            }
+//            return Ok(result);
+            return Ok(await _uow.Prices.GetAllWithPriceAsync());           
             
         }
 

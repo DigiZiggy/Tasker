@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Repositories;
+using DAL.App.DTO;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,23 @@ namespace DAL.App.EF.Repositories
             }
 
             return address;
+        }
+        
+        /// <summary>
+        /// Get all the Addresses from db
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<AddressDTO>> GetAllWithAddressAsync()
+        {          
+            return await RepositoryDbSet
+                .Select(a => new AddressDTO()
+                {
+                    Id = a.Id,
+                    Street = a.Street,
+                    District = a.District,
+                    PostalCode = a.PostalCode
+                })
+                .ToListAsync();
         }
     }
 }

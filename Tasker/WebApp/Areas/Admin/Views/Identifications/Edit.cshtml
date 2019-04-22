@@ -1,0 +1,64 @@
+@model WebApp.ViewModels.IdentificationEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Identification</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Identification.DocumentNumber" class="control-label"></label>
+                <input asp-for="Identification.DocumentNumber" class="form-control" />
+                <span asp-validation-for="Identification.DocumentNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.Start" class="control-label"></label>
+                <input asp-for="Identification.Start" class="form-control" />
+                <span asp-validation-for="Identification.Start" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.End" class="control-label"></label>
+                <input asp-for="Identification.End" class="form-control" />
+                <span asp-validation-for="Identification.End" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.Comment" class="control-label"></label>
+                <input asp-for="Identification.Comment" class="form-control" />
+                <span asp-validation-for="Identification.Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.UserId" class="control-label"></label>
+                <select asp-for="Identification.UserId" class="form-control" asp-items="Model.UserSelectList"></select>
+                <span asp-validation-for="Identification.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.IdentificationTypeId" class="control-label"></label>
+                <select asp-for="Identification.IdentificationTypeId" class="form-control" asp-items="Model.IdentificationTypeSelectList"></select>
+                <span asp-validation-for="Identification.IdentificationTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.AppUserId" class="control-label"></label>
+                <select asp-for="Identification.AppUserId" class="form-control" asp-items="Model.AppUserSelectList"></select>
+                <span asp-validation-for="Identification.AppUserId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Identification.Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

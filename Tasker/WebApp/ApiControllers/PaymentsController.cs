@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using DTO;
 
 namespace WebApp.ApiControllers
 {
@@ -29,20 +29,21 @@ namespace WebApp.ApiControllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPayments()
         {
-            var result = new List<PaymentDTO>();
-            var payments = await _uow.Payments.AllAsync();
-            foreach (var payment in payments)
-            {
-                result.Add(new PaymentDTO()
-                {
-                    Id = payment.Id,
-                    PaymentCode = payment.PaymentCode,
-                    TimeOfPayment = payment.TimeOfPayment,
-                    Total = payment.Total,
-                    Comment = payment.Comment
-                });   
-            }
-            return Ok(result);
+//            var result = new List<PaymentDTO>();
+//            var payments = await _uow.Payments.AllAsync();
+//            foreach (var payment in payments)
+//            {
+//                result.Add(new PaymentDTO()
+//                {
+//                    Id = payment.Id,
+//                    PaymentCode = payment.PaymentCode,
+//                    TimeOfPayment = payment.TimeOfPayment,
+//                    Total = payment.Total,
+//                    Comment = payment.Comment
+//                });   
+//            }
+//            return Ok(result);
+            return Ok(await _uow.Payments.GetAllWithPaymentAsync());           
             
         }
 

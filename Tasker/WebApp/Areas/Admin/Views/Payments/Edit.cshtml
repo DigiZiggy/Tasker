@@ -1,0 +1,59 @@
+@model WebApp.ViewModels.PaymentEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Payment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Payment.PaymentCode" class="control-label"></label>
+                <input asp-for="Payment.PaymentCode" class="form-control" />
+                <span asp-validation-for="Payment.PaymentCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Payment.TimeOfPayment" class="control-label"></label>
+                <input asp-for="Payment.TimeOfPayment" class="form-control" />
+                <span asp-validation-for="Payment.TimeOfPayment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Payment.Total" class="control-label"></label>
+                <input asp-for="Payment.Total" class="form-control" />
+                <span asp-validation-for="Payment.Total" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Payment.Comment" class="control-label"></label>
+                <input asp-for="Payment.Comment" class="form-control" />
+                <span asp-validation-for="Payment.Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Payment.MeansOfPaymentId" class="control-label"></label>
+                <select asp-for="Payment.MeansOfPaymentId" class="form-control" asp-items="Model.MeansOfPaymentSelectList"></select>
+                <span asp-validation-for="Payment.MeansOfPaymentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Payment.InvoiceId" class="control-label"></label>
+                <select asp-for="Payment.InvoiceId" class="form-control" asp-items="Model.InvoiceSelectList"></select>
+                <span asp-validation-for="Payment.InvoiceId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Payment.Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

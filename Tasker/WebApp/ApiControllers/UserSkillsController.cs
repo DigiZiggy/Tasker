@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using DTO;
 
 namespace WebApp.ApiControllers
 {
@@ -29,21 +29,23 @@ namespace WebApp.ApiControllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserSkillDTO>>> GetUserSkills()
         {
-            var result = new List<UserSkillDTO>();
-            var userSkills = await _uow.UserSills.AllAsync();
-            foreach (var userSkill in userSkills)
-            {
-                result.Add(new UserSkillDTO()
-                {
-                    Id = userSkill.Id,
-                    Name = userSkill.Name,
-                    Start = userSkill.Start,
-                    End = userSkill.End,
-                    Comment = userSkill.Comment
-                });   
-            }
-            
-            return Ok(result);        
+//            var result = new List<UserSkillDTO>();
+//            var userSkills = await _uow.UserSills.AllAsync();
+//            foreach (var userSkill in userSkills)
+//            {
+//                result.Add(new UserSkillDTO()
+//                {
+//                    Id = userSkill.Id,
+//                    Name = userSkill.Name,
+//                    Start = userSkill.Start,
+//                    End = userSkill.End,
+//                    Comment = userSkill.Comment
+//                });   
+//            }
+//            
+//            return Ok(result); 
+            return Ok(await _uow.UserSills.GetAllWithUserSkillAsync());           
+
         }
 
         // GET: api/UserSkills/5

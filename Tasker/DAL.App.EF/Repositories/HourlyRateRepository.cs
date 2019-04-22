@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
+using DAL.App.DTO;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,23 @@ namespace DAL.App.EF.Repositories
             }
 
             return hourlyRate;
+        }
+        
+        /// <summary>
+        /// Get all the Hourly Rates from db
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<HourlyRateDTO>> GetAllWithHourlyRateAsync()
+        {          
+            return await RepositoryDbSet
+                .Select(h => new HourlyRateDTO()
+                {
+                    Id = h.Id,
+                    HourRate = h.HourRate,
+                    Start = h.Start,
+                    End = h.End
+                })
+                .ToListAsync();
         }
     }
 }

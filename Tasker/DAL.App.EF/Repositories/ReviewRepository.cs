@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
+using DAL.App.DTO;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,22 @@ namespace DAL.App.EF.Repositories
             }
 
             return review;
+        }
+        
+        /// <summary>
+        /// Get all the Reviews from db
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<ReviewDTO>> GetAllWithReviewAsync()
+        {          
+            return await RepositoryDbSet
+                .Select(r => new ReviewDTO()
+                {
+                    Id = r.Id,
+                    Rating = r.Rating,
+                    Comment = r.Comment
+                })
+                .ToListAsync();
         }
     }
 }

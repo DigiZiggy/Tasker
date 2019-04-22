@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using DTO;
 
 namespace WebApp.ApiControllers
 {
@@ -29,20 +29,22 @@ namespace WebApp.ApiControllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IdentificationDTO>>> GetIdentifications()
         {
-            var result = new List<IdentificationDTO>();
-            var identifications = await _uow.Identifications.AllAsync();
-            foreach (var identification in identifications)
-            {
-                result.Add(new IdentificationDTO()
-                {
-                    Id = identification.Id,
-                    DocumentNumber = identification.DocumentNumber,
-                    Start = identification.Start,
-                    End = identification.End
-                });   
-            }              
-            
-            return Ok(result);           
+//            var result = new List<IdentificationDTO>();
+//            var identifications = await _uow.Identifications.AllAsync();
+//            foreach (var identification in identifications)
+//            {
+//                result.Add(new IdentificationDTO()
+//                {
+//                    Id = identification.Id,
+//                    DocumentNumber = identification.DocumentNumber,
+//                    Start = identification.Start,
+//                    End = identification.End
+//                });   
+//            }              
+//            
+//            return Ok(result); 
+            return Ok(await _uow.Identifications.GetAllWithIdentificationAsync());           
+
         }
 
         // GET: api/Identifications/5

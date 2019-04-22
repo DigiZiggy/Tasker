@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Repositories;
+using DAL.App.DTO;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,23 @@ namespace DAL.App.EF.Repositories
             }
 
             return task;
+        }
+        
+        /// <summary>
+        /// Get all the Tasks from db
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<TaskDTO>> GetAllWithTaskAsync()
+        {          
+            return await RepositoryDbSet
+                .Select(t => new TaskDTO()
+                {
+                    Id = t.Id,
+                    Description = t.Description,
+                    TimeEstimate = t.TimeEstimate,
+                    Address = t.Address
+                })
+                .ToListAsync();
         }
     }
 }

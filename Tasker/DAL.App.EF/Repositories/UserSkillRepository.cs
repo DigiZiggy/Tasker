@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
+using DAL.App.DTO;
 using DAL.Base.EF.Repositories;
 using Domain;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,24 @@ namespace DAL.App.EF.Repositories
             }
 
             return userSkill;
+        }
+        
+        /// <summary>
+        /// Get all the User Skills from db
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<IEnumerable<UserSkillDTO>> GetAllWithUserSkillAsync()
+        {          
+            return await RepositoryDbSet
+                .Select(u => new UserSkillDTO()
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Start = u.Start,
+                    End = u.End,
+                    Comment = u.Comment
+                })
+                .ToListAsync();
         }
     }
 }

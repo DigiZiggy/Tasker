@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
-using DTO;
 
 namespace WebApp.ApiControllers
 {
@@ -29,19 +29,21 @@ namespace WebApp.ApiControllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
         {
-            var result = new List<ReviewDTO>();
-            var reviews = await _uow.Reviews.AllAsync();
-            foreach (var review in reviews)
-            {
-                result.Add(new ReviewDTO()
-                {
-                    Id = review.Id,
-                    Rating = review.Rating,
-                    Comment = review.Comment
-                });   
-            }   
-            
-            return Ok(result);           
+//            var result = new List<ReviewDTO>();
+//            var reviews = await _uow.Reviews.AllAsync();
+//            foreach (var review in reviews)
+//            {
+//                result.Add(new ReviewDTO()
+//                {
+//                    Id = review.Id,
+//                    Rating = review.Rating,
+//                    Comment = review.Comment
+//                });   
+//            }   
+//            
+//            return Ok(result); 
+            return Ok(await _uow.Reviews.GetAllWithReviewAsync());           
+
         }
 
         // GET: api/Reviews/5
