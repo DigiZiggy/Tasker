@@ -1,82 +1,83 @@
 using Contracts.DAL.App.Repositories;
+using Contracts.DAL.Base.Helpers;
 using DAL.App.EF.Repositories;
 using DAL.Base.EF.Helpers;
 
 namespace DAL.App.EF.Helpers
 {
-    public class AppRepositoryFactory : BaseRepositoryFactory
+    public class AppBaseRepositoryFactory : BaseRepositoryFactory, IBaseRepositoryFactory
     {
-        public AppRepositoryFactory()
+        public AppBaseRepositoryFactory()
         {
             // add to dict all the repo creation methods we might need
             
-            RepositoryCreationMethods.Add(typeof(IAddressRepository), 
+            _repositoryCreationMethods.Add(typeof(IAddressRepository), 
                 dataContext => new AddressRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(ICityRepository), 
+            _repositoryCreationMethods.Add(typeof(ICityRepository), 
                 dataContext => new CityRepository(dataContext));
 
-            RepositoryCreationMethods.Add(typeof(ICountryRepository), 
+            _repositoryCreationMethods.Add(typeof(ICountryRepository), 
                 dataContext => new CountryRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IHourlyRateRepository), 
+            _repositoryCreationMethods.Add(typeof(IHourlyRateRepository), 
                 dataContext => new HourlyRateRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IIdentificationRepository), 
+            _repositoryCreationMethods.Add(typeof(IIdentificationRepository), 
                 dataContext => new IdentificationRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IIdentificationTypeRepository), 
+            _repositoryCreationMethods.Add(typeof(IIdentificationTypeRepository), 
                 dataContext => new IdentificationTypeRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IInvoiceLineRepository), 
+            _repositoryCreationMethods.Add(typeof(IInvoiceLineRepository), 
                 dataContext => new InvoiceLineRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IInvoiceRepository), 
+            _repositoryCreationMethods.Add(typeof(IInvoiceRepository), 
                 dataContext => new InvoiceRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IMeansOfPaymentRepository), 
+            _repositoryCreationMethods.Add(typeof(IMeansOfPaymentRepository), 
                 dataContext => new MeansOfPaymentRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IPaymentRepository), 
+            _repositoryCreationMethods.Add(typeof(IPaymentRepository), 
                 dataContext => new PaymentRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IPriceListRepository), 
+            _repositoryCreationMethods.Add(typeof(IPriceListRepository), 
                 dataContext => new PriceListRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IPriceRepository), 
+            _repositoryCreationMethods.Add(typeof(IPriceRepository), 
                 dataContext => new PriceRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IReviewRepository), 
+            _repositoryCreationMethods.Add(typeof(IReviewRepository), 
                 dataContext => new ReviewRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(ISkillRepository), 
+            _repositoryCreationMethods.Add(typeof(ISkillRepository), 
                 dataContext => new SkillRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(ITaskRepository), 
+            _repositoryCreationMethods.Add(typeof(ITaskRepository), 
                 dataContext => new TaskRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(ITaskTypeRepository), 
+            _repositoryCreationMethods.Add(typeof(ITaskTypeRepository), 
                 dataContext => new TaskTypeRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserGroupRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserGroupRepository), 
                 dataContext => new UserGroupRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserInGroupRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserInGroupRepository), 
                 dataContext => new UserInGroupRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserOnAddressRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserOnAddressRepository), 
                 dataContext => new UserOnAddressRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserOnTaskRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserOnTaskRepository), 
                 dataContext => new UserOnTaskRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserRepository), 
                 dataContext => new UserRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserSkillRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserSkillRepository), 
                 dataContext => new UserSkillRepository(dataContext));
             
-            RepositoryCreationMethods.Add(typeof(IUserTypeRepository), 
+            _repositoryCreationMethods.Add(typeof(IUserTypeRepository), 
                 dataContext => new UserTypeRepository(dataContext));
           
         }

@@ -7,30 +7,31 @@ using Remotion.Linq.Clauses.ResultOperators;
 
 namespace DAL.Base.EF.Helpers
 {
-    public class BaseRepositoryFactory : IRepositoryFactory
+    public class BaseRepositoryFactory : IBaseRepositoryFactory
     {
-        protected readonly Dictionary<Type, Func<IDataContext, object>> RepositoryCreationMethods;
+        protected readonly Dictionary<Type, Func<IDataContext, object>> _repositoryCreationMethods;
 
         public BaseRepositoryFactory() : this(new Dictionary<Type, Func<IDataContext, object>>())
         {
             
         }
+        public BaseRepositoryFactory(Dictionary<Type, Func<IDataContext, object>> repositoryCreationMethods)
+        {
+            _repositoryCreationMethods = repositoryCreationMethods;
+        }
+
+        public Func<IDataContext, object> GetRepositoryFactory<TRepository>(){
+            if (_repositoryCreationMethods.ContainsKey(typeof(TRepository)))
+            {
+                return  _repositoryCreationMethods[typeof(TRepository)];
+            }
+
+            throw new NullReferenceException("No repo creation method found for " + typeof(TRepository).FullName);
+        }
         
-        public BaseRepositoryFactory(Dictionary<Type, Func<IDataContext, object>> repositoryCreationMethod)
+        public  Func<IDataContext, object> GetEntityRepositoryFactory<TEntity>() where TEntity : class, IBaseEntity<int>, new()
         {
-            RepositoryCreationMethods = repositoryCreationMethod;
-        }
-
-        public Func<IDataContext, object> GetRepositoryFactory<TRepo>()
-        {
-            //try to get repo by type from cache dictionary
-            RepositoryCreationMethods.TryGetValue(typeof(TRepo), out var repoCreationMethod);
-            return repoCreationMethod;
-        }
-
-        public Func<IDataContext, object> GetRepositoryFactoryForEntity<TEntity>() where TEntity : class, IBaseEntity, new()
-        {
-            return dataContext => new BaseRepository<TEntity>(dataContext);
+            return (IDataContext dataContext) => new BaseRepositoryAsync<TEntity>(dataContext);
         }
     }
 }

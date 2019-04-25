@@ -48,8 +48,8 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new UserInGroupCreateViewModel()
             {
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id"),
-                UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id"),
+                UserGroupSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserGroup>().AllAsync(), "Id", "Id"),
             };
             
             return View(vm);
@@ -69,9 +69,9 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id",
                 "Id", vm.UserInGroup.UserId);
-            vm.UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id", vm.UserInGroup.UserGroupId);
+            vm.UserGroupSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserGroup>().AllAsync(), "Id", "Id", vm.UserInGroup.UserGroupId);
 
             return View(vm);
         }
@@ -92,8 +92,8 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new UserInGroupEditViewModel()
             {
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", userInGroup.UserId),
-                UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id", userInGroup.UserGroupId),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", userInGroup.UserId),
+                UserGroupSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserGroup>().AllAsync(), "Id", "Id", userInGroup.UserGroupId),
             };
             return View(vm);
         }
@@ -118,9 +118,9 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id",
                 "Id", vm.UserInGroup.UserId);
-            vm.UserGroupSelectList = new SelectList(await _uow.BaseRepository<UserGroup>().AllAsync(), "Id", "Id", vm.UserInGroup.UserGroupId);
+            vm.UserGroupSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserGroup>().AllAsync(), "Id", "Id", vm.UserInGroup.UserGroupId);
 
             return View(vm);
         }

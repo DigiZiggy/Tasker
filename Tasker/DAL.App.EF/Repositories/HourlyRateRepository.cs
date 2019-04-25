@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class HourlyRateRepository : BaseRepository<HourlyRate>, IHourlyRateRepository
+    public class HourlyRateRepository : BaseRepositoryAsync<HourlyRate>, IHourlyRateRepository
     {
         public HourlyRateRepository(IDataContext dataContext) : base(dataContext)
         {

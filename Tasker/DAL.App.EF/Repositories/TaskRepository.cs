@@ -12,7 +12,7 @@ using Task = Domain.Task;
 
 namespace DAL.App.EF.Repositories
 {
-    public class TaskRepository : BaseRepository<Task>, ITaskRepository
+    public class TaskRepository : BaseRepositoryAsync<Task>, ITaskRepository
     {
         public TaskRepository(IDataContext dataContext) : base(dataContext)
         {

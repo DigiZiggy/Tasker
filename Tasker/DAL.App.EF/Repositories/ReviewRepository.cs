@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class ReviewRepository : BaseRepository<Review>, IReviewRepository
+    public class ReviewRepository : BaseRepositoryAsync<Review>, IReviewRepository
     {
         public ReviewRepository(IDataContext dataContext) : base(dataContext)
         {

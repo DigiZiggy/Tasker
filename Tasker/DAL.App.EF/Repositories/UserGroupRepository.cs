@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserGroupRepository : BaseRepository<UserGroup>, IUserGroupRepository
+    public class UserGroupRepository : BaseRepositoryAsync<UserGroup>, IUserGroupRepository
     {
         public UserGroupRepository(IDataContext dataContext) : base(dataContext)
         {

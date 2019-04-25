@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PriceRepository : BaseRepository<Price>, IPriceRepository
+    public class PriceRepository : BaseRepositoryAsync<Price>, IPriceRepository
     {
         public PriceRepository(IDataContext dataContext) : base(dataContext)
         {

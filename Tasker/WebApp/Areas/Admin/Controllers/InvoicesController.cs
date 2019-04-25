@@ -47,7 +47,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new InvoiceCreateViewModel()
             {
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id"),
 
             };
             
@@ -68,7 +68,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id",
                 "Id", vm.Invoice.UserId);
 
             return View(vm);
@@ -90,7 +90,7 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new InvoiceEditViewModel()
             {
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", invoice.UserId),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", invoice.UserId),
 
             };
             
@@ -116,7 +116,7 @@ namespace WebApp.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id",
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id",
                 "Id", vm.Invoice.UserId);
             
             return View(vm);

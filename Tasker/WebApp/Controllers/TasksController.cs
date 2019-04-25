@@ -53,8 +53,8 @@ namespace WebApp.Controllers
         {
             var vm = new TaskCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
-                TaskTypeSelectList = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Id"),
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
+                TaskTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskType>().AllAsync(), "Id", "Id"),
 
             };
 
@@ -75,9 +75,9 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.Task.AppUserId);
-            vm.TaskTypeSelectList = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id",
+            vm.TaskTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskType>().AllAsync(), "Id",
                 "Id", vm.Task.TaskTypeId);
 
             return View(vm);
@@ -99,8 +99,8 @@ namespace WebApp.Controllers
             
             var vm = new TaskEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId),
-                TaskTypeSelectList = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id", "Id", task.TaskTypeId),
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", task.AppUserId),
+                TaskTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskType>().AllAsync(), "Id", "Id", task.TaskTypeId),
 
             };
 
@@ -126,9 +126,9 @@ namespace WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.Task.AppUserId);
-            vm.TaskTypeSelectList = new SelectList(await _uow.BaseRepository<TaskType>().AllAsync(), "Id",
+            vm.TaskTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskType>().AllAsync(), "Id",
                 "Id", vm.Task.TaskTypeId);
             
             return View(vm);

@@ -52,7 +52,7 @@ namespace WebApp.Controllers
         {
             var vm = new PriceCreateViewModel()
             {
-                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "FirstName"),
+                PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id", "FirstName"),
 
             };
 
@@ -73,7 +73,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id",
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id",
                 "Id", vm.Price.PriceListId);
 
             return View(vm);
@@ -95,7 +95,7 @@ namespace WebApp.Controllers
             
             var vm = new PriceEditViewModel()
             {
-                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "FirstName", price.PriceListId),
+                PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id", "FirstName", price.PriceListId),
 
             };
 
@@ -122,7 +122,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id",
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id",
                 "Id", vm.Price.PriceListId);
 
             return View(vm);

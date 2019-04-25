@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserOnAddressRepository : BaseRepository<UserOnAddress>, IUserOnAddressRepository
+    public class UserOnAddressRepository : BaseRepositoryAsync<UserOnAddress>, IUserOnAddressRepository
     {
         public UserOnAddressRepository(IDataContext dataContext) : base(dataContext)
         {

@@ -47,7 +47,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new CityCreateViewModel()
             {
-                CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id"),
+                CountrySelectList = new SelectList(await _uow.BaseRepositoryAsync<Country>().AllAsync(), "Id", "Id"),
             };
 
             return View(vm);
@@ -67,7 +67,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id", vm.City.CountryId);
+            vm.CountrySelectList = new SelectList(await _uow.BaseRepositoryAsync<Country>().AllAsync(), "Id", "Id", vm.City.CountryId);
 
             return View(vm);
         }
@@ -87,7 +87,7 @@ namespace WebApp.Areas.Admin.Controllers
             }
             var vm = new CityEditViewModel()
             {
-                CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id", city.CountryId),
+                CountrySelectList = new SelectList(await _uow.BaseRepositoryAsync<Country>().AllAsync(), "Id", "Id", city.CountryId),
             };
             
             return View(vm);
@@ -113,7 +113,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.CountrySelectList = new SelectList(await _uow.BaseRepository<Country>().AllAsync(), "Id", "Id", vm.City.CountryId);
+            vm.CountrySelectList = new SelectList(await _uow.BaseRepositoryAsync<Country>().AllAsync(), "Id", "Id", vm.City.CountryId);
             return View(vm);
         }
 

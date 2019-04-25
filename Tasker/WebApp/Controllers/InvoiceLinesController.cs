@@ -53,8 +53,8 @@ namespace WebApp.Controllers
         {
             var vm = new InvoiceLinesCreateViewModel()
             {
-                InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id", "Id"),
-                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id"),
+                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "Id"),
+                TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id", "Id"),
             };
             
             return View(vm);
@@ -74,9 +74,9 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
                                  
-            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id",
+            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id",
                 "Id", vm.InvoiceLine.InvoiceId);
-            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id",
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id",
                 "Id", vm.InvoiceLine.TaskId);
             
             return View(vm);
@@ -98,8 +98,8 @@ namespace WebApp.Controllers
             
             var vm = new InvoiceLinesEditViewModel()
             {
-                InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id", "Id", invoiceLine.InvoiceId),
-                TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id", "Id", invoiceLine.TaskId),
+                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "Id", invoiceLine.InvoiceId),
+                TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id", "Id", invoiceLine.TaskId),
             };
             
             return View(vm);
@@ -125,9 +125,9 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepository<Invoice>().AllAsync(), "Id",
+            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id",
                 "Id", vm.InvoiceLine.InvoiceId);
-            vm.TaskSelectList = new SelectList(await _uow.BaseRepository<Domain.Task>().AllAsync(), "Id",
+            vm.TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id",
                 "Id", vm.InvoiceLine.TaskId);
 
             return View(vm);

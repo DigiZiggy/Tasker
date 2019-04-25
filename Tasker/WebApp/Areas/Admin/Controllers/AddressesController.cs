@@ -48,7 +48,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new AddressCreateViewModel()
             {
-                CitySelectList = new SelectList(await _uow.BaseRepository<City>().AllAsync(), "Id", "Id"),
+                CitySelectList = new SelectList(await _uow.BaseRepositoryAsync<City>().AllAsync(), "Id", "Id"),
             };
             return View(vm);
         }
@@ -67,7 +67,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.CitySelectList = new SelectList(await _uow.BaseRepository<City>().AllAsync(), "Id", "Id", vm.Address.CityId);
+            vm.CitySelectList = new SelectList(await _uow.BaseRepositoryAsync<City>().AllAsync(), "Id", "Id", vm.Address.CityId);
 
             return View(vm);
         }
@@ -88,7 +88,7 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new AddressEditViewModel()
             {
-                CitySelectList = new SelectList(await _uow.BaseRepository<City>().AllAsync(), "Id", "Id", address.CityId),
+                CitySelectList = new SelectList(await _uow.BaseRepositoryAsync<City>().AllAsync(), "Id", "Id", address.CityId),
             };
             
             return View(vm);
@@ -114,7 +114,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.CitySelectList = new SelectList(await _uow.BaseRepository<City>().AllAsync(), "Id", "Id", vm.Address.CityId);
+            vm.CitySelectList = new SelectList(await _uow.BaseRepositoryAsync<City>().AllAsync(), "Id", "Id", vm.Address.CityId);
             return View(vm);
         }
 

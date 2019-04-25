@@ -12,7 +12,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace DAL.App.EF.Repositories
 {
-    public class CountryRepository : BaseRepository<Country>, ICountryRepository
+    public class CountryRepository : BaseRepositoryAsync<Country>, ICountryRepository
     {
         public CountryRepository(IDataContext dataContext) : base(dataContext)
         {

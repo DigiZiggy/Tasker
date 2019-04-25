@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class SkillRepository : BaseRepository<Skill>, ISkillRepository
+    public class SkillRepository : BaseRepositoryAsync<Skill>, ISkillRepository
     {
         public SkillRepository(IDataContext dataContext) : base(dataContext)
         {

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class AddressRepository : BaseRepository<Address>, IAddressRepository
+    public class AddressRepository : BaseRepositoryAsync<Address>, IAddressRepository
     {
         public AddressRepository(IDataContext dataContext) : base(dataContext)
         {

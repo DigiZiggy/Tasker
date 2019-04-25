@@ -8,29 +8,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF.Repositories
 {
-    public class BaseRepository<TEntity> : IBaseRepositoryAsync<TEntity> 
-        where TEntity : class, IBaseEntity, new()
-    {
 
+    public class BaseRepositoryAsync<TEntity> : BaseRepositoryAsync<TEntity, int>
+        where TEntity: class, IBaseEntity<int>, new()
+    {
+        public BaseRepositoryAsync(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        {
+        }
+    }
+
+    
+    public class BaseRepositoryAsync<TEntity,TKey>: IBaseRepositoryAsync<TEntity,TKey>
+        where TEntity: class, IBaseEntity<TKey>, new()
+        where TKey: IComparable
+    {
         protected readonly DbContext RepositoryDbContext;
         protected readonly DbSet<TEntity> RepositoryDbSet;
-        
-//        public BaseRepository(IDataContext dataContext)
-//        {
-//            RepositoryDbContext = (dataContext as DbContext)?? throw new ArgumentNullException(nameof(dataContext));
-//            RepositoryDbSet = RepositoryDbContext.Set<TEntity>();
-//        }
-        
-        public  BaseRepository(IDataContext repositoryDbContext)
+
+        public  BaseRepositoryAsync(IDataContext repositoryDbContext)
         {
             RepositoryDbContext = (DbContext) repositoryDbContext ;
             // get the dbset by type from db context
             RepositoryDbSet = RepositoryDbContext.Set<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> All()
+
+        public virtual TEntity Update(TEntity entity)
         {
-            return RepositoryDbSet.ToList();
+            return RepositoryDbSet.Update(entity).Entity;
+        }
+
+        public virtual void  Remove(TEntity entity)
+        {
+            RepositoryDbSet.Remove(entity);
+        }
+
+        public virtual void  Remove(params object[] id)
+        {
+            RepositoryDbSet.Remove(FindAsync(id).Result);
         }
 
         public virtual async Task<IEnumerable<TEntity>> AllAsync()
@@ -38,19 +53,9 @@ namespace DAL.Base.EF.Repositories
             return await RepositoryDbSet.ToListAsync();
         }
 
-        public virtual TEntity Find(params object[] id)
-        {
-            return RepositoryDbSet.Find(id);
-        }
-
         public virtual async Task<TEntity> FindAsync(params object[] id)
         {
             return await RepositoryDbSet.FindAsync(id);
-        }
-
-        public virtual void Add(TEntity entity)
-        {
-            RepositoryDbSet.Add(entity);
         }
 
         public virtual async Task AddAsync(TEntity entity)
@@ -58,20 +63,5 @@ namespace DAL.Base.EF.Repositories
             await RepositoryDbSet.AddAsync(entity);
         }
 
-        public virtual TEntity Update(TEntity entity)
-        {
-            return RepositoryDbSet.Update(entity).Entity;
-        }
-
-        public virtual void Remove(TEntity entity)
-        {
-            RepositoryDbSet.Remove(entity);
-        }
-
-        public virtual void Remove(params object[] id)
-        {
-            RepositoryDbSet.Remove(FindAsync(id).Result);
-        }
-
-    }
+    }  
 }

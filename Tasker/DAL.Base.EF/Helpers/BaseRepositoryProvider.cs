@@ -6,61 +6,58 @@ using Contracts.DAL.Base.Repositories;
 
 namespace DAL.Base.EF.Helpers
 {
-    public class BaseRepositoryProvider : IRepositoryProvider 
+    public class BaseRepositoryProvider : IBaseRepositoryProvider
     {
-        //repo cache
-        private readonly Dictionary<Type, object> _repositoryCache = new Dictionary<Type, object>();
-
-        private readonly IRepositoryFactory _repositoryFactory;
-        private readonly IDataContext _dataContext;
-
-        public BaseRepositoryProvider(IDataContext dataContext, IRepositoryFactory repositoryFactory)
+        protected readonly Dictionary<Type, object> _repositoryCache;
+        protected readonly IBaseRepositoryFactory _repositoryFactory;
+        protected readonly IDataContext _dataContext;
+        
+        public BaseRepositoryProvider(IBaseRepositoryFactory repositoryFactory, IDataContext dataContext):
+            this(new Dictionary<Type, object>(), repositoryFactory, dataContext)
         {
-            _dataContext = dataContext;
+        }
+        
+        public BaseRepositoryProvider(Dictionary<Type, object> repositoryCache, IBaseRepositoryFactory repositoryFactory, IDataContext dataContext)
+        {
+            _repositoryCache = repositoryCache;
             _repositoryFactory = repositoryFactory;
+            _dataContext = dataContext;
         }
 
-        public TRepository GetRepository<TRepository>()
+        public virtual TRepository GetRepository<TRepository>()
         {
-            _repositoryCache.TryGetValue(typeof(TRepository), out var repoObject);
-            if (repoObject != null)
+            if (_repositoryCache.ContainsKey(typeof(TRepository)))
             {
-                return (TRepository) repoObject;
+                return (TRepository) _repositoryCache[typeof(TRepository)];
             }
-            //repo was not found in cache, create it
-            
-            //get the creation method from factory
+            // didn't find the repo in cache, lets create it
+
             var repoCreationMethod = _repositoryFactory.GetRepositoryFactory<TRepository>();
-            if (repoCreationMethod == null)
-            {
-                throw new NullReferenceException("No factory found for repository " + typeof(TRepository).Name);
-            }
-            repoObject = repoCreationMethod(_dataContext);
-            
-            //add repo to cache
-            _repositoryCache[typeof(TRepository)] = repoObject;
-            return (TRepository) repoObject;
+
+
+            object repo = repoCreationMethod(_dataContext);
+        
+
+            _repositoryCache[typeof(TRepository)] = repo;
+            return (TRepository) repo;
         }
 
-        public IBaseRepositoryAsync<TEntity> GetRepositoryForEntity<TEntity>() where TEntity : class, IBaseEntity, new()
+
+        public virtual IBaseRepositoryAsync<TEntity> GetEntityRepository<TEntity>() where TEntity : class, IBaseEntity<int>, new()
         {
-            _repositoryCache.TryGetValue(typeof(IBaseRepositoryAsync<TEntity>), out var repoObject);
-            if (repoObject != null)
+            if (_repositoryCache.ContainsKey(typeof(IBaseRepositoryAsync<TEntity>)))
             {
-                return (IBaseRepositoryAsync<TEntity>) repoObject;
+                return (IBaseRepositoryAsync<TEntity>) _repositoryCache[typeof(IBaseRepositoryAsync<TEntity>)];
             }
-            //repo was not found in cache, create it
-            
-            //get the creation method from factory
-            var repoCreationMethod = _repositoryFactory.GetRepositoryFactoryForEntity<TEntity>();
-            if (repoCreationMethod == null)
-            {
-                throw new NullReferenceException("No factory found for entity base repository! Entity: " + typeof(TEntity).Name);
-            }
-            repoObject = repoCreationMethod(_dataContext);
-            
-            //add repo to cache
-            _repositoryCache[typeof(IBaseRepositoryAsync<TEntity>)] = repoObject;
-            return (IBaseRepositoryAsync<TEntity>) repoObject;        }
+            // didn't find the repo in cache, lets create it
+            var repoCreationMethod = _repositoryFactory.GetEntityRepositoryFactory<TEntity>();
+
+            object repo = repoCreationMethod(_dataContext);
+
+
+            _repositoryCache[typeof(IBaseRepositoryAsync<TEntity>)] = repo;
+            return (IBaseRepositoryAsync<TEntity>) repo;
+
+        }
     }
 }

@@ -50,9 +50,9 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new UserCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
-                HourlyRateSelectList = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id"),
-                UserTypeSelectList = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
+                HourlyRateSelectList = new SelectList(await _uow.BaseRepositoryAsync<HourlyRate>().AllAsync(), "Id", "Id"),
+                UserTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserType>().AllAsync(), "Id", "Id")
 
             };
             
@@ -75,10 +75,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.User.AppUserId);
-            vm.UserTypeSelectList = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Id", vm.User.UserTypeId);
-            vm.HourlyRateSelectList = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", vm.User.HourlyRateId);
+            vm.UserTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserType>().AllAsync(), "Id", "Id", vm.User.UserTypeId);
+            vm.HourlyRateSelectList = new SelectList(await _uow.BaseRepositoryAsync<HourlyRate>().AllAsync(), "Id", "Id", vm.User.HourlyRateId);
 
             return View(vm);
         }
@@ -99,9 +99,9 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new UserEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId),
-                HourlyRateSelectList = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId),
-                UserTypeSelectList = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Id", user.UserTypeId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", user.AppUserId),
+                HourlyRateSelectList = new SelectList(await _uow.BaseRepositoryAsync<HourlyRate>().AllAsync(), "Id", "Id", user.HourlyRateId),
+                UserTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserType>().AllAsync(), "Id", "Id", user.UserTypeId)
 
             };
             
@@ -128,10 +128,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.User.AppUserId);
-            vm.UserTypeSelectList = new SelectList(await _uow.BaseRepository<UserType>().AllAsync(), "Id", "Id", vm.User.UserTypeId);
-            vm.HourlyRateSelectList = new SelectList(await _uow.BaseRepository<HourlyRate>().AllAsync(), "Id", "Id", vm.User.HourlyRateId);
+            vm.UserTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<UserType>().AllAsync(), "Id", "Id", vm.User.UserTypeId);
+            vm.HourlyRateSelectList = new SelectList(await _uow.BaseRepositoryAsync<HourlyRate>().AllAsync(), "Id", "Id", vm.User.HourlyRateId);
 
             return View(vm);
         }

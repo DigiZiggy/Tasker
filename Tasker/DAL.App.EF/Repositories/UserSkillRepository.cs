@@ -11,7 +11,7 @@ using Task = Domain.Task;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserSkillRepository : BaseRepository<UserSkill>, IUserSkillRepository
+    public class UserSkillRepository : BaseRepositoryAsync<UserSkill>, IUserSkillRepository
     {
         public UserSkillRepository(IDataContext dataContext) : base(dataContext)
         {

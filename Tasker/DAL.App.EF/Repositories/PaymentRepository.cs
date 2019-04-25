@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PaymentRepository : BaseRepository<Payment>, IPaymentRepository
+    public class PaymentRepository : BaseRepositoryAsync<Payment>, IPaymentRepository
     {
         public PaymentRepository(IDataContext dataContext) : base(dataContext)
         {

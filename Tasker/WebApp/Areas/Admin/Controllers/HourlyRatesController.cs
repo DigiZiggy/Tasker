@@ -47,7 +47,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new HourlyRateCreateViewModel()
             {
-                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id"),
+                PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id", "Id"),
             };
 
             return View(vm);
@@ -66,7 +66,7 @@ namespace WebApp.Areas.Admin.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id", vm.HourlyRate.PriceListId);
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id", "Id", vm.HourlyRate.PriceListId);
 
             return View(vm);
         }
@@ -87,7 +87,7 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new HourlyRateEditViewModel()
             {
-                PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id", hourlyRate.PriceListId),
+                PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id", "Id", hourlyRate.PriceListId),
             };
             
             return View(vm);
@@ -113,7 +113,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.PriceListSelectList = new SelectList(await _uow.BaseRepository<PriceList>().AllAsync(), "Id", "Id", vm.HourlyRate.PriceListId);
+            vm.PriceListSelectList = new SelectList(await _uow.BaseRepositoryAsync<PriceList>().AllAsync(), "Id", "Id", vm.HourlyRate.PriceListId);
 
             return View(vm);
         }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PriceListRepository : BaseRepository<PriceList>, IPriceListRepository
+    public class PriceListRepository : BaseRepositoryAsync<PriceList>, IPriceListRepository
     {
         public PriceListRepository(IDataContext dataContext) : base(dataContext)
         {

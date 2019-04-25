@@ -49,9 +49,9 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new UserOnAddressCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
-                AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id"),
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
+                AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id")
             };
          
             return View(vm);
@@ -71,10 +71,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.UserOnAddress.AppUserId);
-            vm.AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
+            vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
 
             return View(vm);
         }
@@ -95,9 +95,9 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new UserOnAddressEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", userOnAddress.AppUserId),
-                AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id", userOnAddress.AddressId),
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", userOnAddress.UserId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", userOnAddress.AppUserId),
+                AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", userOnAddress.AddressId),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", userOnAddress.UserId)
             };
             
             return View(vm);
@@ -123,10 +123,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.UserOnAddress.AppUserId);
-            vm.AddressSelectList = new SelectList(await _uow.BaseRepository<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
+            vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
 
             return View(vm);
         }

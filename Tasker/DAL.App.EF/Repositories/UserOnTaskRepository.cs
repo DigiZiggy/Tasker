@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserOnTaskRepository : BaseRepository<UserOnTask>, IUserOnTaskRepository
+    public class UserOnTaskRepository : BaseRepositoryAsync<UserOnTask>, IUserOnTaskRepository
     {
         public UserOnTaskRepository(IDataContext dataContext) : base(dataContext)
         {

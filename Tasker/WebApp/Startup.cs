@@ -55,8 +55,8 @@ using Microsoft.Extensions.DependencyInjection;
                     Configuration.GetConnectionString("MySqlConnection")));
 
             services.AddScoped<IDataContext, AppDbContext>();
-            services.AddSingleton<IRepositoryFactory, AppRepositoryFactory>();
-            services.AddScoped<IRepositoryProvider, BaseRepositoryProvider>();
+            services.AddSingleton<IBaseRepositoryFactory, AppBaseRepositoryFactory>();
+            services.AddScoped<IBaseRepositoryProvider, BaseRepositoryProvider>();
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
                            
             /*

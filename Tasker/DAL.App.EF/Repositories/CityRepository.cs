@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class CityRepository : BaseRepository<City>, ICityRepository
+    public class CityRepository : BaseRepositoryAsync<City>, ICityRepository
     {
         public CityRepository(IDataContext dataContext) : base(dataContext)
         {

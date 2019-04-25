@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class IdentificationRepository : BaseRepository<Identification>, IIdentificationRepository
+    public class IdentificationRepository : BaseRepositoryAsync<Identification>, IIdentificationRepository
     {
         public IdentificationRepository(IDataContext dataContext) : base(dataContext)
         {

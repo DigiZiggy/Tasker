@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class InvoiceLineRepository : BaseRepository<InvoiceLine>, IInvoiceLineRepository
+    public class InvoiceLineRepository : BaseRepositoryAsync<InvoiceLine>, IInvoiceLineRepository
     {
         public InvoiceLineRepository(IDataContext dataContext) : base(dataContext)
         {

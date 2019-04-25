@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class MeansOfPaymentRepository : BaseRepository<MeansOfPayment>, IMeansOfPaymentRepository
+    public class MeansOfPaymentRepository : BaseRepositoryAsync<MeansOfPayment>, IMeansOfPaymentRepository
     {
         public MeansOfPaymentRepository(IDataContext dataContext) : base(dataContext)
         {

@@ -54,9 +54,9 @@ namespace WebApp.Controllers
         {
             var vm = new UserSkillCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
-                SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id"),
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
+                SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id")
 
             };
  
@@ -77,10 +77,10 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.UserSkill.AppUserId);
-            vm.SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserSkill.UserId);
+            vm.SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.UserSkill.UserId);
 
             return View(vm);
         }
@@ -101,9 +101,9 @@ namespace WebApp.Controllers
             
             var vm = new UserSkillEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", userSkill.AppUserId),
-                SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id", userSkill.SkillId),
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", userSkill.UserId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", userSkill.AppUserId),
+                SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id", userSkill.SkillId),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", userSkill.UserId)
 
             };
 
@@ -129,10 +129,10 @@ namespace WebApp.Controllers
                     
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.UserSkill.AppUserId);
-            vm.SkillSelectList = new SelectList(await _uow.BaseRepository<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.UserSkill.UserId);
+            vm.SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.UserSkill.UserId);
             
             return View(vm);
         }

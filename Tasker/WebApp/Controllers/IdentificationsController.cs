@@ -53,9 +53,9 @@ namespace WebApp.Controllers
         {     
             var vm = new IdentificationCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName"),
-                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id"),
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
+                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id"),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id")
             };
             
             return View(vm);
@@ -75,10 +75,10 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.Identification.AppUserId);
-            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
+            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
 
             return View(vm);
         }
@@ -99,9 +99,9 @@ namespace WebApp.Controllers
             
             var vm = new IdentificationEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id", "FirstName", identification.AppUserId),
-                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id", identification.IdentificationTypeId),
-                UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", identification.UserId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", identification.AppUserId),
+                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id", identification.IdentificationTypeId),
+                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", identification.UserId)
             };
            
             return View(vm);
@@ -127,10 +127,10 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepository<AppUser>().AllAsync(), "Id",
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
                 "FirstName", vm.Identification.AppUserId);
-            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepository<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepository<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
+            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
+            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
 
             return View(vm);
         }

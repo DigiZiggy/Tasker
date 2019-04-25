@@ -14,9 +14,9 @@ namespace DAL.App.EF
 {
     public class AppUnitOfWork : BaseUnitOfWork, IAppUnitOfWork
     {
-        private readonly AppDbContext _appDbContext;
-
-        private readonly IRepositoryProvider _repositoryProvider;
+        public AppUnitOfWork(IDataContext dbContext, IBaseRepositoryProvider repositoryProvider) : base(dbContext, repositoryProvider)
+        {
+        }
 
         public IAddressRepository Addresses =>
             _repositoryProvider.GetRepository<IAddressRepository>();
@@ -66,17 +66,21 @@ namespace DAL.App.EF
             _repositoryProvider.GetRepository<IUserTypeRepository>();
 
         
-        public IBaseRepositoryAsync<TEntity> BaseRepository<TEntity>() where TEntity : class, IBaseEntity, new()
-        {
-            return _repositoryProvider.GetRepositoryForEntity<TEntity>();
-        }
-        
-        
-        public AppUnitOfWork(AppDbContext dbContext, IDataContext dataContext, IRepositoryProvider repositoryProvider) : base(dbContext)
-        {
-            _appDbContext = (dataContext as AppDbContext) ?? throw new ArgumentNullException(nameof(dataContext));
-            _repositoryProvider = repositoryProvider;
-        }
+        private readonly AppDbContext _appDbContext;
+//
+//        private readonly IBaseRepositoryProvider _baseRepositoryProvider;
+//        
+//        public IBaseRepositoryAsync<TEntity> BaseRepositoryAsync<TEntity>() where TEntity : class, IBaseEntity, new()
+//        {
+//            return _baseRepositoryProvider.GetEntityRepository<TEntity>();
+//        }
+//        
+//        
+//        public AppUnitOfWork(AppDbContext dbContext, IDataContext dataContext, IBaseRepositoryProvider baseRepositoryProvider) : base(dbContext)
+//        {
+//            _appDbContext = (dataContext as AppDbContext) ?? throw new ArgumentNullException(nameof(dataContext));
+//            _baseRepositoryProvider = baseRepositoryProvider;
+//        }
 
         public virtual int SaveChanges()
         {

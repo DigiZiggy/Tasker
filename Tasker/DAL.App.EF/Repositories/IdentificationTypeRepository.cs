@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class IdentificationTypeRepository : BaseRepository<IdentificationType>, IIdentificationTypeRepository
+    public class IdentificationTypeRepository : BaseRepositoryAsync<IdentificationType>, IIdentificationTypeRepository
     {
         public IdentificationTypeRepository(IDataContext dataContext) : base(dataContext)
         {
