@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Domain.Base;
+using Domain.Enums;
 using Domain.Identity;
 
 namespace Domain
@@ -9,19 +11,15 @@ namespace Domain
         [MaxLength(64)]
         [MinLength(1)]
 //        [Required]
-        public string DocumentNumber { get; set; }
+        public string DocNumber { get; set; }
+        
+        public IdentificationType IdentificationType { get; set; }
         
 //        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public string Comment { get; set; }
-        
-        public int UserId { get; set; }
-        public User User { get; set; }
-
-        public int IdentificationTypeId { get; set; }
-        public IdentificationType IdentificationType { get; set; }
-        
+      
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
     }

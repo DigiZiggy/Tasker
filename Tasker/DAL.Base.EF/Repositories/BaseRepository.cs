@@ -6,10 +6,10 @@ using Contracts.DAL.Base;
 using Contracts.DAL.Base.Repositories;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace DAL.Base.EF.Repositories
 {
-
-    public class BaseRepositoryAsync<TEntity> : BaseRepositoryAsync<TEntity, int>
+    public class BaseRepositoryAsync<TEntity> : BaseRepositoryAsync<TEntity, int>, IBaseRepositoryAsync<TEntity>
         where TEntity: class, IBaseEntity<int>, new()
     {
         public BaseRepositoryAsync(IDataContext repositoryDbContext) : base(repositoryDbContext)
@@ -63,5 +63,5 @@ namespace DAL.Base.EF.Repositories
             await RepositoryDbSet.AddAsync(entity);
         }
 
-    }  
+    }
 }

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity.Migrations.Model;
+using Domain.Base;
 using Domain.Identity;
 
 namespace Domain
@@ -12,10 +12,7 @@ namespace Domain
         [MaxLength(64)]
         [MinLength(1)]
 //        [Required]
-        public string Comment { get; set; }
-
-        public int TaskId { get; set; }
-        public Task Task { get; set; }
+        public string ReviewComment { get; set; }
         
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }

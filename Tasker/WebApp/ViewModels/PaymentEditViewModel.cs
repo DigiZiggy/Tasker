@@ -7,6 +7,5 @@ namespace WebApp.ViewModels
     {
         public Payment Payment { get; set; }
         public SelectList InvoiceSelectList { get; set; }
-        public SelectList MeansOfPaymentSelectList { get; set; }
     }
 }

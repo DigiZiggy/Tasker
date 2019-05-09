@@ -5,8 +5,7 @@ namespace WebApp.ViewModels
 {
     public class TaskEditViewModel
     {
-        public Task Task { get; set; }
-        public SelectList AppUserSelectList { get; set; }
-        public SelectList TaskTypeSelectList { get; set; }
+        public TaskerTask TaskerTask { get; set; }
+        public SelectList AddressSelectList { get; set; }
     }
 }

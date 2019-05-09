@@ -4,6 +4,7 @@ using BLL.Base.Services;
 using Contracts.BLL.Base.Helpers;
 using Contracts.DAL.Base;
 
+
 namespace BLL.Base.Helpers
 {
     public class BaseServiceFactory : IBaseServiceFactory

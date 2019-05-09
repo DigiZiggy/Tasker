@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
-using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,44 +12,27 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
     public class IdentificationsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly AppDbContext _context;
 
-        public IdentificationsController(IAppUnitOfWork uow)
+        public IdentificationsController(AppDbContext context)
         {
-            _uow = uow;
+            _context = context;
         }
 
         // GET: api/Identifications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IdentificationDTO>>> GetIdentifications()
+        public async Task<ActionResult<IEnumerable<Identification>>> GetIdentifications()
         {
-//            var result = new List<IdentificationDTO>();
-//            var identifications = await _uow.Identifications.AllAsync();
-//            foreach (var identification in identifications)
-//            {
-//                result.Add(new IdentificationDTO()
-//                {
-//                    Id = identification.Id,
-//                    DocumentNumber = identification.DocumentNumber,
-//                    Start = identification.Start,
-//                    End = identification.End
-//                });   
-//            }              
-//            
-//            return Ok(result); 
-            return Ok(await _uow.Identifications.GetAllWithIdentificationAsync());           
-
+            return await _context.Identifications.ToListAsync();
         }
 
         // GET: api/Identifications/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Identification>> GetIdentification(int id)
         {
-            var identification = await _uow.Identifications.FindAsync(id);
+            var identification = await _context.Identifications.FindAsync(id);
 
             if (identification == null)
             {
@@ -70,8 +51,23 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _uow.Identifications.Update(identification);
-            await _uow.SaveChangesAsync();
+            _context.Entry(identification).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!IdentificationExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -80,8 +76,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Identification>> PostIdentification(Identification identification)
         {
-            await _uow.Identifications.AddAsync(identification);
-            await _uow.SaveChangesAsync();
+            _context.Identifications.Add(identification);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetIdentification", new { id = identification.Id }, identification);
         }
@@ -90,16 +86,21 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Identification>> DeleteIdentification(int id)
         {
-            var identification = await _uow.Identifications.FindAsync(id);
+            var identification = await _context.Identifications.FindAsync(id);
             if (identification == null)
             {
                 return NotFound();
             }
 
-            _uow.Identifications.Remove(identification);
-            await _uow.SaveChangesAsync();
+            _context.Identifications.Remove(identification);
+            await _context.SaveChangesAsync();
 
             return identification;
+        }
+
+        private bool IdentificationExists(int id)
+        {
+            return _context.Identifications.Any(e => e.Id == id);
         }
     }
 }

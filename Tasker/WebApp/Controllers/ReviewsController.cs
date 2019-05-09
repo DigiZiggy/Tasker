@@ -38,7 +38,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var review = await _uow.Reviews.FindAsync(id);
+            var review = await _uow.Reviews.FindAllIncludedAsync(id);
 
             if (review == null)
             {
@@ -54,11 +54,9 @@ namespace WebApp.Controllers
             
             var vm = new ReviewCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
-                TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id", "Id"),
-
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id")
             };
-            
+           
             return View(vm);
         }
 
@@ -75,11 +73,8 @@ namespace WebApp.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
             vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "FirstName", vm.Review.AppUserId);
-            vm.TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id",
-                "Id", vm.Review.TaskId);
+                "Id", vm.Review.AppUserId);
 
             return View(vm);
         }
@@ -97,12 +92,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
             var vm = new ReviewEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", review.AppUserId),
-                TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id", "Id", review.TaskId),
-
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", review.AppUserId)
             };
 
             return View(vm);
@@ -124,13 +116,11 @@ namespace WebApp.Controllers
             {
                 _uow.Reviews.Update(vm.Review);
                 await _uow.SaveChangesAsync();
-
+  
                 return RedirectToAction(nameof(Index));
             }
             vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "FirstName", vm.Review.AppUserId);
-            vm.TaskSelectList = new SelectList(await _uow.BaseRepositoryAsync<Domain.Task>().AllAsync(), "Id",
-                "Id", vm.Review.TaskId);
+                "Id", vm.Review.AppUserId);
 
             return View(vm);
         }
@@ -143,7 +133,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var review = await _uow.Reviews.FindAsync(id);
+            var review = await _uow.Reviews.FindAllIncludedAsync(id);
+            
             if (review == null)
             {
                 return NotFound();

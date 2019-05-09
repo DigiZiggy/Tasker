@@ -6,6 +6,6 @@ namespace WebApp.ViewModels
     public class InvoiceEditViewModel
     {
         public Invoice Invoice { get; set; }
-        public SelectList UserSelectList { get; set; }
+        public SelectList AppUserSelectList { get; set; }
     }
 }

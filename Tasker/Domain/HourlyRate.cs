@@ -1,5 +1,7 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using Domain.Base;
+using Domain.Identity;
 
 namespace Domain
 {
@@ -11,8 +13,8 @@ namespace Domain
 //        [Required]
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        
+        public ICollection<AppUser> AppUsers { get; set; }
 
-        public int PriceListId { get; set; }
-        public PriceList PriceList { get; set; }
     }
 }

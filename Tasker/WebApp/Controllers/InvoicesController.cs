@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Domain.Identity;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
@@ -20,6 +21,7 @@ namespace WebApp.Controllers
         {
             _uow = uow;
         }
+
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
@@ -36,7 +38,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _uow.Invoices.FindAsync(id);
+            var invoice = await _uow.Invoices.FindAllIncludedAsync(id);
 
             if (invoice == null)
             {
@@ -51,8 +53,7 @@ namespace WebApp.Controllers
         {
             var vm = new InvoiceCreateViewModel()
             {
-                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id"),
-
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id")
             };
             
             return View(vm);
@@ -71,11 +72,11 @@ namespace WebApp.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
-            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id",
-                "Id", vm.Invoice.UserId);
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
+                "Id", vm.Invoice.AppUserId);
 
             return View(vm);
+
         }
 
         // GET: Invoices/Edit/5
@@ -91,11 +92,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
             var vm = new InvoiceEditViewModel()
             {
-                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", invoice.UserId),
-
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", invoice.AppUserId)
             };
             
             return View(vm);
@@ -117,13 +116,14 @@ namespace WebApp.Controllers
             {
                 _uow.Invoices.Update(vm.Invoice);
                 await _uow.SaveChangesAsync();
-
+  
                 return RedirectToAction(nameof(Index));
             }
-            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id",
-                "Id", vm.Invoice.UserId);
+            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
+                "Id", vm.Invoice.AppUserId);
             
             return View(vm);
+
         }
 
         // GET: Invoices/Delete/5
@@ -134,7 +134,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _uow.Invoices.FindAsync(id);
+            var invoice = await _uow.Invoices.FindAllIncludedAsync(id);
+
             if (invoice == null)
             {
                 return NotFound();

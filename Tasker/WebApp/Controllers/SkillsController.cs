@@ -23,9 +23,7 @@ namespace WebApp.Controllers
         // GET: Skills
         public async Task<IActionResult> Index()
         {
-            var skills = await _uow.Skills.AllAsync();
-
-            return View(skills);
+            return View(await _uow.Skills.AllAsync());
         }
 
         // GET: Skills/Details/5
@@ -57,7 +55,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Comment,Id")] Skill skill)
+        public async Task<IActionResult> Create([Bind("SkillName,Description,Category,Id")] Skill skill)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +87,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Comment,Id")] Skill skill)
+        public async Task<IActionResult> Edit(int id, [Bind("SkillName,Description,Category,Id")] Skill skill)
         {
             if (id != skill.Id)
             {
@@ -100,7 +98,7 @@ namespace WebApp.Controllers
             {
                 _uow.Skills.Update(skill);
                 await _uow.SaveChangesAsync();
- 
+
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);

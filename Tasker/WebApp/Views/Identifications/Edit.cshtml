@@ -1,4 +1,5 @@
-@model IdentificationEditViewModel
+@using Domain.Enums
+@model WebApp.ViewModels.IdentificationEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,9 +14,14 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Identification.DocumentNumber" class="control-label"></label>
-                <input asp-for="Identification.DocumentNumber" class="form-control" />
-                <span asp-validation-for="Identification.DocumentNumber" class="text-danger"></span>
+                <label asp-for="Identification.DocNumber" class="control-label"></label>
+                <input asp-for="Identification.DocNumber" class="form-control" />
+                <span asp-validation-for="Identification.DocNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification.IdentificationType" class="control-label"></label>
+                <select asp-for="Identification.IdentificationType" class="form-control" asp-items="Html.GetEnumSelectList<IdentificationType>()"></select>
+                <span asp-validation-for="Identification.IdentificationType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Identification.Start" class="control-label"></label>
@@ -31,16 +37,6 @@
                 <label asp-for="Identification.Comment" class="control-label"></label>
                 <input asp-for="Identification.Comment" class="form-control" />
                 <span asp-validation-for="Identification.Comment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Identification.UserId" class="control-label"></label>
-                <select asp-for="Identification.UserId" class="form-control" asp-items="Model.UserSelectList"></select>
-                <span asp-validation-for="Identification.UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Identification.IdentificationTypeId" class="control-label"></label>
-                <select asp-for="Identification.IdentificationTypeId" class="form-control" asp-items="Model.IdentificationTypeSelectList"></select>
-                <span asp-validation-for="Identification.IdentificationTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Identification.AppUserId" class="control-label"></label>

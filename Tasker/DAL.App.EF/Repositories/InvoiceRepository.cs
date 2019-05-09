@@ -10,26 +10,25 @@ namespace DAL.App.EF.Repositories
 {
     public class InvoiceRepository : BaseRepositoryAsync<Invoice>, IInvoiceRepository
     {
-        public InvoiceRepository(IDataContext dataContext) : base(dataContext)
+        public InvoiceRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
-
+        
         public override async Task<IEnumerable<Invoice>> AllAsync()
         {
             return await RepositoryDbSet
-                .Include(i => i.User)
+                .Include(i => i.AppUser)
                 .ToListAsync();          
         }
         
-        public override async Task<Invoice> FindAsync(params object[] id)
+        public async Task<Invoice> FindAllIncludedAsync(params object[] id)
         {
             var invoice = await base.FindAsync(id);
 
             if (invoice != null)
             {
-                await RepositoryDbContext.Entry(invoice).Reference(i => i.User).LoadAsync();
+                await RepositoryDbContext.Entry(invoice).Reference(i => i.AppUser).LoadAsync();
             }
-
             return invoice;
         }
     }

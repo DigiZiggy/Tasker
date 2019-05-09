@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
-using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,44 +12,27 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
     public class PaymentsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly AppDbContext _context;
 
-        public PaymentsController(IAppUnitOfWork uow)
+        public PaymentsController(AppDbContext context)
         {
-            _uow = uow;
+            _context = context;
         }
 
         // GET: api/Payments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPayments()
+        public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
         {
-//            var result = new List<PaymentDTO>();
-//            var payments = await _uow.Payments.AllAsync();
-//            foreach (var payment in payments)
-//            {
-//                result.Add(new PaymentDTO()
-//                {
-//                    Id = payment.Id,
-//                    PaymentCode = payment.PaymentCode,
-//                    TimeOfPayment = payment.TimeOfPayment,
-//                    Total = payment.Total,
-//                    Comment = payment.Comment
-//                });   
-//            }
-//            return Ok(result);
-            return Ok(await _uow.Payments.GetAllWithPaymentAsync());           
-            
+            return await _context.Payments.ToListAsync();
         }
 
         // GET: api/Payments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Payment>> GetPayment(int id)
         {
-            var payment = await _uow.Payments.FindAsync(id);
+            var payment = await _context.Payments.FindAsync(id);
 
             if (payment == null)
             {
@@ -70,8 +51,23 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _uow.Payments.Update(payment);
-            await _uow.SaveChangesAsync();
+            _context.Entry(payment).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PaymentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -80,8 +76,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Payment>> PostPayment(Payment payment)
         {
-            await _uow.Payments.AddAsync(payment);
-            await _uow.SaveChangesAsync();
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);
         }
@@ -90,16 +86,21 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Payment>> DeletePayment(int id)
         {
-            var payment = await _uow.Payments.FindAsync(id);
+            var payment = await _context.Payments.FindAsync(id);
             if (payment == null)
             {
                 return NotFound();
             }
 
-            _uow.Payments.Remove(payment);
-            await _uow.SaveChangesAsync();
+            _context.Payments.Remove(payment);
+            await _context.SaveChangesAsync();
 
             return payment;
+        }
+
+        private bool PaymentExists(int id)
+        {
+            return _context.Payments.Any(e => e.Id == id);
         }
     }
 }

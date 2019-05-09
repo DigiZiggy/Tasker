@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
 using Contracts.DAL.Base.Repositories;
@@ -26,6 +26,10 @@ namespace DAL.Base.EF
         {
             return await UOWDbContext.SaveChangesAsync();
         }
+        
+        public virtual int SaveChanges()
+        {
+            return UOWDbContext.SaveChanges();
+        }
     }
-
 }

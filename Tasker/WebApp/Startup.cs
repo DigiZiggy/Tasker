@@ -1,35 +1,32 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
- using System.IdentityModel.Tokens.Jwt;
- using System.Linq;
- using System.Text;
- using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Contracts.DAL.App;
-using Contracts.DAL.App.Repositories;
- using Contracts.DAL.Base;
- using Contracts.DAL.Base.Helpers;
- using DAL;
+using Contracts.DAL.Base;
+using Contracts.DAL.Base.Helpers;
 using DAL.App.EF;
- using DAL.App.EF.Helpers;
- using DAL.App.EF.Repositories;
- using DAL.Base.EF.Helpers;
- using Domain.Identity;
+using DAL.App.EF.Helpers;
+using DAL.Base.EF.Helpers;
+using Domain.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-  using Microsoft.AspNetCore.Identity.UI.Services;
-  using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
- using Microsoft.IdentityModel.Tokens;
- using Newtonsoft.Json;
- using WebApp.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using WebApp.Helpers;
 
-  namespace WebApp
+namespace WebApp
 {
     public class Startup
     {
@@ -55,7 +52,7 @@ using Microsoft.Extensions.DependencyInjection;
                     Configuration.GetConnectionString("MySqlConnection")));
 
             services.AddScoped<IDataContext, AppDbContext>();
-            services.AddSingleton<IBaseRepositoryFactory, AppBaseRepositoryFactory>();
+            services.AddSingleton<IBaseRepositoryFactory, AppRepositoryFactory>();
             services.AddScoped<IBaseRepositoryProvider, BaseRepositoryProvider>();
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
                            

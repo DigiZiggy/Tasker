@@ -14,7 +14,7 @@ namespace DAL.App.EF.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Domain.Address", b =>
@@ -22,9 +22,13 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CityId");
+                    b.Property<string>("City")
+                        .HasMaxLength(64);
 
-                    b.Property<string>("District")
+                    b.Property<string>("Country")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("HouseNumber")
                         .HasMaxLength(64);
 
                     b.Property<string>("PostalCode")
@@ -33,45 +37,12 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Street")
                         .HasMaxLength(64);
 
-                    b.HasKey("Id");
+                    b.Property<string>("UnitNumber")
+                        .HasMaxLength(64);
 
-                    b.HasIndex("CityId");
+                    b.HasKey("Id");
 
                     b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("Domain.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<int>("CountryId");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("Domain.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CountryCode");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("Domain.HourlyRate", b =>
@@ -83,13 +54,9 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<decimal>("HourRate");
 
-                    b.Property<int>("PriceListId");
-
                     b.Property<DateTime>("Start");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PriceListId");
 
                     b.ToTable("HourlyRates");
                 });
@@ -103,41 +70,20 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<string>("DocumentNumber")
+                    b.Property<string>("DocNumber")
                         .HasMaxLength(64);
 
                     b.Property<DateTime>("End");
 
-                    b.Property<int>("IdentificationTypeId");
+                    b.Property<int>("IdentificationType");
 
                     b.Property<DateTime>("Start");
-
-                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("IdentificationTypeId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("Identifications");
-                });
-
-            modelBuilder.Entity("Domain.IdentificationType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentificationTypes");
                 });
 
             modelBuilder.Entity("Domain.Identity.AppRole", b =>
@@ -179,11 +125,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
+                    b.Property<int?>("HourlyRateId");
+
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(64);
 
                     b.Property<bool>("LockoutEnabled");
@@ -211,6 +157,8 @@ namespace DAL.App.EF.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HourlyRateId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -226,6 +174,8 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AppUserId");
+
                     b.Property<string>("Comment");
 
                     b.Property<DateTime>("Date");
@@ -236,62 +186,13 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<decimal>("TotalWithoutVAT");
 
-                    b.Property<int>("UserId");
-
                     b.Property<decimal>("VAT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Invoices");
-                });
-
-            modelBuilder.Entity("Domain.InvoiceLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Amount");
-
-                    b.Property<string>("Comment");
-
-                    b.Property<int>("InvoiceId");
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<int>("TaskId");
-
-                    b.Property<decimal>("Total");
-
-                    b.Property<decimal>("TotalWithoutVAT");
-
-                    b.Property<decimal>("VAT");
-
-                    b.Property<decimal>("VATpercentage");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("InvoiceLines");
-                });
-
-            modelBuilder.Entity("Domain.MeansOfPayment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MeansOfPayments");
                 });
 
             modelBuilder.Entity("Domain.Payment", b =>
@@ -303,7 +204,7 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("InvoiceId");
 
-                    b.Property<int>("MeansOfPaymentId");
+                    b.Property<string>("MeansOfPayment");
 
                     b.Property<int>("PaymentCode");
 
@@ -315,50 +216,7 @@ namespace DAL.App.EF.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("MeansOfPaymentId");
-
                     b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("Domain.Price", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Amount");
-
-                    b.Property<string>("Comment");
-
-                    b.Property<DateTime>("End");
-
-                    b.Property<int>("PriceListId");
-
-                    b.Property<DateTime>("Start");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PriceListId");
-
-                    b.ToTable("Prices");
-                });
-
-            modelBuilder.Entity("Domain.PriceList", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("End");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.Property<DateTime>("Start");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PriceLists");
                 });
 
             modelBuilder.Entity("Domain.Review", b =>
@@ -368,18 +226,14 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("AppUserId");
 
-                    b.Property<string>("Comment")
-                        .HasMaxLength(64);
-
                     b.Property<int>("Rating");
 
-                    b.Property<int>("TaskId");
+                    b.Property<string>("ReviewComment")
+                        .HasMaxLength(64);
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("TaskId");
 
                     b.ToTable("Reviews");
                 });
@@ -389,11 +243,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Comment");
+                    b.Property<int>("Category");
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SkillName")
                         .HasMaxLength(64);
 
                     b.HasKey("Id");
@@ -401,117 +255,30 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("Skills");
                 });
 
-            modelBuilder.Entity("Domain.Task", b =>
+            modelBuilder.Entity("Domain.TaskerTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(64);
-
-                    b.Property<int>("AppUserId");
+                    b.Property<int>("AddressId");
 
                     b.Property<string>("Description")
                         .HasMaxLength(64);
 
-                    b.Property<int>("TaskTypeId");
+                    b.Property<string>("TaskName")
+                        .HasMaxLength(64);
 
-                    b.Property<int>("TimeEstimate");
+                    b.Property<int>("TaskStatus");
+
+                    b.Property<int>("TaskType");
+
+                    b.Property<decimal>("TimeEstimate");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("TaskTypeId");
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("Domain.TaskType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TaskTypes");
-                });
-
-            modelBuilder.Entity("Domain.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AppUserId");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(64);
-
-                    b.Property<int>("HourlyRateId");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(64);
-
-                    b.Property<int>("Phone");
-
-                    b.Property<int>("UserTypeId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("HourlyRateId");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Domain.UserGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("End");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.Property<DateTime>("Start");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserGroups");
-                });
-
-            modelBuilder.Entity("Domain.UserInGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("End");
-
-                    b.Property<DateTime>("Start");
-
-                    b.Property<int>("UserGroupId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserGroupId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserInGroups");
                 });
 
             modelBuilder.Entity("Domain.UserOnAddress", b =>
@@ -527,25 +294,41 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<DateTime>("Start");
 
-                    b.Property<int>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("UserOnAddresses");
                 });
 
-            modelBuilder.Entity("Domain.UserOnTask", b =>
+            modelBuilder.Entity("Domain.UserSkill", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AppUserId");
+
+                    b.Property<DateTime>("End");
+
+                    b.Property<int>("SkillId");
+
+                    b.Property<DateTime>("Start");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("UserSkills");
+                });
+
+            modelBuilder.Entity("Domain.UserTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("End");
 
@@ -557,63 +340,17 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("TaskerId");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("TaskerTaskId");
 
-                    b.HasIndex("AppUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TaskGiverId");
 
-                    b.HasIndex("TaskId");
-
                     b.HasIndex("TaskerId");
 
-                    b.ToTable("UserOnTasks");
-                });
+                    b.HasIndex("TaskerTaskId");
 
-            modelBuilder.Entity("Domain.UserSkill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AppUserId");
-
-                    b.Property<string>("Comment");
-
-                    b.Property<DateTime>("End");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.Property<int>("SkillId");
-
-                    b.Property<DateTime>("Start");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("SkillId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserSkills");
-                });
-
-            modelBuilder.Entity("Domain.UserType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserTasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -697,203 +434,95 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Address", b =>
-                {
-                    b.HasOne("Domain.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.City", b =>
-                {
-                    b.HasOne("Domain.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.HourlyRate", b =>
-                {
-                    b.HasOne("Domain.PriceList", "PriceList")
-                        .WithMany()
-                        .HasForeignKey("PriceListId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("Domain.Identification", b =>
                 {
                     b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Identifications")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
 
-                    b.HasOne("Domain.IdentificationType", "IdentificationType")
-                        .WithMany()
-                        .HasForeignKey("IdentificationTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+            modelBuilder.Entity("Domain.Identity.AppUser", b =>
+                {
+                    b.HasOne("Domain.HourlyRate", "HourlyRate")
+                        .WithMany("AppUsers")
+                        .HasForeignKey("HourlyRateId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Invoice", b =>
                 {
-                    b.HasOne("Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.InvoiceLine", b =>
-                {
-                    b.HasOne("Domain.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
+                    b.HasOne("Domain.Identity.AppUser", "AppUser")
+                        .WithMany("Invoices")
+                        .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Payment", b =>
                 {
                     b.HasOne("Domain.Invoice", "Invoice")
-                        .WithMany()
+                        .WithMany("Payments")
                         .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.MeansOfPayment", "MeansOfPayment")
-                        .WithMany()
-                        .HasForeignKey("MeansOfPaymentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.Price", b =>
-                {
-                    b.HasOne("Domain.PriceList", "PriceList")
-                        .WithMany()
-                        .HasForeignKey("PriceListId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Review", b =>
                 {
                     b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Domain.Task", b =>
+            modelBuilder.Entity("Domain.TaskerTask", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.TaskType", "TaskType")
-                        .WithMany()
-                        .HasForeignKey("TaskTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.User", b =>
-                {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany("Users")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.HourlyRate", "HourlyRate")
-                        .WithMany()
-                        .HasForeignKey("HourlyRateId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.UserType", "UserType")
-                        .WithMany()
-                        .HasForeignKey("UserTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.UserInGroup", b =>
-                {
-                    b.HasOne("Domain.UserGroup", "UserGroup")
-                        .WithMany()
-                        .HasForeignKey("UserGroupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("Domain.Address", "Address")
+                        .WithMany("TasksOnAddress")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.UserOnAddress", b =>
                 {
                     b.HasOne("Domain.Address", "Address")
-                        .WithMany()
+                        .WithMany("AppUsersOnAddress")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Addresses")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("Domain.UserOnTask", b =>
-                {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.User", "TaskGiver")
-                        .WithMany()
-                        .HasForeignKey("TaskGiverId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.Task", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.User", "Tasker")
-                        .WithMany()
-                        .HasForeignKey("TaskerId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.UserSkill", b =>
                 {
                     b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Skills")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Skill", "Skill")
-                        .WithMany()
+                        .WithMany("AppUsers")
                         .HasForeignKey("SkillId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
 
-                    b.HasOne("Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+            modelBuilder.Entity("Domain.UserTask", b =>
+                {
+                    b.HasOne("Domain.Identity.AppUser", "TaskGiver")
+                        .WithMany("TasksCreated")
+                        .HasForeignKey("TaskGiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Identity.AppUser", "Tasker")
+                        .WithMany("TasksWorkedOn")
+                        .HasForeignKey("TaskerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.TaskerTask", "TaskerTask")
+                        .WithMany("AppUsersInvolved")
+                        .HasForeignKey("TaskerTaskId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

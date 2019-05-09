@@ -37,7 +37,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var payment = await _uow.Payments.FindAsync(id);
+            var payment = await _uow.Payments.FindAllIncludedAsync(id);
 
             if (payment == null)
             {
@@ -50,11 +50,9 @@ namespace WebApp.Controllers
         // GET: Payments/Create
         public async Task<IActionResult> Create()
         {
-            
             var vm = new PaymentCreateViewModel()
             {
-                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "FirstName"),
-                MeansOfPaymentSelectList = new SelectList(await _uow.BaseRepositoryAsync<MeansOfPayment>().AllAsync(), "Id", "Id"),
+                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "Id"),
 
             };
 
@@ -74,13 +72,11 @@ namespace WebApp.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
             vm.InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id",
                 "Id", vm.Payment.InvoiceId);
-            vm.MeansOfPaymentSelectList = new SelectList(await _uow.BaseRepositoryAsync<MeansOfPayment>().AllAsync(), "Id",
-                "Id", vm.Payment.MeansOfPaymentId);
 
             return View(vm);
+
         }
 
         // GET: Payments/Edit/5
@@ -96,11 +92,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
             var vm = new PaymentEditViewModel()
             {
-                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "FirstName", payment.InvoiceId),
-                MeansOfPaymentSelectList = new SelectList(await _uow.BaseRepositoryAsync<MeansOfPayment>().AllAsync(), "Id", "Id", payment.MeansOfPaymentId),
+                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "Id", payment.InvoiceId),
 
             };
 
@@ -123,15 +117,12 @@ namespace WebApp.Controllers
             {
                 _uow.Payments.Update(vm.Payment);
                 await _uow.SaveChangesAsync();
- 
+      
                 return RedirectToAction(nameof(Index));
             }
-            
-            
+                 
             vm.InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id",
                 "Id", vm.Payment.InvoiceId);
-            vm.MeansOfPaymentSelectList = new SelectList(await _uow.BaseRepositoryAsync<MeansOfPayment>().AllAsync(), "Id",
-                "Id", vm.Payment.MeansOfPaymentId);
             
             return View(vm);
         }
@@ -144,7 +135,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var payment = await _uow.Payments.FindAsync(id);
+            var payment = await _uow.Payments.FindAllIncludedAsync(id);
+
             if (payment == null)
             {
                 return NotFound();

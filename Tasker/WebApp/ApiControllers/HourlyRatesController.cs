@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
-using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,42 +12,27 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HourlyRatesController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly AppDbContext _context;
 
-        public HourlyRatesController(IAppUnitOfWork uow)
+        public HourlyRatesController(AppDbContext context)
         {
-            _uow = uow;
+            _context = context;
         }
 
         // GET: api/HourlyRates
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HourlyRateDTO>>> GetHourlyRates()
+        public async Task<ActionResult<IEnumerable<HourlyRate>>> GetHourlyRates()
         {
-//            var result = new List<HourlyRateDTO>();
-//            var hourlyRates = await _uow.HourlyRates.AllAsync();
-//            foreach (var hourlyRate in hourlyRates)
-//            {
-//                result.Add(new HourlyRateDTO()
-//                {
-//                    Id = hourlyRate.Id,
-//                    HourRate = hourlyRate.HourRate,
-//                    Start = hourlyRate.Start,
-//                    End = hourlyRate.End
-//                });   
-//            }            
-//            return Ok(result);
-            return Ok(await _uow.HourlyRates.GetAllWithHourlyRateAsync());           
-            
+            return await _context.HourlyRates.ToListAsync();
         }
 
         // GET: api/HourlyRates/5
         [HttpGet("{id}")]
         public async Task<ActionResult<HourlyRate>> GetHourlyRate(int id)
         {
-            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
+            var hourlyRate = await _context.HourlyRates.FindAsync(id);
 
             if (hourlyRate == null)
             {
@@ -68,8 +51,23 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _uow.HourlyRates.Update(hourlyRate);
-            await _uow.SaveChangesAsync();
+            _context.Entry(hourlyRate).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HourlyRateExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -78,8 +76,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<HourlyRate>> PostHourlyRate(HourlyRate hourlyRate)
         {
-            await _uow.HourlyRates.AddAsync(hourlyRate);
-            await _uow.SaveChangesAsync();
+            _context.HourlyRates.Add(hourlyRate);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetHourlyRate", new { id = hourlyRate.Id }, hourlyRate);
         }
@@ -88,16 +86,21 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<HourlyRate>> DeleteHourlyRate(int id)
         {
-            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
+            var hourlyRate = await _context.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
             {
                 return NotFound();
             }
 
-            _uow.HourlyRates.Remove(hourlyRate);
-            await _uow.SaveChangesAsync();
+            _context.HourlyRates.Remove(hourlyRate);
+            await _context.SaveChangesAsync();
 
             return hourlyRate;
+        }
+
+        private bool HourlyRateExists(int id)
+        {
+            return _context.HourlyRates.Any(e => e.Id == id);
         }
     }
 }

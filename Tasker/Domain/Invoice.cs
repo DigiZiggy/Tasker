@@ -1,5 +1,7 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using Domain.Base;
+using Domain.Identity;
 
 namespace Domain
 {
@@ -10,12 +12,21 @@ namespace Domain
         
 //        [Required]
         public DateTime Date { get; set; }
+        
+//        [Required]
         public decimal TotalWithVAT { get; set; }
+        
+//        [Required]
         public decimal TotalWithoutVAT { get; set; }
+        
+//        [Required]
         public decimal VAT { get; set; }
         public string Comment { get; set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+        
+        public ICollection<Payment> Payments { get; set; }
+
     }
 }

@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.MeansOfPayment)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PaymentCode)
             </th>
             <th>
@@ -25,9 +28,6 @@
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MeansOfPayment)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Invoice)
             </th>
             <th></th>
@@ -36,6 +36,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeansOfPayment)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentCode)
             </td>
@@ -47,9 +50,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeansOfPayment.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Invoice.Id)

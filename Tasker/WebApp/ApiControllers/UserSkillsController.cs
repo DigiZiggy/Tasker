@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
-using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,45 +12,27 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
     public class UserSkillsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly AppDbContext _context;
 
-        public UserSkillsController(IAppUnitOfWork uow)
+        public UserSkillsController(AppDbContext context)
         {
-            _uow = uow;
+            _context = context;
         }
 
         // GET: api/UserSkills
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserSkillDTO>>> GetUserSkills()
+        public async Task<ActionResult<IEnumerable<UserSkill>>> GetUserSkills()
         {
-//            var result = new List<UserSkillDTO>();
-//            var userSkills = await _uow.UserSills.AllAsync();
-//            foreach (var userSkill in userSkills)
-//            {
-//                result.Add(new UserSkillDTO()
-//                {
-//                    Id = userSkill.Id,
-//                    Name = userSkill.Name,
-//                    Start = userSkill.Start,
-//                    End = userSkill.End,
-//                    Comment = userSkill.Comment
-//                });   
-//            }
-//            
-//            return Ok(result); 
-            return Ok(await _uow.UserSills.GetAllWithUserSkillAsync());           
-
+            return await _context.UserSkills.ToListAsync();
         }
 
         // GET: api/UserSkills/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserSkill>> GetUserSkill(int id)
         {
-            var userSkill = await _uow.UserSills.FindAsync(id);
+            var userSkill = await _context.UserSkills.FindAsync(id);
 
             if (userSkill == null)
             {
@@ -71,8 +51,23 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _uow.UserSills.Update(userSkill);
-            await _uow.SaveChangesAsync();
+            _context.Entry(userSkill).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserSkillExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -81,8 +76,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<UserSkill>> PostUserSkill(UserSkill userSkill)
         {
-            await _uow.UserSills.AddAsync(userSkill);
-            await _uow.SaveChangesAsync();
+            _context.UserSkills.Add(userSkill);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUserSkill", new { id = userSkill.Id }, userSkill);
         }
@@ -91,16 +86,21 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserSkill>> DeleteUserSkill(int id)
         {
-            var userSkill = await _uow.UserSills.FindAsync(id);
+            var userSkill = await _context.UserSkills.FindAsync(id);
             if (userSkill == null)
             {
                 return NotFound();
             }
 
-            _uow.UserSills.Remove(userSkill);
-            await _uow.SaveChangesAsync();
+            _context.UserSkills.Remove(userSkill);
+            await _context.SaveChangesAsync();
 
             return userSkill;
+        }
+
+        private bool UserSkillExists(int id)
+        {
+            return _context.UserSkills.Any(e => e.Id == id);
         }
     }
 }

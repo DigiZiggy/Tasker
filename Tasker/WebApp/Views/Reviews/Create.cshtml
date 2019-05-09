@@ -1,4 +1,4 @@
-@model ReviewCreateViewModel
+@model WebApp.ViewModels.ReviewCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -18,13 +18,9 @@
                 <span asp-validation-for="Review.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Review.Comment" class="control-label"></label>
-                <input asp-for="Review.Comment" class="form-control" />
-                <span asp-validation-for="Review.Comment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Review.TaskId" class="control-label"></label>
-                <select asp-for="Review.TaskId" class ="form-control" asp-items="Model.TaskSelectList"></select>
+                <label asp-for="Review.ReviewComment" class="control-label"></label>
+                <input asp-for="Review.ReviewComment" class="form-control" />
+                <span asp-validation-for="Review.ReviewComment" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Review.AppUserId" class="control-label"></label>

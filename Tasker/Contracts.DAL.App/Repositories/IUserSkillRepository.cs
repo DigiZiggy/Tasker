@@ -1,14 +1,11 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.Base.Repositories;
-using DAL.App.DTO;
 using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IUserSkillRepository : IBaseRepositoryAsync<UserSkill>
+    public interface IUserSkillRepository : IBaseRepositoryAsync<UserSkill, int>
     {
-        Task<IEnumerable<UserSkillDTO>> GetAllWithUserSkillAsync();
-
+        Task<UserSkill> FindAllIncludedAsync(params object[] id);      
     }
 }

@@ -44,5 +44,3 @@ namespace Contracts.DAL.Base.Repositories
         void Add(TEntity entity);
     }
 }
-
-

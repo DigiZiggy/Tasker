@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
 using DAL.Base.EF.Repositories;
-using Remotion.Linq.Clauses.ResultOperators;
+
 
 namespace DAL.Base.EF.Helpers
 {
     public class BaseRepositoryFactory : IBaseRepositoryFactory
     {
-        protected readonly Dictionary<Type, Func<IDataContext, object>> _repositoryCreationMethods;
+        protected readonly Dictionary<Type, Func<IDataContext, object>> _repositoryCreationMethodCache;
 
         public BaseRepositoryFactory() : this(new Dictionary<Type, Func<IDataContext, object>>())
         {
@@ -17,13 +17,13 @@ namespace DAL.Base.EF.Helpers
         }
         public BaseRepositoryFactory(Dictionary<Type, Func<IDataContext, object>> repositoryCreationMethods)
         {
-            _repositoryCreationMethods = repositoryCreationMethods;
+            _repositoryCreationMethodCache = repositoryCreationMethods;
         }
 
         public Func<IDataContext, object> GetRepositoryFactory<TRepository>(){
-            if (_repositoryCreationMethods.ContainsKey(typeof(TRepository)))
+            if (_repositoryCreationMethodCache.ContainsKey(typeof(TRepository)))
             {
-                return  _repositoryCreationMethods[typeof(TRepository)];
+                return  _repositoryCreationMethodCache[typeof(TRepository)];
             }
 
             throw new NullReferenceException("No repo creation method found for " + typeof(TRepository).FullName);

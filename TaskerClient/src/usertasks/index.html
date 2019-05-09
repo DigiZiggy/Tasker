@@ -1,0 +1,42 @@
+<template>
+
+  <h1>User Tasks - Index</h1>
+
+  <p>
+    <a route-href="route: userTasksCreate">User Tasks - Create New</a>
+  </p>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>
+        From when
+      </th>
+      <th>
+        Till when
+      </th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- repeat this tr element, iterate over userOnTasks -->
+    <tr repeat.for="userTask of userTasks">
+      <td>
+        <!-- string interpolation -->
+        ${userTask.Start}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${userTask.End}
+      </td>
+      <td>
+        <!-- gdenerate links, based on routing table defined in main-router -->
+        <a route-href="route: userTasksEdit; params.bind: {id: userTask.id}">Edit</a> |
+        <a route-href="route: userTasksDetails; params.bind: {id: userTask.id}">Details</a> |
+        <a route-href="route: userTasksDelete; params.bind: {id: userTask.id}">Delete</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+
+</template>

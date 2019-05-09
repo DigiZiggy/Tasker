@@ -29,6 +29,5 @@ namespace BLL.Base
         {
             return await Uow.SaveChangesAsync();   
         }
-
     }
 }

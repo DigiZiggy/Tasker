@@ -17,6 +17,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             _uow = uow;
         }
+
         // GET: UserOnAddresses
         public async Task<IActionResult> Index()
         {
@@ -33,7 +34,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
+            var userOnAddress = await _uow.UserOnAddresses.FindAllIncludedAsync(id);
 
             if (userOnAddress == null)
             {
@@ -49,13 +50,13 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new UserOnAddressCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id"),
                 AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id"),
-                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id")
             };
-         
+            
             return View(vm);
         }
+
 
         // POST: UserOnAddresses/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -70,13 +71,12 @@ namespace WebApp.Areas.Admin.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
             vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "FirstName", vm.UserOnAddress.AppUserId);
+                "Id", vm.UserOnAddress.AppUserId);
             vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
 
             return View(vm);
+
         }
 
         // GET: UserOnAddresses/Edit/5
@@ -92,12 +92,10 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            
             var vm = new UserOnAddressEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", userOnAddress.AppUserId),
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", userOnAddress.AppUserId),
                 AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", userOnAddress.AddressId),
-                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", userOnAddress.UserId)
             };
             
             return View(vm);
@@ -119,16 +117,15 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 _uow.UserOnAddresses.Update(vm.UserOnAddress);
                 await _uow.SaveChangesAsync();
-  
+
                 return RedirectToAction(nameof(Index));
             }
-            
             vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "FirstName", vm.UserOnAddress.AppUserId);
+                "Id", vm.UserOnAddress.AppUserId);
             vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.UserOnAddress.UserId);
 
             return View(vm);
+
         }
 
         // GET: UserOnAddresses/Delete/5
@@ -139,12 +136,12 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
+            var userOnAddress = await _uow.UserOnAddresses.FindAllIncludedAsync(id);
+
             if (userOnAddress == null)
             {
                 return NotFound();
             }
-
             return View(userOnAddress);
         }
 

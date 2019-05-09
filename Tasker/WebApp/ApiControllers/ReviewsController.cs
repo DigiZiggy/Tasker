@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
-using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,43 +12,27 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
     public class ReviewsController : ControllerBase
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly AppDbContext _context;
 
-        public ReviewsController(IAppUnitOfWork uow)
+        public ReviewsController(AppDbContext context)
         {
-            _uow = uow;
+            _context = context;
         }
 
         // GET: api/Reviews
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
+        public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
         {
-//            var result = new List<ReviewDTO>();
-//            var reviews = await _uow.Reviews.AllAsync();
-//            foreach (var review in reviews)
-//            {
-//                result.Add(new ReviewDTO()
-//                {
-//                    Id = review.Id,
-//                    Rating = review.Rating,
-//                    Comment = review.Comment
-//                });   
-//            }   
-//            
-//            return Ok(result); 
-            return Ok(await _uow.Reviews.GetAllWithReviewAsync());           
-
+            return await _context.Reviews.ToListAsync();
         }
 
         // GET: api/Reviews/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Review>> GetReview(int id)
         {
-            var review = await _uow.Reviews.FindAsync(id);
+            var review = await _context.Reviews.FindAsync(id);
 
             if (review == null)
             {
@@ -69,8 +51,23 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _uow.Reviews.Update(review);
-            await _uow.SaveChangesAsync();
+            _context.Entry(review).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReviewExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -79,8 +76,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Review>> PostReview(Review review)
         {
-            await _uow.Reviews.AddAsync(review);
-            await _uow.SaveChangesAsync();
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetReview", new { id = review.Id }, review);
         }
@@ -89,16 +86,21 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Review>> DeleteReview(int id)
         {
-            var review = await _uow.Reviews.FindAsync(id);
+            var review = await _context.Reviews.FindAsync(id);
             if (review == null)
             {
                 return NotFound();
             }
 
-            _uow.Reviews.Remove(review);
-            await _uow.SaveChangesAsync();
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
 
             return review;
+        }
+
+        private bool ReviewExists(int id)
+        {
+            return _context.Reviews.Any(e => e.Id == id);
         }
     }
 }

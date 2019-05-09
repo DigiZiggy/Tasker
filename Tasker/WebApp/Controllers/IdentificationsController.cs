@@ -26,7 +26,6 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var identifications = await _uow.Identifications.AllAsync();
-
             return View(identifications);
         }
 
@@ -38,7 +37,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _uow.Identifications.FindAsync(id);
+            var identification = await _uow.Identifications.FindAllIncludedAsync(id);
 
             if (identification == null)
             {
@@ -50,12 +49,10 @@ namespace WebApp.Controllers
 
         // GET: Identifications/Create
         public async Task<IActionResult> Create()
-        {     
+        {
             var vm = new IdentificationCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName"),
-                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id"),
-                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id))
             };
             
             return View(vm);
@@ -74,12 +71,9 @@ namespace WebApp.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
             vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "FirstName", vm.Identification.AppUserId);
-            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
-
+                "Id", vm.Identification.AppUserId);
+      
             return View(vm);
         }
 
@@ -96,15 +90,13 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            
             var vm = new IdentificationEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "FirstName", identification.AppUserId),
-                IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id", identification.IdentificationTypeId),
-                UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", identification.UserId)
+                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", identification.AppUserId),
             };
            
             return View(vm);
+
         }
 
         // POST: Identifications/Edit/5
@@ -123,15 +115,12 @@ namespace WebApp.Controllers
             {
                 _uow.Identifications.Update(vm.Identification);
                 await _uow.SaveChangesAsync();
-  
+
                 return RedirectToAction(nameof(Index));
             }
-            
             vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "FirstName", vm.Identification.AppUserId);
-            vm.IdentificationTypeSelectList = new SelectList(await _uow.BaseRepositoryAsync<IdentificationType>().AllAsync(), "Id", "Id", vm.Identification.IdentificationTypeId);
-            vm.UserSelectList = new SelectList(await _uow.BaseRepositoryAsync<User>().AllAsync(), "Id", "Id", vm.Identification.UserId);
-
+                "Id", vm.Identification.AppUserId);
+        
             return View(vm);
         }
 
@@ -143,7 +132,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _uow.Identifications.FindAsync(id);
+            var identification = await _uow.Identifications.FindAllIncludedAsync(id);
+
             if (identification == null)
             {
                 return NotFound();

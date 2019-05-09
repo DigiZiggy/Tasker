@@ -7,6 +7,5 @@ namespace WebApp.ViewModels
     {
         public Review Review { get; set; }
         public SelectList AppUserSelectList { get; set; }
-        public SelectList TaskSelectList { get; set; }
     }
 }

@@ -7,7 +7,5 @@ namespace WebApp.ViewModels
     {
         public Identification Identification { get; set; }
         public SelectList AppUserSelectList { get; set; }
-        public SelectList IdentificationTypeSelectList { get; set; }
-        public SelectList UserSelectList { get; set; }
     }
 }

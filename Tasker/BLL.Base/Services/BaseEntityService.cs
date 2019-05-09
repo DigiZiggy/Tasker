@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.Base.Services;
 using Contracts.DAL.Base;
-using DAL.Base.EF.Repositories;
 
 namespace BLL.Base.Services
 {
@@ -46,5 +45,4 @@ namespace BLL.Base.Services
             await Uow.BaseRepositoryAsync<TEntity>().AddAsync(entity);
         }
     }
-
 }
