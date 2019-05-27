@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class IdentificationsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public IdentificationsController(AppDbContext context)
+        public IdentificationsController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
         // GET: api/Identifications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Identification>>> GetIdentifications()
+        public async Task<List<Identification>> GetIdentifications()
         {
-            return await _context.Identifications.ToListAsync();
+            return await _bll.Identifications.AllAsync();
         }
 
         // GET: api/Identifications/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Identification>> GetIdentification(int id)
         {
-            var identification = await _context.Identifications.FindAsync(id);
+            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
 
             if (identification == null)
             {
@@ -50,24 +52,9 @@ namespace WebApp.ApiControllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(identification).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IdentificationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            
+            _bll.Identifications.Update(identification);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +63,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Identification>> PostIdentification(Identification identification)
         {
-            _context.Identifications.Add(identification);
-            await _context.SaveChangesAsync();
+            await _bll.Identifications.AddAsync(identification);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetIdentification", new { id = identification.Id }, identification);
         }
@@ -86,21 +73,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Identification>> DeleteIdentification(int id)
         {
-            var identification = await _context.Identifications.FindAsync(id);
+            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
             if (identification == null)
             {
                 return NotFound();
             }
 
-            _context.Identifications.Remove(identification);
-            await _context.SaveChangesAsync();
+            _bll.Identifications.Remove(identification);
+            await _bll.SaveChangesAsync();
 
             return identification;
-        }
-
-        private bool IdentificationExists(int id)
-        {
-            return _context.Identifications.Any(e => e.Id == id);
         }
     }
 }

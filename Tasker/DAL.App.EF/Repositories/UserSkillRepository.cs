@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserSkillRepository : BaseRepositoryAsync<UserSkill>, IUserSkillRepository
+    public class UserSkillRepository : BaseRepository<UserSkill, AppDbContext>, IUserSkillRepository
     {
-        public UserSkillRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public UserSkillRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
         
-        public override async Task<IEnumerable<UserSkill>> AllAsync()
+        public override async Task<List<UserSkill>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(a => a.AppUser)

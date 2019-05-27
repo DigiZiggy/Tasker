@@ -4,7 +4,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IPaymentRepository : IBaseRepositoryAsync<Payment, int>
+    public interface IPaymentRepository : IBaseRepositoryAsync<Payment>
     {
         Task<Payment> FindAllIncludedAsync(params object[] id);      
         

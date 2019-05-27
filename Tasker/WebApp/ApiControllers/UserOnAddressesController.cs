@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class UserOnAddressesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public UserOnAddressesController(AppDbContext context)
+        public UserOnAddressesController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
         // GET: api/UserOnAddresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserOnAddress>>> GetUserOnAddresses()
+        public async Task<List<UserOnAddress>> GetUserOnAddresses()
         {
-            return await _context.UserOnAddresses.ToListAsync();
+            return await _bll.UserOnAddresses.AllAsync();
         }
 
         // GET: api/UserOnAddresses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserOnAddress>> GetUserOnAddress(int id)
         {
-            var userOnAddress = await _context.UserOnAddresses.FindAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
 
             if (userOnAddress == null)
             {
@@ -51,23 +53,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(userOnAddress).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserOnAddressExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _bll.UserOnAddresses.Update(userOnAddress);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +63,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<UserOnAddress>> PostUserOnAddress(UserOnAddress userOnAddress)
         {
-            _context.UserOnAddresses.Add(userOnAddress);
-            await _context.SaveChangesAsync();
+            await _bll.UserOnAddresses.AddAsync(userOnAddress);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetUserOnAddress", new { id = userOnAddress.Id }, userOnAddress);
         }
@@ -86,21 +73,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserOnAddress>> DeleteUserOnAddress(int id)
         {
-            var userOnAddress = await _context.UserOnAddresses.FindAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
             if (userOnAddress == null)
             {
                 return NotFound();
             }
 
-            _context.UserOnAddresses.Remove(userOnAddress);
-            await _context.SaveChangesAsync();
+            _bll.UserOnAddresses.Remove(userOnAddress);
+            await _bll.SaveChangesAsync();
 
             return userOnAddress;
-        }
-
-        private bool UserOnAddressExists(int id)
-        {
-            return _context.UserOnAddresses.Any(e => e.Id == id);
         }
     }
 }

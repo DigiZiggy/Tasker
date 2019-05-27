@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class AddressesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public AddressesController(AppDbContext context)
+        public AddressesController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
         // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Address>>> GetAddresses()
+        public async Task<List<Address>> GetAddresses()
         {
-            return await _context.Addresses.ToListAsync();
+            return await _bll.Addresses.AllAsync();
         }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Address>> GetAddress(int id)
         {
-            var address = await _context.Addresses.FindAsync(id);
+            var address = await _bll.Addresses.FindAsync(id);
 
             if (address == null)
             {
@@ -51,23 +53,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(address).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AddressExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _bll.Addresses.Update(address);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +63,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
+            await _bll.Addresses.AddAsync(address);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetAddress", new { id = address.Id }, address);
         }
@@ -86,21 +73,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Address>> DeleteAddress(int id)
         {
-            var address = await _context.Addresses.FindAsync(id);
+            var address = await _bll.Addresses.FindAsync(id);
             if (address == null)
             {
                 return NotFound();
             }
 
-            _context.Addresses.Remove(address);
-            await _context.SaveChangesAsync();
+            _bll.Addresses.Remove(address);
+            await _bll.SaveChangesAsync();
 
             return address;
-        }
-
-        private bool AddressExists(int id)
-        {
-            return _context.Addresses.Any(e => e.Id == id);
         }
     }
 }

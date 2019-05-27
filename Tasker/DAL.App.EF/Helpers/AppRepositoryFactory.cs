@@ -1,51 +1,35 @@
 using Contracts.DAL.App.Repositories;
+using Contracts.DAL.App.Repositories.Identity;
 using Contracts.DAL.Base.Helpers;
 using DAL.App.EF.Repositories;
+using DAL.App.EF.Repositories.Identity;
 using DAL.Base.EF.Helpers;
+using AppUserRepository = DAL.App.EF.Repositories.AppUserRepository;
 
 namespace DAL.App.EF.Helpers
 {
-    public class AppRepositoryFactory : BaseRepositoryFactory, IBaseRepositoryFactory
+    public class AppRepositoryFactory : BaseRepositoryFactory<AppDbContext>
     {
         public AppRepositoryFactory()
         {
-            // add to dict all the repo creation methods we might need            
-            _repositoryCreationMethodCache.Add(typeof(IAppUserRepository), 
-                dataContext => new AppUserRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IAddressRepository), 
-                dataContext => new AddressRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IHourlyRateRepository), 
-                dataContext => new HourlyRateRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IIdentificationRepository), 
-                dataContext => new IdentificationRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IInvoiceRepository), 
-                dataContext => new InvoiceRepository(dataContext));
+            RegisterRepositories();
+        }
 
-            _repositoryCreationMethodCache.Add(typeof(IPaymentRepository), 
-                dataContext => new PaymentRepository(dataContext));
-           
-            _repositoryCreationMethodCache.Add(typeof(IReviewRepository), 
-                dataContext => new ReviewRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(ISkillRepository), 
-                dataContext => new SkillRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(ITaskerTaskRepository), 
-                dataContext => new TaskerTaskRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IUserOnAddressRepository), 
-                dataContext => new UserOnAddressRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IUserTaskRepository), 
-                dataContext => new UserTaskRepository(dataContext));
-            
-            _repositoryCreationMethodCache.Add(typeof(IUserSkillRepository), 
-                dataContext => new UserSkillRepository(dataContext));
-            
+        private void RegisterRepositories()
+        {
+            AddToCreationMethods<IAppUserRepository>(dataContext => new AppUserRepository(dataContext));
+            AddToCreationMethods<IAppRoleRepository>(dataContext => new AppRoleRepository(dataContext));
+            AddToCreationMethods<IAddressRepository>(dataContext => new AddressRepository(dataContext));
+            AddToCreationMethods<IHourlyRateRepository>(dataContext => new HourlyRateRepository(dataContext));
+            AddToCreationMethods<IIdentificationRepository>(dataContext => new IdentificationRepository(dataContext));
+            AddToCreationMethods<IInvoiceRepository>(dataContext => new InvoiceRepository(dataContext));
+            AddToCreationMethods<IPaymentRepository>(dataContext => new PaymentRepository(dataContext));
+            AddToCreationMethods<IReviewRepository>(dataContext => new ReviewRepository(dataContext));
+            AddToCreationMethods<ISkillRepository>(dataContext => new SkillRepository(dataContext));
+            AddToCreationMethods<ITaskerTaskRepository>(dataContext => new TaskerTaskRepository(dataContext));
+            AddToCreationMethods<IUserOnAddressRepository>(dataContext => new UserOnAddressRepository(dataContext));
+            AddToCreationMethods<IUserTaskRepository>(dataContext => new UserTaskRepository(dataContext));
+            AddToCreationMethods<IUserSkillRepository>(dataContext => new UserSkillRepository(dataContext));
         }
     }
 }

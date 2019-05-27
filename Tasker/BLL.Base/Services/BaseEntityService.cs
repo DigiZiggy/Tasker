@@ -3,46 +3,65 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.Base.Services;
 using Contracts.DAL.Base;
+using Contracts.DAL.Base.Repositories;
 
 namespace BLL.Base.Services
 {
-    public class BaseEntityService<TEntity> : BaseService, IBaseEntityService<TEntity> where TEntity : class, IBaseEntity<int>, new()
+    public class BaseEntityService<TEntity, TUnitOfWork> : BaseService, IBaseEntityService<TEntity> where TEntity : class, IBaseEntity, new()
+        where TUnitOfWork: IBaseUnitOfWork
     {
-        protected readonly IUnitOfWork Uow;
+        protected readonly TUnitOfWork Uow;
+        private readonly IBaseRepository<TEntity> _repo; 
 
-        public BaseEntityService(IUnitOfWork uow)
+        public BaseEntityService(TUnitOfWork uow)
         {
             Uow = uow;
+            _repo = Uow.BaseRepository<TEntity>();
         }
 
-        public TEntity Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
-            return Uow.BaseRepositoryAsync<TEntity>().Update(entity);
+            return _repo.Update(entity);
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
-            Uow.BaseRepositoryAsync<TEntity>().Remove(entity);
+            _repo.Remove(entity);
         }
 
-        public void Remove(params object[] id)
+        public virtual void Remove(params object[] id)
         {
-            Uow.BaseRepositoryAsync<TEntity>().Remove(id);
+            _repo.Remove(id);
         }
 
-        public async Task<IEnumerable<TEntity>> AllAsync()
+        public virtual async Task<List<TEntity>> AllAsync()
         {
-            return await Uow.BaseRepositoryAsync<TEntity>().AllAsync();
+            return await _repo.AllAsync();
         }
 
-        public async Task<TEntity> FindAsync(params object[] id)
+        public virtual async Task<TEntity> FindAsync(params object[] id)
         {
-            return await Uow.BaseRepositoryAsync<TEntity>().FindAsync(id);
+            return await _repo.FindAsync(id);
         }
 
-        public async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync(TEntity entity)
         {
-            await Uow.BaseRepositoryAsync<TEntity>().AddAsync(entity);
+            await _repo.AddAsync(entity);
+        }
+
+        public List<TEntity> All()
+        {
+            return _repo.All();
+        }
+
+        public TEntity Find(params object[] id)
+        {
+            return _repo.Find(id);
+        }
+
+        public void Add(TEntity entity)
+        {
+            _repo.Add(entity);
         }
     }
 }

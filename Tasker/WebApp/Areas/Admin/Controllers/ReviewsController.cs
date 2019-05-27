@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Domain.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,17 +12,17 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class ReviewsController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public ReviewsController(IAppUnitOfWork uow)
+        public ReviewsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            var reviews = await _uow.Reviews.AllAsync();
+            var reviews = await _bll.Reviews.AllAsync();
 
             return View(reviews);
         }
@@ -33,7 +35,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var review = await _uow.Reviews.FindAllIncludedAsync(id);
+            var review = await _bll.Reviews.FindAllIncludedAsync(id);
 
             if (review == null)
             {
@@ -49,7 +51,8 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new ReviewCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id")
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id))
             };
            
             return View(vm);
@@ -64,12 +67,12 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.Reviews.AddAsync(vm.Review);
-                await _uow.SaveChangesAsync();
+                await _bll.Reviews.AddAsync(vm.Review);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.Review.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Review.AppUserId);
 
             return View(vm);
         }
@@ -82,14 +85,15 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var review = await _uow.Reviews.FindAsync(id);
+            var review = await _bll.Reviews.FindAsync(id);
             if (review == null)
             {
                 return NotFound();
             }
             var vm = new ReviewEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", review.AppUserId)
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id), review.AppUserId)
             };
 
             return View(vm);
@@ -109,13 +113,13 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Reviews.Update(vm.Review);
-                await _uow.SaveChangesAsync();
+                _bll.Reviews.Update(vm.Review);
+                await _bll.SaveChangesAsync();
   
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.Review.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Review.AppUserId);
 
             return View(vm);
         }
@@ -128,7 +132,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var review = await _uow.Reviews.FindAllIncludedAsync(id);
+            var review = await _bll.Reviews.FindAllIncludedAsync(id);
             
             if (review == null)
             {
@@ -143,8 +147,8 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.Reviews.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.Reviews.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

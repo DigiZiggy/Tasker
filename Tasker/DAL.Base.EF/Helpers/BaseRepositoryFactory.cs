@@ -3,35 +3,47 @@ using System.Collections.Generic;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
 using DAL.Base.EF.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace DAL.Base.EF.Helpers
 {
-    public class BaseRepositoryFactory : IBaseRepositoryFactory
+    public class BaseRepositoryFactory<TDbContext> : IBaseRepositoryFactory<TDbContext>
+        where TDbContext: DbContext
     {
-        protected readonly Dictionary<Type, Func<IDataContext, object>> _repositoryCreationMethodCache;
+        private readonly Dictionary<Type, Func<TDbContext, object>> _repositoryCreationMethodCache;
 
-        public BaseRepositoryFactory() : this(new Dictionary<Type, Func<IDataContext, object>>())
+        public BaseRepositoryFactory() : this(new Dictionary<Type, Func<TDbContext, object>>())
         {
-            
         }
-        public BaseRepositoryFactory(Dictionary<Type, Func<IDataContext, object>> repositoryCreationMethods)
+
+        public BaseRepositoryFactory(Dictionary<Type, Func<TDbContext, object>> repositoryCreationMethods)
         {
             _repositoryCreationMethodCache = repositoryCreationMethods;
         }
 
-        public Func<IDataContext, object> GetRepositoryFactory<TRepository>(){
+        public void AddToCreationMethods<TRepository>(Func<TDbContext, TRepository> creationMethod)
+            where TRepository : class
+        {
+            _repositoryCreationMethodCache.Add(typeof(TRepository), creationMethod);
+        }
+
+    
+
+        public Func<TDbContext, object> GetRepositoryFactory<TRepository>()
+        {
             if (_repositoryCreationMethodCache.ContainsKey(typeof(TRepository)))
             {
-                return  _repositoryCreationMethodCache[typeof(TRepository)];
+                return _repositoryCreationMethodCache[typeof(TRepository)];
             }
 
             throw new NullReferenceException("No repo creation method found for " + typeof(TRepository).FullName);
         }
-        
-        public  Func<IDataContext, object> GetEntityRepositoryFactory<TEntity>() where TEntity : class, IBaseEntity<int>, new()
+
+        public Func<TDbContext, object> GetEntityRepositoryFactory<TEntity>()
+            where TEntity : class, IBaseEntity, new()
         {
-            return (IDataContext dataContext) => new BaseRepositoryAsync<TEntity>(dataContext);
+            return dataContext => new BaseRepository<TEntity, TDbContext>(dataContext);
         }
     }
 }

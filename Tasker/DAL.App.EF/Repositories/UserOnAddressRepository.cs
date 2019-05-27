@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserOnAddressRepository : BaseRepositoryAsync<UserOnAddress>, IUserOnAddressRepository
+    public class UserOnAddressRepository : BaseRepository<UserOnAddress, AppDbContext>, IUserOnAddressRepository
     {
-        public UserOnAddressRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public UserOnAddressRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
         
-        public override async Task<IEnumerable<UserOnAddress>> AllAsync()
+        public override async Task<List<UserOnAddress>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(u => u.Address)

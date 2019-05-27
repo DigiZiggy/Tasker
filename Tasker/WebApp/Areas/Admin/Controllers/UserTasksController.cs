@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
-using Domain;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -10,17 +11,17 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class UserTasksController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public UserTasksController(IAppUnitOfWork uow)
+        public UserTasksController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: UserTasks
         public async Task<IActionResult> Index()
         {
-            var userTasks = await _uow.UserTasks.AllAsync();
+            var userTasks = await _bll.UserTasks.AllAsync();
 
             return View(userTasks);
         }
@@ -33,7 +34,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userTask = await _uow.UserTasks.FindAllIncludedAsync(id);
+            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
 
             if (userTask == null)
             {
@@ -48,8 +49,8 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new UserTaskCreateViewModel()
             {
-                TaskGiverSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id"),
-                TaskerSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id")
+                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), nameof(Task.Id)),
+                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), nameof(Task.Id))
 
             };          
             return View(vm);
@@ -64,12 +65,14 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.UserTasks.AddAsync(vm.UserTask);
-                await _uow.SaveChangesAsync();
+                await _bll.UserTasks.AddAsync(vm.UserTask);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.TaskerSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id", vm.UserTask.TaskerId);
-            vm.TaskGiverSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id", vm.UserTask.TaskGiverId);
+            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
+                nameof(Task.Id), vm.UserTask.TaskerId);
+            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
+                nameof(Task.Id), vm.UserTask.TaskGiverId);
 
             return View(vm);
         }
@@ -82,15 +85,17 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userTask = await _uow.UserTasks.FindAsync(id);
+            var userTask = await _bll.UserTasks.FindAsync(id);
             if (userTask == null)
             {
                 return NotFound();
             }
             var vm = new UserTaskEditViewModel()
             {
-                TaskGiverSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id", userTask.TaskGiverId),
-                TaskerSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id", userTask.TaskerId)
+                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
+                    nameof(Task.Id), userTask.TaskGiverId),
+                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
+                    nameof(Task.Id), userTask.TaskerId)
             };
             
             return View(vm);
@@ -110,13 +115,15 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.UserTasks.Update(vm.UserTask);
-                await _uow.SaveChangesAsync();
+                _bll.UserTasks.Update(vm.UserTask);
+                await _bll.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.TaskerSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id", vm.UserTask.TaskerId);
-            vm.TaskGiverSelectList = new SelectList(await _uow.BaseRepositoryAsync<TaskerTask>().AllAsync(), "Id", "Id", vm.UserTask.TaskGiverId);
+            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
+                nameof(Task.Id), vm.UserTask.TaskerId);
+            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
+                nameof(Task.Id), vm.UserTask.TaskGiverId);
 
             return View(vm);
         }
@@ -129,7 +136,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userTask = await _uow.UserTasks.FindAllIncludedAsync(id);
+            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
 
             if (userTask == null)
             {
@@ -144,8 +151,8 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.UserTasks.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.UserTasks.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

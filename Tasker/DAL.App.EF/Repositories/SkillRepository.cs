@@ -5,9 +5,9 @@ using Domain;
 
 namespace DAL.App.EF.Repositories
 {
-    public class SkillRepository : BaseRepositoryAsync<Skill>, ISkillRepository
+    public class SkillRepository : BaseRepository<Skill, AppDbContext>, ISkillRepository
     {
-        public SkillRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public SkillRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
     }

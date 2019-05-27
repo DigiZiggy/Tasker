@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,17 +10,17 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class AddressesController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
         
-        public AddressesController(IAppUnitOfWork uow)
+        public AddressesController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Addresses
         public async Task<IActionResult> Index()
         {
-            return View(await _uow.Addresses.AllAsync());
+            return View(await _bll.Addresses.AllAsync());
         }
 
         // GET: Addresses/Details/5
@@ -29,7 +31,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var address = await _uow.Addresses.FindAsync(id);
+            var address = await _bll.Addresses.FindAsync(id);
 
             if (address == null)
             {
@@ -54,8 +56,8 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.Addresses.AddAsync(address);
-                await _uow.SaveChangesAsync();
+                await _bll.Addresses.AddAsync(address);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(address);
@@ -69,7 +71,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var address = await _uow.Addresses.FindAsync(id);
+            var address = await _bll.Addresses.FindAsync(id);
             if (address == null)
             {
                 return NotFound();
@@ -91,8 +93,8 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Addresses.Update(address);
-                await _uow.SaveChangesAsync();
+                _bll.Addresses.Update(address);
+                await _bll.SaveChangesAsync();
  
                 return RedirectToAction(nameof(Index));
             }
@@ -107,7 +109,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var address = await _uow.Addresses.FindAsync(id);
+            var address = await _bll.Addresses.FindAsync(id);
             if (address == null)
             {
                 return NotFound();
@@ -121,8 +123,8 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.Addresses.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.Addresses.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

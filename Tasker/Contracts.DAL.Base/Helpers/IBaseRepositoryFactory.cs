@@ -1,13 +1,18 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace Contracts.DAL.Base.Helpers
 {
-    public interface IBaseRepositoryFactory
+    public interface IBaseRepositoryFactory<TDbContext>
+        where TDbContext: DbContext
     {
-        Func<IDataContext, object> GetRepositoryFactory<TRepository>();
+        void AddToCreationMethods<TRepository>(Func<TDbContext, TRepository> creationMethod)
+            where TRepository : class;
+        
+        Func<TDbContext, object> GetRepositoryFactory<TRepository>();
 
-        Func<IDataContext, object> GetEntityRepositoryFactory<TEntity>()
-            where TEntity : class, IBaseEntity<int>, new();
+        Func<TDbContext, object> GetEntityRepositoryFactory<TEntity>()
+            where TEntity : class, IBaseEntity, new();        
 
     }
 }

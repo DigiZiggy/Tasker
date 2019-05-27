@@ -1,10 +1,13 @@
 ﻿using Contracts.DAL.App.Repositories;
+using Contracts.DAL.App.Repositories.Identity;
 using Contracts.DAL.Base;
 
 namespace Contracts.DAL.App
 {
-    public interface IAppUnitOfWork : IUnitOfWork
+    public interface IAppUnitOfWork : IBaseUnitOfWork
     {
+        IAppUserRepository AppUsers { get; }
+        IAppRoleRepository AppRoles { get; }
         IAddressRepository Addresses { get; }
         IHourlyRateRepository HourlyRates { get; }
         IIdentificationRepository Identifications { get; }
@@ -15,7 +18,7 @@ namespace Contracts.DAL.App
         ITaskerTaskRepository Tasks { get; }
         IUserOnAddressRepository UserOnAddresses { get; }
         IUserTaskRepository UserTasks { get; }
-        IUserSkillRepository UserSills { get; }
-        
+        IUserSkillRepository UserSkills { get; }
+       
     }
 }

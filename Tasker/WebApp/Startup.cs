@@ -4,11 +4,19 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.App;
+using BLL.App.Helpers;
+using BLL.Base.Helpers;
+using Contracts.BLL.App;
+using Contracts.BLL.Base.Helpers;
 using Contracts.DAL.App;
+using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
+using DAL;
 using DAL.App.EF;
 using DAL.App.EF.Helpers;
+using DAL.App.EF.Repositories;
 using DAL.Base.EF.Helpers;
 using Domain.Identity;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +28,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -47,36 +56,48 @@ namespace WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // set up db with pomelo mysql
             services.AddDbContext<AppDbContext>(options =>
+                // UseMySQL is oracle non-functional driver
                 options.UseMySql(
                     Configuration.GetConnectionString("MySqlConnection")));
 
-            services.AddScoped<IDataContext, AppDbContext>();
-            services.AddSingleton<IBaseRepositoryFactory, AppRepositoryFactory>();
-            services.AddScoped<IBaseRepositoryProvider, BaseRepositoryProvider>();
+
+            //services.AddScoped<IDataContext, AppDbContext>();
+            services.AddScoped<IBaseRepositoryProvider, BaseRepositoryProvider<AppDbContext>>();
+            services.AddSingleton<IBaseRepositoryFactory<AppDbContext>, AppRepositoryFactory>();
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
-                           
+
+            services.AddSingleton<IBaseServiceFactory<IAppUnitOfWork>, AppServiceFactory>();
+            services.AddScoped<IBaseServiceProvider, BaseServiceProvider<IAppUnitOfWork>>();
+            services.AddScoped<IAppBLL, AppBLL>();
+            
+            
+            
             /*
-              services.AddDefaultIdentity<AppUser>()
-                  .AddDefaultUI(UIFramework.Bootstrap4)
-                  .AddEntityFrameworkStores<AppDbContext>();
-  */
+            services.AddDefaultIdentity<AppUser>()
+                .AddDefaultUI(UIFramework.Bootstrap4)
+                .AddEntityFrameworkStores<AppDbContext>();
+*/
             services
                 .AddIdentity<AppUser, AppRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+            
+            // Relax password requirements for easy testing
+            // TODO: Remove in production
             services.Configure<IdentityOptions>(options =>
-                {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequiredUniqueChars = 0;
-                }
-            );
-                
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireNonAlphanumeric = false;
+
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsAllowAll",
@@ -88,7 +109,7 @@ namespace WebApp
                     });
                 
             });
-
+            
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -129,6 +150,7 @@ namespace WebApp
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -151,10 +173,12 @@ namespace WebApp
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-            app.UseCors("CorsAllowAll");
 
+            app.UseCors("CorsAllowAll");
+            
             app.UseMvc(routes =>
             {
+
                 routes.MapRoute(
                     name: "area",
                     template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -163,8 +187,8 @@ namespace WebApp
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
             });
+                       
         }
     }
 }

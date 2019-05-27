@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Domain.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,17 +12,17 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class IdentificationsController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public IdentificationsController(IAppUnitOfWork uow)
+        public IdentificationsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Identifications
         public async Task<IActionResult> Index()
         {
-            var identifications = await _uow.Identifications.AllAsync();
+            var identifications = await _bll.Identifications.AllAsync();
             return View(identifications);
         }
 
@@ -32,7 +34,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var identification = await _uow.Identifications.FindAllIncludedAsync(id);
+            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
 
             if (identification == null)
             {
@@ -47,7 +49,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new IdentificationCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id))
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id))
             };
             
             return View(vm);
@@ -62,12 +64,12 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.Identifications.AddAsync(vm.Identification);
-                await _uow.SaveChangesAsync();
+                await _bll.Identifications.AddAsync(vm.Identification);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.Identification.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Identification.AppUserId);
       
             return View(vm);
         }
@@ -80,14 +82,15 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var identification = await _uow.Identifications.FindAsync(id);
+            var identification = await _bll.Identifications.FindAsync(id);
             if (identification == null)
             {
                 return NotFound();
             }
             var vm = new IdentificationEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", identification.AppUserId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id), identification.AppUserId),
             };
            
             return View(vm);
@@ -108,13 +111,13 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Identifications.Update(vm.Identification);
-                await _uow.SaveChangesAsync();
+                _bll.Identifications.Update(vm.Identification);
+                await _bll.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.Identification.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Identification.AppUserId);
         
             return View(vm);
         }
@@ -127,7 +130,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var identification = await _uow.Identifications.FindAllIncludedAsync(id);
+            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
 
             if (identification == null)
             {
@@ -142,8 +145,8 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.Identifications.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.Identifications.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

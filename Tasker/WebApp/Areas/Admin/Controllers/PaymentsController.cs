@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Contracts.DAL.App;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,17 +12,17 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class PaymentsController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public PaymentsController(IAppUnitOfWork uow)
+        public PaymentsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Payments
         public async Task<IActionResult> Index()
         {
-            var payments = await _uow.Payments.AllAsync();
+            var payments = await _bll.Payments.AllAsync();
 
             return View(payments);
         }
@@ -33,7 +35,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var payment = await _uow.Payments.FindAllIncludedAsync(id);
+            var payment = await _bll.Payments.FindAllIncludedAsync(id);
 
             if (payment == null)
             {
@@ -48,7 +50,8 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new PaymentCreateViewModel()
             {
-                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "Id"),
+                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id), 
+                    nameof(Invoice.Id)),
 
             };
 
@@ -64,12 +67,12 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.Payments.AddAsync(vm.Payment);
-                await _uow.SaveChangesAsync();
+                await _bll.Payments.AddAsync(vm.Payment);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id",
-                "Id", vm.Payment.InvoiceId);
+            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id),
+                nameof(Invoice.Id), vm.Payment.InvoiceId);
 
             return View(vm);
 
@@ -83,14 +86,15 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var payment = await _uow.Payments.FindAsync(id);
+            var payment = await _bll.Payments.FindAsync(id);
             if (payment == null)
             {
                 return NotFound();
             }
             var vm = new PaymentEditViewModel()
             {
-                InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id", "Id", payment.InvoiceId),
+                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id), 
+                    nameof(Invoice.Id), payment.InvoiceId),
 
             };
 
@@ -111,14 +115,14 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Payments.Update(vm.Payment);
-                await _uow.SaveChangesAsync();
+                _bll.Payments.Update(vm.Payment);
+                await _bll.SaveChangesAsync();
       
                 return RedirectToAction(nameof(Index));
             }
                  
-            vm.InvoiceSelectList = new SelectList(await _uow.BaseRepositoryAsync<Invoice>().AllAsync(), "Id",
-                "Id", vm.Payment.InvoiceId);
+            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id),
+                nameof(Invoice.Id), vm.Payment.InvoiceId);
             
             return View(vm);
         }
@@ -131,7 +135,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var payment = await _uow.Payments.FindAllIncludedAsync(id);
+            var payment = await _bll.Payments.FindAllIncludedAsync(id);
 
             if (payment == null)
             {
@@ -146,8 +150,8 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.Payments.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.Payments.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

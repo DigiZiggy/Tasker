@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserTaskRepository : BaseRepositoryAsync<UserTask>, IUserTaskRepository
+    public class UserTaskRepository : BaseRepository<UserTask, AppDbContext>, IUserTaskRepository
     {
-        public UserTaskRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public UserTaskRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
                
-        public override async Task<IEnumerable<UserTask>> AllAsync()
+        public override async Task<List<UserTask>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(u => u.TaskGiver)

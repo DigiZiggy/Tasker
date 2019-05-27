@@ -6,18 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF
 {
-    public class BaseUnitOfWork : IUnitOfWork
+    public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork
+        where TDbContext : DbContext
     {
-        protected readonly DbContext UOWDbContext;
+        protected readonly TDbContext UOWDbContext;
         protected readonly IBaseRepositoryProvider _repositoryProvider;
 
-        public BaseUnitOfWork(IDataContext dataContext, IBaseRepositoryProvider repositoryProvider)
+        public BaseUnitOfWork(TDbContext dataContext, IBaseRepositoryProvider repositoryProvider)
         {
             _repositoryProvider = repositoryProvider;
-            UOWDbContext = (DbContext) dataContext;
+            UOWDbContext =  dataContext;
         }
 
-        public IBaseRepositoryAsync<TEntity> BaseRepositoryAsync<TEntity>() where TEntity : class, IBaseEntity<int>, new()
+        public IBaseRepository<TEntity> BaseRepository<TEntity>() where TEntity : class, IBaseEntity, new()
         {
             return _repositoryProvider.GetEntityRepository<TEntity>();
         }
@@ -26,8 +27,8 @@ namespace DAL.Base.EF
         {
             return await UOWDbContext.SaveChangesAsync();
         }
-        
-        public virtual int SaveChanges()
+
+        public int SaveChanges()
         {
             return UOWDbContext.SaveChanges();
         }

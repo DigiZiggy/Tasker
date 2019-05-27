@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +17,17 @@ namespace WebApp.Controllers
 {
     public class UserOnAddressesController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public UserOnAddressesController(IAppUnitOfWork uow)
+        public UserOnAddressesController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: UserOnAddresses
         public async Task<IActionResult> Index()
         {
-            var userOnAddresses = await _uow.UserOnAddresses.AllAsync();
+            var userOnAddresses = await _bll.UserOnAddresses.AllAsync();
 
             return View(userOnAddresses);
         }
@@ -38,7 +40,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _uow.UserOnAddresses.FindAllIncludedAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
 
             if (userOnAddress == null)
             {
@@ -54,8 +56,8 @@ namespace WebApp.Controllers
             
             var vm = new UserOnAddressCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id"),
-                AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id"),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id)),
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), nameof(Address.Id)),
             };
             
             return View(vm);
@@ -71,13 +73,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.UserOnAddresses.AddAsync(vm.UserOnAddress);
-                await _uow.SaveChangesAsync();
+                await _bll.UserOnAddresses.AddAsync(vm.UserOnAddress);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.UserOnAddress.AppUserId);
-            vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.UserOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
+                nameof(Address.Id), vm.UserOnAddress.AddressId);
 
             return View(vm);
 
@@ -91,15 +94,17 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _uow.UserOnAddresses.FindAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAsync(id);
             if (userOnAddress == null)
             {
                 return NotFound();
             }
             var vm = new UserOnAddressEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", userOnAddress.AppUserId),
-                AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", userOnAddress.AddressId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id), userOnAddress.AppUserId),
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
+                    nameof(Address.Id), userOnAddress.AddressId),
             };
             
             return View(vm);
@@ -119,14 +124,15 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.UserOnAddresses.Update(vm.UserOnAddress);
-                await _uow.SaveChangesAsync();
+                _bll.UserOnAddresses.Update(vm.UserOnAddress);
+                await _bll.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.UserOnAddress.AppUserId);
-            vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", vm.UserOnAddress.AddressId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.UserOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
+                nameof(Address.Id), vm.UserOnAddress.AddressId);
 
             return View(vm);
 
@@ -140,7 +146,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _uow.UserOnAddresses.FindAllIncludedAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
 
             if (userOnAddress == null)
             {
@@ -154,8 +160,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.UserOnAddresses.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.UserOnAddresses.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

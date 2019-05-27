@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +17,17 @@ namespace WebApp.Controllers
 {
     public class UserSkillsController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public UserSkillsController(IAppUnitOfWork uow)
+        public UserSkillsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: UserSkills
         public async Task<IActionResult> Index()
         {
-            var userSkills = await _uow.UserSills.AllAsync();
+            var userSkills = await _bll.UserSkills.AllAsync();
 
             return View(userSkills);
         }
@@ -38,7 +40,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _uow.UserSills.FindAllIncludedAsync(id);
+            var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
 
 
             if (userSkill == null)
@@ -54,8 +56,8 @@ namespace WebApp.Controllers
         {
             var vm = new UserSkillCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id"),
-                SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id"),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id)),
+                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), nameof(Skill.Id)),
 
             };
             return View(vm);
@@ -71,13 +73,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.UserSills.AddAsync(vm.UserSkill);
-                await _uow.SaveChangesAsync();
+                await _bll.UserSkills.AddAsync(vm.UserSkill);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.UserSkill.AppUserId);
-            vm.SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.UserSkill.AppUserId);
+            vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), 
+                nameof(Skill.Id), vm.UserSkill.SkillId);
 
             return View(vm);
         }
@@ -90,15 +93,17 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _uow.UserSills.FindAsync(id);
+            var userSkill = await _bll.UserSkills.FindAsync(id);
             if (userSkill == null)
             {
                 return NotFound();
             }
             var vm = new UserSkillEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id", "Id", userSkill.AppUserId),
-                SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id", userSkill.SkillId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id), userSkill.AppUserId),
+                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), 
+                    nameof(Skill.Id), userSkill.SkillId),
             };
 
             return View(vm);
@@ -118,14 +123,15 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.UserSills.Update(vm.UserSkill);
-                await _uow.SaveChangesAsync();
+                _bll.UserSkills.Update(vm.UserSkill);
+                await _bll.SaveChangesAsync();
                     
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _uow.BaseRepositoryAsync<AppUser>().AllAsync(), "Id",
-                "Id", vm.UserSkill.AppUserId);
-            vm.SkillSelectList = new SelectList(await _uow.BaseRepositoryAsync<Skill>().AllAsync(), "Id", "Id", vm.UserSkill.SkillId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.UserSkill.AppUserId);
+            vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), 
+                nameof(Skill.Id), vm.UserSkill.SkillId);
             
             return View(vm);
 
@@ -139,7 +145,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _uow.UserSills.FindAllIncludedAsync(id);
+            var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
 
             if (userSkill == null)
             {
@@ -154,8 +160,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.UserSills.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.UserSkills.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

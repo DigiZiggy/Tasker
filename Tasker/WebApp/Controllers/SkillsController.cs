@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,17 +15,17 @@ namespace WebApp.Controllers
 {
     public class SkillsController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public SkillsController(IAppUnitOfWork uow)
+        public SkillsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Skills
         public async Task<IActionResult> Index()
         {
-            return View(await _uow.Skills.AllAsync());
+            return View(await _bll.Skills.AllAsync());
         }
 
         // GET: Skills/Details/5
@@ -34,7 +36,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _uow.Skills.FindAsync(id);
+            var skill = await _bll.Skills.FindAsync(id);
 
             if (skill == null)
             {
@@ -59,8 +61,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.Skills.AddAsync(skill);
-                await _uow.SaveChangesAsync();
+                await _bll.Skills.AddAsync(skill);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(skill);
@@ -74,7 +76,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _uow.Skills.FindAsync(id);
+            var skill = await _bll.Skills.FindAsync(id);
             if (skill == null)
             {
                 return NotFound();
@@ -96,8 +98,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Skills.Update(skill);
-                await _uow.SaveChangesAsync();
+                _bll.Skills.Update(skill);
+                await _bll.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -112,7 +114,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var skill = await _uow.Skills.FindAsync(id);
+            var skill = await _bll.Skills.FindAsync(id);
             if (skill == null)
             {
                 return NotFound();
@@ -126,8 +128,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.Skills.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.Skills.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

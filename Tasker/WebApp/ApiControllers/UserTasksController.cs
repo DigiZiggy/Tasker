@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class UserTasksController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public UserTasksController(AppDbContext context)
+        public UserTasksController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
         // GET: api/UserTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserTask>>> GetUserTasks()
+        public async Task<List<UserTask>> GetUserTasks()
         {
-            return await _context.UserTasks.ToListAsync();
+            return await _bll.UserTasks.AllAsync();
         }
 
         // GET: api/UserTasks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserTask>> GetUserTask(int id)
         {
-            var userTask = await _context.UserTasks.FindAsync(id);
+            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
 
             if (userTask == null)
             {
@@ -51,23 +53,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(userTask).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserTaskExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _bll.UserTasks.Update(userTask);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +63,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<UserTask>> PostUserTask(UserTask userTask)
         {
-            _context.UserTasks.Add(userTask);
-            await _context.SaveChangesAsync();
+            await _bll.UserTasks.AddAsync(userTask);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetUserTask", new { id = userTask.Id }, userTask);
         }
@@ -86,21 +73,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserTask>> DeleteUserTask(int id)
         {
-            var userTask = await _context.UserTasks.FindAsync(id);
+            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
             if (userTask == null)
             {
                 return NotFound();
             }
 
-            _context.UserTasks.Remove(userTask);
-            await _context.SaveChangesAsync();
+            _bll.UserTasks.Remove(userTask);
+            await _bll.SaveChangesAsync();
 
             return userTask;
-        }
-
-        private bool UserTaskExists(int id)
-        {
-            return _context.UserTasks.Any(e => e.Id == id);
         }
     }
 }

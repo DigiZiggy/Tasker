@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class ReviewRepository : BaseRepositoryAsync<Review>, IReviewRepository
+    public class ReviewRepository : BaseRepository<Review, AppDbContext>, IReviewRepository
     {
-        public ReviewRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public ReviewRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
         
-        public override async Task<IEnumerable<Review>> AllAsync()
+        public override async Task<List<Review>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(r => r.AppUser)

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +16,17 @@ namespace WebApp.Controllers
 {
     public class TaskerTasksController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public TaskerTasksController(IAppUnitOfWork uow)
+        public TaskerTasksController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: TaskerTasks
         public async Task<IActionResult> Index()
         {
-            var tasks = await _uow.Tasks.AllAsync();
+            var tasks = await _bll.Tasks.AllAsync();
 
             return View(tasks);
         }
@@ -37,7 +39,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var taskerTask = await _uow.Tasks.FindAllIncludedAsync(id);
+            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
 
             if (taskerTask == null)
             {
@@ -52,7 +54,8 @@ namespace WebApp.Controllers
         {
             var vm = new TaskCreateViewModel()
             {
-                AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id")
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
+                    nameof(Address.Id))
             };
 
             return View(vm);
@@ -68,12 +71,12 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.Tasks.AddAsync(vm.TaskerTask);
-                await _uow.SaveChangesAsync();
+                await _bll.Tasks.AddAsync(vm.TaskerTask);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id",
-                "Is", vm.TaskerTask.AddressId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id),
+                nameof(Address.Id), vm.TaskerTask.AddressId);
 
             return View(vm);
         }
@@ -86,7 +89,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var taskerTask = await _uow.Tasks.FindAsync(id);
+            var taskerTask = await _bll.Tasks.FindAsync(id);
             if (taskerTask == null)
             {
                 return NotFound();
@@ -94,7 +97,8 @@ namespace WebApp.Controllers
 
             var vm = new TaskEditViewModel()
             {
-                AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id", "Id", taskerTask.AddressId)
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
+                    nameof(Address.Id), taskerTask.AddressId)
             };
 
             return View(vm);
@@ -114,13 +118,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.Tasks.Update(vm.TaskerTask);
-                await _uow.SaveChangesAsync();
+                _bll.Tasks.Update(vm.TaskerTask);
+                await _bll.SaveChangesAsync();
      
                 return RedirectToAction(nameof(Index));
             }
-            vm.AddressSelectList = new SelectList(await _uow.BaseRepositoryAsync<Address>().AllAsync(), "Id",
-                "Id", vm.TaskerTask.AddressId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id),
+                nameof(Address.Id), vm.TaskerTask.AddressId);
             
             return View(vm);
 
@@ -134,7 +138,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var taskerTask = await _uow.Tasks.FindAllIncludedAsync(id);
+            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
 
             if (taskerTask == null)
             {
@@ -149,8 +153,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.Tasks.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.Tasks.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

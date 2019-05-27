@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class TaskerTasksController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public TaskerTasksController(AppDbContext context)
+        public TaskerTasksController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
         // GET: api/TaskerTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskerTask>>> GetTasks()
+        public async Task<List<TaskerTask>> GetTasks()
         {
-            return await _context.Tasks.ToListAsync();
+            return await _bll.Tasks.AllAsync();
         }
 
         // GET: api/TaskerTasks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskerTask>> GetTaskerTask(int id)
         {
-            var taskerTask = await _context.Tasks.FindAsync(id);
+            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
 
             if (taskerTask == null)
             {
@@ -51,24 +53,9 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(taskerTask).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaskerTaskExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            _bll.Tasks.Update(taskerTask);
+            await _bll.SaveChangesAsync();
+            
             return NoContent();
         }
 
@@ -76,8 +63,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<TaskerTask>> PostTaskerTask(TaskerTask taskerTask)
         {
-            _context.Tasks.Add(taskerTask);
-            await _context.SaveChangesAsync();
+            await _bll.Tasks.AddAsync(taskerTask);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetTaskerTask", new { id = taskerTask.Id }, taskerTask);
         }
@@ -86,21 +73,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<TaskerTask>> DeleteTaskerTask(int id)
         {
-            var taskerTask = await _context.Tasks.FindAsync(id);
+            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
             if (taskerTask == null)
             {
                 return NotFound();
             }
 
-            _context.Tasks.Remove(taskerTask);
-            await _context.SaveChangesAsync();
+            _bll.Tasks.Remove(taskerTask);
+            await _bll.SaveChangesAsync();
 
             return taskerTask;
-        }
-
-        private bool TaskerTaskExists(int id)
-        {
-            return _context.Tasks.Any(e => e.Id == id);
         }
     }
 }

@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class TaskerTaskRepository : BaseRepositoryAsync<TaskerTask>, ITaskerTaskRepository
+    public class TaskerTaskRepository : BaseRepository<TaskerTask, AppDbContext>, ITaskerTaskRepository
     {
-        public TaskerTaskRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public TaskerTaskRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
         
-        public override async Task<IEnumerable<TaskerTask>> AllAsync()
+        public override async Task<List<TaskerTask>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(t => t.Address)

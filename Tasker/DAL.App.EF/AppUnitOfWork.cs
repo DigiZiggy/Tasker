@@ -1,18 +1,24 @@
 using System.Threading.Tasks;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
+using Contracts.DAL.App.Repositories.Identity;
 using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
 using DAL.Base.EF;
 
 namespace DAL.App.EF
 {
-    public class AppUnitOfWork : BaseUnitOfWork, IAppUnitOfWork
+    public class AppUnitOfWork : BaseUnitOfWork<AppDbContext>, IAppUnitOfWork
     {
-
-        public AppUnitOfWork(IDataContext dbContext, IBaseRepositoryProvider repositoryProvider) : base(dbContext, repositoryProvider)
+        
+        public AppUnitOfWork(AppDbContext dbContext, IBaseRepositoryProvider repositoryProvider) : base(dbContext, repositoryProvider)
         {
-        }
+        }     
+        
+        public IAppUserRepository AppUsers =>
+            _repositoryProvider.GetRepository<IAppUserRepository>();
+        public IAppRoleRepository AppRoles =>
+            _repositoryProvider.GetRepository<IAppRoleRepository>();
         public IAddressRepository Addresses =>
             _repositoryProvider.GetRepository<IAddressRepository>();
         public IHourlyRateRepository HourlyRates => 
@@ -33,9 +39,8 @@ namespace DAL.App.EF
             _repositoryProvider.GetRepository<IUserOnAddressRepository>();
         public IUserTaskRepository UserTasks => 
             _repositoryProvider.GetRepository<IUserTaskRepository>();
-        public IUserSkillRepository UserSills => 
+        public IUserSkillRepository UserSkills => 
             _repositoryProvider.GetRepository<IUserSkillRepository>();
    
- 
     }
 }

@@ -4,7 +4,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IUserSkillRepository : IBaseRepositoryAsync<UserSkill, int>
+    public interface IUserSkillRepository : IBaseRepositoryAsync<UserSkill>
     {
         Task<UserSkill> FindAllIncludedAsync(params object[] id);      
     }

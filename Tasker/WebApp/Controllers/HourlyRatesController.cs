@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
 using Contracts.DAL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,17 +15,17 @@ namespace WebApp.Controllers
 {
     public class HourlyRatesController : Controller
     {
-        private readonly IAppUnitOfWork _uow;
+        private readonly IAppBLL _bll;
 
-        public HourlyRatesController(IAppUnitOfWork uow)
+        public HourlyRatesController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: HourlyRates
         public async Task<IActionResult> Index()
         {
-            return View(await _uow.HourlyRates.AllAsync());
+            return View(await _bll.HourlyRates.AllAsync());
         }
 
         // GET: HourlyRates/Details/5
@@ -34,7 +36,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
+            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
 
             if (hourlyRate == null)
             {
@@ -59,8 +61,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _uow.HourlyRates.AddAsync(hourlyRate);
-                await _uow.SaveChangesAsync();
+                await _bll.HourlyRates.AddAsync(hourlyRate);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(hourlyRate);
@@ -74,7 +76,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
+            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
             {
                 return NotFound();
@@ -96,8 +98,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.HourlyRates.Update(hourlyRate);
-                await _uow.SaveChangesAsync();
+                _bll.HourlyRates.Update(hourlyRate);
+                await _bll.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -112,7 +114,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var hourlyRate = await _uow.HourlyRates.FindAsync(id);
+            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
             {
                 return NotFound();
@@ -126,8 +128,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _uow.HourlyRates.Remove(id);
-            await _uow.SaveChangesAsync();
+            _bll.HourlyRates.Remove(id);
+            await _bll.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

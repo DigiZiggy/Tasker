@@ -5,9 +5,9 @@ using Domain;
 
 namespace DAL.App.EF.Repositories
 {
-    public class HourlyRateRepository : BaseRepositoryAsync<HourlyRate>, IHourlyRateRepository
+    public class HourlyRateRepository : BaseRepository<HourlyRate, AppDbContext>, IHourlyRateRepository
     {
-        public HourlyRateRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public HourlyRateRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
     }

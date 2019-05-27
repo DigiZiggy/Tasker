@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class PaymentRepository : BaseRepositoryAsync<Payment>, IPaymentRepository
+    public class PaymentRepository : BaseRepository<Payment, AppDbContext>, IPaymentRepository
     {
-        public PaymentRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public PaymentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
         
-        public override async Task<IEnumerable<Payment>> AllAsync()
+        public override async Task<List<Payment>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(p => p.Invoice)

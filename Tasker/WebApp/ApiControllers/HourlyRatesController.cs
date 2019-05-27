@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts.BLL.App;
+using DAL.App.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,25 +16,25 @@ namespace WebApp.ApiControllers
     [ApiController]
     public class HourlyRatesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAppBLL _bll;
 
-        public HourlyRatesController(AppDbContext context)
+        public HourlyRatesController(IAppBLL bll)
         {
-            _context = context;
+            _bll = bll;
         }
 
         // GET: api/HourlyRates
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HourlyRate>>> GetHourlyRates()
+        public async Task<List<HourlyRate>> GetHourlyRates()
         {
-            return await _context.HourlyRates.ToListAsync();
+            return await _bll.HourlyRates.AllAsync();
         }
 
         // GET: api/HourlyRates/5
         [HttpGet("{id}")]
         public async Task<ActionResult<HourlyRate>> GetHourlyRate(int id)
         {
-            var hourlyRate = await _context.HourlyRates.FindAsync(id);
+            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
 
             if (hourlyRate == null)
             {
@@ -51,23 +53,8 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            _context.Entry(hourlyRate).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HourlyRateExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _bll.HourlyRates.Update(hourlyRate);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
@@ -76,8 +63,8 @@ namespace WebApp.ApiControllers
         [HttpPost]
         public async Task<ActionResult<HourlyRate>> PostHourlyRate(HourlyRate hourlyRate)
         {
-            _context.HourlyRates.Add(hourlyRate);
-            await _context.SaveChangesAsync();
+            await _bll.HourlyRates.AddAsync(hourlyRate);
+            await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetHourlyRate", new { id = hourlyRate.Id }, hourlyRate);
         }
@@ -86,21 +73,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<HourlyRate>> DeleteHourlyRate(int id)
         {
-            var hourlyRate = await _context.HourlyRates.FindAsync(id);
+            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
             {
                 return NotFound();
             }
 
-            _context.HourlyRates.Remove(hourlyRate);
-            await _context.SaveChangesAsync();
+            _bll.HourlyRates.Remove(hourlyRate);
+            await _bll.SaveChangesAsync();
 
             return hourlyRate;
-        }
-
-        private bool HourlyRateExists(int id)
-        {
-            return _context.HourlyRates.Any(e => e.Id == id);
         }
     }
 }

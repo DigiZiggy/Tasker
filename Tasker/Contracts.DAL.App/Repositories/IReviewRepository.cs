@@ -4,7 +4,7 @@ using Domain;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IReviewRepository : IBaseRepositoryAsync<Review, int>
+    public interface IReviewRepository : IBaseRepositoryAsync<Review>
     {
         Task<Review> FindAllIncludedAsync(params object[] id);      
     }

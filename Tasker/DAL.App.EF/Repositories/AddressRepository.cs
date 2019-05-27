@@ -5,9 +5,9 @@ using Domain;
 
 namespace DAL.App.EF.Repositories
 {
-    public class AddressRepository : BaseRepositoryAsync<Address>, IAddressRepository
+    public class AddressRepository : BaseRepository<Address, AppDbContext>, IAddressRepository
     {
-        public AddressRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public AddressRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
     }

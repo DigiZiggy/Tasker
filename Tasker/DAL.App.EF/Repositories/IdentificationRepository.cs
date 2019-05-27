@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class IdentificationRepository : BaseRepositoryAsync<Identification>, IIdentificationRepository
+    public class IdentificationRepository : BaseRepository<Identification, AppDbContext>, IIdentificationRepository
     {
-        public IdentificationRepository(IDataContext repositoryDbContext) : base(repositoryDbContext)
+        public IdentificationRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
         {
         }
         
-        public override async Task<IEnumerable<Identification>> AllAsync()
+        public override async Task<List<Identification>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(i => i.AppUser)

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF
 {
-    public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IDataContext
+    public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
     {
         public DbSet<Address> Addresses { get; set; }
         public DbSet<HourlyRate> HourlyRates { get; set; }

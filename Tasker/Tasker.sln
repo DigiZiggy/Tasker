@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts.BLL.Base", "Contr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity", "Identity\Identity.csproj", "{EC54A1B7-3331-4ACA-B14E-098178A061A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.App.DTO", "DAL.App.DTO\DAL.App.DTO.csproj", "{B8215074-354B-477B-B2C3-E247DB3AF29E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,5 +86,9 @@ Global
 		{EC54A1B7-3331-4ACA-B14E-098178A061A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC54A1B7-3331-4ACA-B14E-098178A061A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC54A1B7-3331-4ACA-B14E-098178A061A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8215074-354B-477B-B2C3-E247DB3AF29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8215074-354B-477B-B2C3-E247DB3AF29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8215074-354B-477B-B2C3-E247DB3AF29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8215074-354B-477B-B2C3-E247DB3AF29E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

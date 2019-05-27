@@ -4,7 +4,7 @@ using Domain;
 
 namespace DAL.App.DTO.Identity
 {
-    public class AppUser
+    public class AppUserDTO
     {
         public int Id { get; set; }
         public string FirstName { get; set; }       
