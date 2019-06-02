@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
@@ -17,8 +18,17 @@ namespace DAL.App.EF.Repositories
         public override async Task<List<Review>> AllAsync()
         {
             return await RepositoryDbSet
-                .Include(r => r.AppUser)
+                .Include(r => r.ReviewReceiver)
+                .Include(r => r.ReviewGiver)
                 .ToListAsync();          
+        }
+        
+        public async Task<List<Review>> AllForUserAsync(int userId)
+        {
+            return await RepositoryDbSet
+                .Include(r => r.ReviewReceiver)
+                .Include(r => r.ReviewGiver)
+                .ToListAsync();
         }
         
         public async Task<Review> FindAllIncludedAsync(params object[] id)
@@ -27,7 +37,8 @@ namespace DAL.App.EF.Repositories
 
             if (review != null)
             {
-                await RepositoryDbContext.Entry(review).Reference(r => r.AppUser).LoadAsync();
+                await RepositoryDbContext.Entry(review).Reference(r => r.ReviewReceiver).LoadAsync();
+                await RepositoryDbContext.Entry(review).Reference(r => r.ReviewGiver).LoadAsync();
             }
 
             return review;

@@ -16,7 +16,9 @@ namespace Domain.Identity
         [MaxLength(64)]
         [MinLength(1)]
 //        [Required]
-        public string LastName { get; set; }                
+        public string LastName { get; set; }   
+        
+        public string SelfDescription { get; set; }                
         
         public int? HourlyRateId { get; set; }
         public HourlyRate HourlyRate { get; set; }
@@ -31,7 +33,11 @@ namespace Domain.Identity
         
         public ICollection<UserOnAddress> Addresses { get; set; }
                 
-        public ICollection<Review> Reviews { get; set; }
+        [InverseProperty("ReviewGiver")]
+        public ICollection<Review> GivenReviews { get; set; }
+        
+        [InverseProperty("ReviewReceiver")]
+        public ICollection<Review> ReceivedReviews { get; set; }
         
         public ICollection<Invoice> Invoices { get; set; }
         

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.Base;
@@ -21,6 +22,14 @@ namespace DAL.App.EF.Repositories
                 .ToListAsync();  
         }
         
+        public async Task<List<Identification>> AllForUserAsync(int userId)
+        {
+            return await RepositoryDbSet
+                .Include(i => i.AppUser)
+                .Where(c => c.AppUser.Id == userId).ToListAsync();
+        }
+
+        
         public async Task<Identification> FindAllIncludedAsync(params object[] id)
         {
             var identification = await base.FindAsync(id);
@@ -32,6 +41,5 @@ namespace DAL.App.EF.Repositories
 
             return identification;
         }
-
     }
 }

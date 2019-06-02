@@ -5,7 +5,7 @@ namespace WebApp.ViewModels
 {
     public class ReviewEditViewModel
     {
-        public Review Review { get; set; }
-        public SelectList AppUserSelectList { get; set; }
-    }
+        public Review Review { get; set; }        
+        public SelectList ReviewGiverSelectList { get; set; }        
+        public SelectList ReviewReceiverSelectList { get; set; }    }
 }

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
 using Domain.Identity;
+using Identity;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
@@ -27,7 +28,7 @@ namespace WebApp.Controllers
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var invoices = await _bll.Invoices.AllAsync();
+            var invoices = await _bll.Invoices.AllForUserAsync(User.GetUserId());
 
             return View(invoices);
         }

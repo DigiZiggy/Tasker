@@ -13,7 +13,7 @@ namespace Domain
 //        [Required]
         public string TaskName { get; set; }
         
-        [MaxLength(64)]
+        [MaxLength(1264)]
         [MinLength(1)]
 //        [Required]
         public string Description { get; set; }

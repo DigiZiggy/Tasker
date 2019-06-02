@@ -56,8 +56,10 @@ namespace WebApp.Controllers
             
             var vm = new ReviewCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id))
+                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id)),
+                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                nameof(AppUser.Id))
             };
            
             return View(vm);
@@ -76,8 +78,10 @@ namespace WebApp.Controllers
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Review.AppUserId);
+            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Review.ReviewGiverId);
+            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Review.ReviewReceiverId);
 
             return View(vm);
         }
@@ -97,8 +101,10 @@ namespace WebApp.Controllers
             }
             var vm = new ReviewEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), review.AppUserId)
+                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id), review.ReviewGiverId),
+                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
+                    nameof(AppUser.Id), review.ReviewReceiverId)
             };
 
             return View(vm);
@@ -123,8 +129,10 @@ namespace WebApp.Controllers
   
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Review.AppUserId);
+            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Review.ReviewGiverId);
+            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
+                nameof(AppUser.Id), vm.Review.ReviewReceiverId);
 
             return View(vm);
         }

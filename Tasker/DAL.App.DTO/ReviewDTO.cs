@@ -10,7 +10,10 @@ namespace DAL.App.DTO
         
         public string ReviewComment { get; set; }
         
-        public int AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public int ReviewGiverId { get; set; } 
+        public AppUser ReviewGiver { get; set; }        
+        
+        public int ReviewReceiverId { get; set; }
+        public AppUser ReviewReceiver { get; set; }  
     }
 }

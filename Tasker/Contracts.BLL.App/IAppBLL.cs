@@ -21,7 +21,5 @@ namespace Contracts.BLL.App
         IUserTaskService UserTasks { get; }
         IUserSkillService UserSkills { get; }
         // TODO: Public facing services
-       
     }
-
 }

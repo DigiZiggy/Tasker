@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
@@ -15,7 +16,11 @@ namespace BLL.App.Services
         public async Task<Invoice> FindAllIncludedAsync(params object[] id)
         {
             return await Uow.Invoices.FindAllIncludedAsync(id);
-
+        }
+        
+        public async Task<List<Invoice>> AllForUserAsync(int userId)
+        {
+            return await Uow.Invoices.AllForUserAsync(userId);
         }
     }
 }

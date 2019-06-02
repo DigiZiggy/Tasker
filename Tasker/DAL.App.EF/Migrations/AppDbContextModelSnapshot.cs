@@ -50,7 +50,7 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("End");
+                    b.Property<DateTime?>("End");
 
                     b.Property<decimal>("HourRate");
 
@@ -73,7 +73,7 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("DocNumber")
                         .HasMaxLength(64);
 
-                    b.Property<DateTime>("End");
+                    b.Property<DateTime?>("End");
 
                     b.Property<int>("IdentificationType");
 
@@ -150,6 +150,8 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<string>("SelfDescription");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -224,16 +226,20 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AppUserId");
-
                     b.Property<int>("Rating");
 
                     b.Property<string>("ReviewComment")
-                        .HasMaxLength(64);
+                        .HasMaxLength(1264);
+
+                    b.Property<int>("ReviewGiverId");
+
+                    b.Property<int>("ReviewReceiverId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("ReviewGiverId");
+
+                    b.HasIndex("ReviewReceiverId");
 
                     b.ToTable("Reviews");
                 });
@@ -290,7 +296,7 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("AppUserId");
 
-                    b.Property<DateTime>("End");
+                    b.Property<DateTime?>("End");
 
                     b.Property<DateTime>("Start");
 
@@ -310,7 +316,7 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("AppUserId");
 
-                    b.Property<DateTime>("End");
+                    b.Property<DateTime?>("End");
 
                     b.Property<int>("SkillId");
 
@@ -330,7 +336,7 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("End");
+                    b.Property<DateTime?>("End");
 
                     b.Property<DateTime>("Start");
 
@@ -468,9 +474,14 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Review", b =>
                 {
-                    b.HasOne("Domain.Identity.AppUser", "AppUser")
-                        .WithMany("Reviews")
-                        .HasForeignKey("AppUserId")
+                    b.HasOne("Domain.Identity.AppUser", "ReviewGiver")
+                        .WithMany("GivenReviews")
+                        .HasForeignKey("ReviewGiverId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Identity.AppUser", "ReviewReceiver")
+                        .WithMany("ReceivedReviews")
+                        .HasForeignKey("ReviewReceiverId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

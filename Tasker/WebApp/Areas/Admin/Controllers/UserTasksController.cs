@@ -51,7 +51,6 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), nameof(Task.Id)),
                 TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), nameof(Task.Id))
-
             };          
             return View(vm);
         }

@@ -8,7 +8,7 @@ namespace Domain
     {
 //        [Required]
         public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
 
         public int AddressId { get; set; }
         public Address Address { get; set; }

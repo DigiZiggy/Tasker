@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
@@ -15,7 +16,11 @@ namespace BLL.App.Services
         public async Task<Identification> FindAllIncludedAsync(params object[] id)
         {
             return await Uow.Identifications.FindAllIncludedAsync(id);
-
+        }
+               
+        public async Task<List<Identification>> AllForUserAsync(int userId)
+        {
+            return await Uow.Identifications.AllForUserAsync(userId);
         }
     }
 }
