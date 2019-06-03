@@ -1,87 +1,13 @@
-.navbar__container {
-    z-index: 3;
-    width: 100%;
-    padding: 2px 12px 2px 12px;
-    background: #fff;
-    border-bottom: 1px solid #b1b9c3;
+.logo  img {
+    height: 66px;
+    width: 66px;
 }
 
-.navbar__logo {
-    color: #f8b612;
+.container-fluid h4.title {
+    width: 50%;
+    float: left;
 }
 
-a.navbar__logo:hover, a.navbar__logo:focus, a.navbar__logo:visited {
-    text-decoration: none;
-    cursor: pointer;
-    color: #f8b612;
-}
-
-.btn-primary {
-    background-color: #00e3e5;
-    border-color: #00e3e5;
-}
-
-.btn-primary:hover {
-    background-color: #01c5c6;
-    border-color: #01c5c6;
-}
-
-.admin__container {
-    padding: 20px 0px 20px 0px;
-}
-
-.admin__container h1 {
-    font-size: 1.75rem;
-}
-
-
-form {
-    padding: 20px 0px;
-}
-
-#loader {
-    transition: all 0.3s ease-in-out;
-    opacity: 1;
-    visibility: visible;
-    position: fixed;
-    height: 100vh;
-    width: 100%;
-    background: #fff;
-    z-index: 90000;
-}
-
-#loader.fadeOut {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: calc(50% - 20px);
-    left: calc(50% - 20px);
-    background-color: #333;
-    border-radius: 100%;
-    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
-    animation: sk-scaleout 1.0s infinite ease-in-out;
-}
-
-@-webkit-keyframes sk-scaleout {
-    0% { -webkit-transform: scale(0) }
-    100% {
-        -webkit-transform: scale(1.0);
-        opacity: 0;
-    }
-}
-
-@keyframes sk-scaleout {
-    0% {
-        -webkit-transform: scale(0);
-        transform: scale(0);
-    } 100% {
-          -webkit-transform: scale(1.0);
-          transform: scale(1.0);
-          opacity: 0;
-      }
+.container-fluid p.btn_add .btn-info {
+    float: right;
 }
