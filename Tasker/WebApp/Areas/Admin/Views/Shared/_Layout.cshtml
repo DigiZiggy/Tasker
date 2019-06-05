@@ -558,8 +558,9 @@
             integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
     </script>
 </environment>
-<script type="text/javascript" src="~/js/vendor.js"></script>
-<script type="text/javascript" src="~/js/site.js"></script>
+
+<script src="~/js/vendor.js" asp-append-version="true"></script>
+<script src="~/js/bundle.js" asp-append-version="true"></script>
 
 @RenderSection("Scripts", required: false)
 </body>

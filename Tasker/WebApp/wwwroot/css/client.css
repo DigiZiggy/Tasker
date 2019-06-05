@@ -1,0 +1,254 @@
+.navbar__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    z-index: 3;
+    width: 100%;
+    padding: 2px 12px 2px 12px;
+    background: #fff;
+    border-bottom: 1px solid #b1b9c3;
+}
+
+.navbar__logo {
+    color: #f8b612;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nav-item a {
+    color: #4ECDC4;
+    margin: 0px 10px 0px 10px;
+    font-weight: lighter;
+}
+
+#register {
+    background-color: #fff;
+    color: #4ECDC4;
+    padding: 0.625em 1.5em;
+    border: 1px solid #40A8A1;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+#register:hover {
+    background-color: #4ECDC4;
+    color: #fff;
+}
+
+#register:active {
+    background-color: black;
+}
+
+.hero {
+    background-image: url("../assets/helphand.jpg"), linear-gradient(rgba(255,255,255,0.2),rgba(255,255,255,0.2));
+    background-blend-mode: overlay;
+    height: 100vh;
+    width: 100vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero h1 {
+    font-size: 80px;
+    margin-top: 1.5em;
+    color: #4ECDC4;
+    /*text-shadow: 2px 2px white;*/
+
+}
+
+.hero h1,
+.hero h4 {
+    font-weight: 200;
+}
+
+.page__register {
+    background-image: url("../assets/wall-work.jpg"), linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2));
+    background-blend-mode: overlay;
+    height: 100vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.register__form {
+    float: left;
+    margin-top: 2%;
+    width: 30%;
+    margin-left: 10%;
+    padding: 30px 60px 20px 30px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 7px;
+}
+
+.login__form h1,
+.register__form h1 {
+    font-weight: lighter;
+}
+
+.login__form h4,
+.login__form .form-group label,
+.register__form h4 {
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+.login__form h1,
+.login__form h4 {
+    text-align: center;
+}
+
+.login__form #forgot-password {
+    font-size: 16px;
+    font-weight: lighter;
+    text-align: right;
+}
+
+.login__form #forgot-password a {
+    color: #4ECDC4;
+    text-decoration: none;
+}
+
+.login__form #forgot-password a:hover {
+    color: #4ECDC4;
+
+}
+
+.register__form .form-group {
+    margin: 30px 0px 30px 0px;
+}
+
+.login__form .btn-primary,
+.register__form .btn-primary {
+    width: 100%;
+    margin-bottom: 1em;
+    background-color: #4ECDC4;
+    border-color: #4ECDC4;
+}
+
+.login__form .btn-primary:hover,
+.register__form .btn-primary:hover {
+    background-color: #40A8A1;
+    border-color: #40A8A1;
+}
+
+
+.page__login {
+    background-image: url("../assets/begin.jpg"), linear-gradient(rgba(255,255,255,0.3),rgba(255,255,255,0.3));
+    background-blend-mode: overlay;
+    height: 100vh;
+    width: 100vw;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.login__form {
+    float: left;
+    margin-top: 4%;
+    width: 40%;
+    margin-left: 30%;
+    padding: 30px 60px 20px 30px;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 7px;
+}
+
+.carousel-subcategory h2 {
+    margin: 90px 90px 20px;
+}
+
+.carousel-container {
+    margin: 0 70px 100px 70px;
+}
+
+.carousel {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.carousel .carousel-item .content-item {
+    padding: 23px;
+}
+
+.carousel .carousel-item .content-item img {
+    object-fit: cover;
+    height: 350px;
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 3px 3px 5px #a4abb5;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-item h4 {
+    position: absolute;
+    z-index: 1;
+    font-size: 22px;
+    line-height: 23px;
+    color: #fff;
+    padding: 15px;
+}
+
+/* Multi Item Carousel */
+
+.carousel-inner .carousel-item.active,
+.carousel-inner .carousel-item-next,
+.carousel-inner .carousel-item-prev {
+    display: flex;
+}
+
+.carousel-inner .carousel-item-right.active,
+.carousel-inner .carousel-item-next {
+    transform: translateX(25%);
+}
+
+.carousel-inner .carousel-item-left.active,
+.carousel-inner .carousel-item-prev {
+    transform: translateX(-25%);
+}
+
+.carousel-inner .carousel-item-left.active img,
+.carousel-inner .carousel-item-prev img{
+    box-shadow:none !important;
+}
+
+.carousel-inner .carousel-item-right,
+.carousel-inner .carousel-item-left {
+    transform: translateX(0);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: #fff;
+    filter: none;
+    opacity: 1;
+    border-radius: 30px;
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    width: 48px;
+    height: 48px;
+    margin-top: -24px;
+    text-align: center;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+}
+
+.carousel-control-prev .carousel-control-prev-icon,
+.carousel-control-next .carousel-control-next-icon {
+    filter: invert(100%);
+
+}
