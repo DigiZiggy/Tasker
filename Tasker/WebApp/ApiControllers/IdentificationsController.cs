@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Identifications
         [HttpGet]
-        public async Task<List<Identification>> GetIdentifications()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Identification>>> GetIdentifications()
         {
             return await _bll.Identifications.AllAsync();
         }
 
         // GET: api/Identifications/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Identification>> GetIdentification(int id)
+        public async Task<ActionResult<BLL.App.DTO.Identification>> GetIdentification(int id)
         {
             var identification = await _bll.Identifications.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Identifications/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIdentification(int id, Identification identification)
+        public async Task<IActionResult> PutIdentification(int id, BLL.App.DTO.Identification identification)
         {
             if (id != identification.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/Identifications
         [HttpPost]
-        public async Task<ActionResult<Identification>> PostIdentification(Identification identification)
+        public async Task<ActionResult<BLL.App.DTO.Identification>> PostIdentification(BLL.App.DTO.Identification identification)
         {
             await _bll.Identifications.AddAsync(identification);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/Identifications/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Identification>> DeleteIdentification(int id)
+        public async Task<ActionResult> DeleteIdentification(int id)
         {
             var identification = await _bll.Identifications.FindAllIncludedAsync(id);
             if (identification == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Identifications.Remove(identification);
             await _bll.SaveChangesAsync();
 
-            return identification;
+            return NoContent();
         }
     }
 }

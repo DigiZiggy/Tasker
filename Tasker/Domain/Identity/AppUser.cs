@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class AppUser : IdentityUser<int>, IBaseEntity
+    public class AppUser : IdentityUser<int>, IBaseEntity, IDomainEntity
     {
         [MaxLength(64)]
         [MinLength(1)]
@@ -42,8 +42,6 @@ namespace Domain.Identity
         public ICollection<Invoice> Invoices { get; set; }
         
         public ICollection<Identification> Identifications { get; set; }
-        
-        public string FirstLastName => FirstName + " " + LastName;
-
+       
     }
 }

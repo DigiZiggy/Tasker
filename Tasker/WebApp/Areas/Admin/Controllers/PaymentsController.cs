@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -50,8 +47,9 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new PaymentCreateViewModel()
             {
-                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id), 
-                    nameof(Invoice.Id)),
+                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                    nameof(BLL.App.DTO.Invoice.Id), 
+                    nameof(BLL.App.DTO.Invoice.Id)),
 
             };
 
@@ -67,12 +65,14 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Payments.AddAsync(vm.Payment);
+                _bll.Payments.Add(vm.Payment);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id),
-                nameof(Invoice.Id), vm.Payment.InvoiceId);
+            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                nameof(BLL.App.DTO.Invoice.Id),
+                nameof(BLL.App.DTO.Invoice.Id), 
+                vm.Payment.InvoiceId);
 
             return View(vm);
 
@@ -93,8 +93,10 @@ namespace WebApp.Areas.Admin.Controllers
             }
             var vm = new PaymentEditViewModel()
             {
-                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id), 
-                    nameof(Invoice.Id), payment.InvoiceId),
+                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                    nameof(BLL.App.DTO.Invoice.Id), 
+                    nameof(BLL.App.DTO.Invoice.Id), 
+                    payment.InvoiceId),
 
             };
 
@@ -121,8 +123,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
                  
-            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id),
-                nameof(Invoice.Id), vm.Payment.InvoiceId);
+            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                nameof(BLL.App.DTO.Invoice.Id),
+                nameof(BLL.App.DTO.Invoice.Id), 
+                vm.Payment.InvoiceId);
             
             return View(vm);
         }

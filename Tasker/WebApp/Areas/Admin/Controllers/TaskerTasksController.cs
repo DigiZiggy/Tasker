@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -50,8 +47,9 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new TaskCreateViewModel()
             {
-                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
-                    nameof(Address.Id))
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                    nameof(BLL.App.DTO.Address.Id), 
+                    nameof(BLL.App.DTO.Address.Id))
             };
 
             return View(vm);
@@ -67,12 +65,14 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Tasks.AddAsync(vm.TaskerTask);
+                _bll.Tasks.Add(vm.TaskerTask);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id),
-                nameof(Address.Id), vm.TaskerTask.AddressId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                nameof(BLL.App.DTO.Address.Id),
+                nameof(BLL.App.DTO.Address.Id), 
+                vm.TaskerTask.AddressId);
 
             return View(vm);
         }
@@ -93,8 +93,10 @@ namespace WebApp.Areas.Admin.Controllers
 
             var vm = new TaskEditViewModel()
             {
-                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
-                    nameof(Address.Id), taskerTask.AddressId)
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                    nameof(BLL.App.DTO.Address.Id), 
+                    nameof(BLL.App.DTO.Address.Id), 
+                    taskerTask.AddressId)
             };
 
             return View(vm);
@@ -119,8 +121,10 @@ namespace WebApp.Areas.Admin.Controllers
      
                 return RedirectToAction(nameof(Index));
             }
-            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id),
-                nameof(Address.Id), vm.TaskerTask.AddressId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                nameof(BLL.App.DTO.Address.Id),
+                nameof(BLL.App.DTO.Address.Id), 
+                vm.TaskerTask.AddressId);
             
             return View(vm);
 

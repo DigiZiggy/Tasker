@@ -2,27 +2,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.DTO;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class TaskerTaskRepository : BaseRepository<TaskerTask, AppDbContext>, ITaskerTaskRepository
+    public class TaskerTaskRepository : BaseRepository<DAL.App.DTO.TaskerTask, Domain.TaskerTask, AppDbContext>, ITaskerTaskRepository
     {
-        public TaskerTaskRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public TaskerTaskRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new TaskerTaskMapper())
         {
         }
         
-        public override async Task<List<TaskerTask>> AllAsync()
+        public override async Task<List<DAL.App.DTO.TaskerTask>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(t => t.Address)
-                .ToListAsync();          
+                .Select(t => TaskerTaskMapper.MapFromDomain(t)).ToListAsync();          
         }
         
-        public async Task<TaskerTask> FindAllIncludedAsync(params object[] id)
+        public async Task<DAL.App.DTO.TaskerTask> FindAllIncludedAsync(params object[] id)
         {
             var task = await base.FindAsync(id);
 
@@ -31,6 +33,11 @@ namespace DAL.App.EF.Repositories
                 await RepositoryDbContext.Entry(task).Reference(t => t.Address).LoadAsync();
             }
             return task;
+        }
+
+        public Task<TaskerTask> FindForUserAsync(int id, int userId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

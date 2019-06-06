@@ -1,13 +1,18 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class HourlyRateRepository : BaseRepository<HourlyRate, AppDbContext>, IHourlyRateRepository
+    public class HourlyRateRepository : BaseRepository<DAL.App.DTO.HourlyRate, Domain.HourlyRate, AppDbContext>, IHourlyRateRepository
     {
-        public HourlyRateRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public HourlyRateRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new HourlyRateMapper())
         {
         }
     }

@@ -2,36 +2,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.DTO;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserOnAddressRepository : BaseRepository<UserOnAddress, AppDbContext>, IUserOnAddressRepository
+    public class UserOnAddressRepository : BaseRepository<DAL.App.DTO.UserOnAddress, Domain.UserOnAddress, AppDbContext>, IUserOnAddressRepository
     {
-        public UserOnAddressRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public UserOnAddressRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new UserOnAddressMapper())
         {
         }
         
-        public override async Task<List<UserOnAddress>> AllAsync()
+        public override async Task<List<DAL.App.DTO.UserOnAddress>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(u => u.Address)
                 .Include(u => u.AppUser)
-                .ToListAsync();  
+                .Select(e => UserOnAddressMapper.MapFromDomain(e)).ToListAsync(); 
         }
         
-        public async Task<List<UserOnAddress>> AllForUserAsync(int userId)
+        public async Task<List<DAL.App.DTO.UserOnAddress>> AllForUserAsync(int userId)
         {
             return await RepositoryDbSet
                 .Include(u => u.Address)
                 .Include(u => u.AppUser)
-                .Where(c => c.AppUser.Id == userId).ToListAsync();
+                .Where(c => c.AppUser.Id == userId)
+                .Select(e => UserOnAddressMapper.MapFromDomain(e)).ToListAsync();
+
         }
 
-        public async Task<UserOnAddress> FindAllIncludedAsync(params object[] id)
+        public async Task<DAL.App.DTO.UserOnAddress> FindAllIncludedAsync(params object[] id)
         {
             var userOnAddress = await base.FindAsync(id);
 
@@ -42,6 +46,11 @@ namespace DAL.App.EF.Repositories
             }
 
             return userOnAddress;
+        }
+
+        public Task<UserOnAddress> FindForUserAsync(int id, int userId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

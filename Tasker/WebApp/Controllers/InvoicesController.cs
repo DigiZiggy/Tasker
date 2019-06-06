@@ -56,8 +56,9 @@ namespace WebApp.Controllers
         {
             var vm = new InvoiceCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id))
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id))
             };
             
             return View(vm);
@@ -72,12 +73,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Invoices.AddAsync(vm.Invoice);
+                _bll.Invoices.Add(vm.Invoice);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Invoice.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Invoice.AppUserId);
 
             return View(vm);
 
@@ -98,8 +101,10 @@ namespace WebApp.Controllers
             }
             var vm = new InvoiceEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), invoice.AppUserId)
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    invoice.AppUserId)
             };
             
             return View(vm);
@@ -124,8 +129,10 @@ namespace WebApp.Controllers
   
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Invoice.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Invoice.AppUserId);
             
             return View(vm);
 

@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using UserSkill = BLL.App.DTO.UserSkill;
 
 namespace WebApp.ViewModels
 {

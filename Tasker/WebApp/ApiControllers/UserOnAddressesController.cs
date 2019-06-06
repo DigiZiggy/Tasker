@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/UserOnAddresses
         [HttpGet]
-        public async Task<List<UserOnAddress>> GetUserOnAddresses()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.UserOnAddress>>> GetUserOnAddresses()
         {
             return await _bll.UserOnAddresses.AllAsync();
         }
 
         // GET: api/UserOnAddresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserOnAddress>> GetUserOnAddress(int id)
+        public async Task<ActionResult<BLL.App.DTO.UserOnAddress>> GetUserOnAddress(int id)
         {
             var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/UserOnAddresses/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserOnAddress(int id, UserOnAddress userOnAddress)
+        public async Task<IActionResult> PutUserOnAddress(int id, BLL.App.DTO.UserOnAddress userOnAddress)
         {
             if (id != userOnAddress.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/UserOnAddresses
         [HttpPost]
-        public async Task<ActionResult<UserOnAddress>> PostUserOnAddress(UserOnAddress userOnAddress)
+        public async Task<ActionResult<BLL.App.DTO.UserOnAddress>> PostUserOnAddress(BLL.App.DTO.UserOnAddress userOnAddress)
         {
             await _bll.UserOnAddresses.AddAsync(userOnAddress);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/UserOnAddresses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserOnAddress>> DeleteUserOnAddress(int id)
+        public async Task<ActionResult> DeleteUserOnAddress(int id)
         {
             var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
             if (userOnAddress == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.UserOnAddresses.Remove(userOnAddress);
             await _bll.SaveChangesAsync();
 
-            return userOnAddress;
+            return NoContent();
         }
     }
 }

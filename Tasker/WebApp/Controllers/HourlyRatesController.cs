@@ -57,11 +57,11 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HourRate,Start,End,Id")] HourlyRate hourlyRate)
+        public async Task<IActionResult> Create([Bind("HourRate,Start,End,Id")] BLL.App.DTO.HourlyRate hourlyRate)
         {
             if (ModelState.IsValid)
             {
-                await _bll.HourlyRates.AddAsync(hourlyRate);
+                _bll.HourlyRates.Add(hourlyRate);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -89,7 +89,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HourRate,Start,End,Id")] HourlyRate hourlyRate)
+        public async Task<IActionResult> Edit(int id, [Bind("HourRate,Start,End,Id")] BLL.App.DTO.HourlyRate hourlyRate)
         {
             if (id != hourlyRate.Id)
             {

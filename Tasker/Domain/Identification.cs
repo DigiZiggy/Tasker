@@ -1,12 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Enums;
 using Domain.Identity;
 
 namespace Domain
 {
-    public class Identification : BaseEntity
+    public class Identification : BaseEntity, IDomainEntity
     {
         [MaxLength(64)]
         [MinLength(1)]

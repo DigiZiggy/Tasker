@@ -54,8 +54,12 @@ namespace WebApp.Controllers
         {
             var vm = new UserTaskCreateViewModel()
             {
-                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), nameof(Task.Id)),
-                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), nameof(Task.Id))
+                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                    nameof(BLL.App.DTO.TaskerTask.Id), 
+                    nameof(BLL.App.DTO.TaskerTask.Id)),
+                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                    nameof(BLL.App.DTO.TaskerTask.Id), 
+                    nameof(BLL.App.DTO.TaskerTask.Id))
 
             };          
             return View(vm);
@@ -74,10 +78,14 @@ namespace WebApp.Controllers
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
-                nameof(Task.Id), vm.UserTask.TaskerId);
-            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
-                nameof(Task.Id), vm.UserTask.TaskGiverId);
+            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                vm.UserTask.TaskerId);
+            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                vm.UserTask.TaskGiverId);
 
             return View(vm);
         }
@@ -97,10 +105,14 @@ namespace WebApp.Controllers
             }
             var vm = new UserTaskEditViewModel()
             {
-                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
-                    nameof(Task.Id), userTask.TaskGiverId),
-                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
-                    nameof(Task.Id), userTask.TaskerId)
+                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                    nameof(BLL.App.DTO.TaskerTask.Id), 
+                    nameof(BLL.App.DTO.TaskerTask.Id), 
+                    userTask.TaskGiverId),
+                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                    nameof(BLL.App.DTO.TaskerTask.Id), 
+                    nameof(BLL.App.DTO.TaskerTask.Id), 
+                    userTask.TaskerId)
             };
             
             return View(vm);
@@ -125,10 +137,14 @@ namespace WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
-                nameof(Task.Id), vm.UserTask.TaskerId);
-            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), nameof(Task.Id), 
-                nameof(Task.Id), vm.UserTask.TaskGiverId);
+            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                vm.UserTask.TaskerId);
+            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                nameof(BLL.App.DTO.TaskerTask.Id), 
+                vm.UserTask.TaskGiverId);
 
             return View(vm);
         }

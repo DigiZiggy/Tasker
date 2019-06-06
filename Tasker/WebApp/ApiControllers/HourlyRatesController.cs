@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/HourlyRates
         [HttpGet]
-        public async Task<List<HourlyRate>> GetHourlyRates()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.HourlyRate>>> GetHourlyRates()
         {
             return await _bll.HourlyRates.AllAsync();
         }
 
         // GET: api/HourlyRates/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<HourlyRate>> GetHourlyRate(int id)
+        public async Task<ActionResult<BLL.App.DTO.HourlyRate>> GetHourlyRate(int id)
         {
             var hourlyRate = await _bll.HourlyRates.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/HourlyRates/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHourlyRate(int id, HourlyRate hourlyRate)
+        public async Task<IActionResult> PutHourlyRate(int id, BLL.App.DTO.HourlyRate hourlyRate)
         {
             if (id != hourlyRate.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/HourlyRates
         [HttpPost]
-        public async Task<ActionResult<HourlyRate>> PostHourlyRate(HourlyRate hourlyRate)
+        public async Task<ActionResult<BLL.App.DTO.HourlyRate>> PostHourlyRate(BLL.App.DTO.HourlyRate hourlyRate)
         {
             await _bll.HourlyRates.AddAsync(hourlyRate);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/HourlyRates/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<HourlyRate>> DeleteHourlyRate(int id)
+        public async Task<ActionResult> DeleteHourlyRate(int id)
         {
             var hourlyRate = await _bll.HourlyRates.FindAsync(id);
             if (hourlyRate == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.HourlyRates.Remove(hourlyRate);
             await _bll.SaveChangesAsync();
 
-            return hourlyRate;
+            return NoContent();
         }
     }
 }

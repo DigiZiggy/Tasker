@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Domain.Identity;
+using Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -22,7 +20,9 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Identifications
         public async Task<IActionResult> Index()
         {
-            var identifications = await _bll.Identifications.AllAsync();
+
+            var identifications = await _bll.Identifications.AllForUserAsync(User.GetUserId());
+            
             return View(identifications);
         }
 
@@ -49,7 +49,9 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var vm = new IdentificationCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id))
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id))
             };
             
             return View(vm);
@@ -64,12 +66,14 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Identifications.AddAsync(vm.Identification);
+                _bll.Identifications.Add(vm.Identification);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Identification.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Identification.AppUserId);
       
             return View(vm);
         }
@@ -89,8 +93,10 @@ namespace WebApp.Areas.Admin.Controllers
             }
             var vm = new IdentificationEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), identification.AppUserId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    identification.AppUserId),
             };
            
             return View(vm);
@@ -116,8 +122,10 @@ namespace WebApp.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Identification.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Identification.AppUserId);
         
             return View(vm);
         }

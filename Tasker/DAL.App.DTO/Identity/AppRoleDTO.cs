@@ -1,9 +1,0 @@
-namespace DAL.App.DTO.Identity
-{
-    public class AppRoleDTO
-    {
-        public int Id { get; set; }
-
-
-    }
-}

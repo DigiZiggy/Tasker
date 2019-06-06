@@ -1,10 +1,11 @@
 using Contracts.BLL.Base.Services;
 using Contracts.DAL.App.Repositories;
-using Domain;
+using BLLAppDTO = BLL.App.DTO;
+
 
 namespace Contracts.BLL.App.Services
 {
-    public interface IReviewService : IBaseEntityService<Review>, IReviewRepository
+    public interface IReviewService : IBaseEntityService<BLLAppDTO.Review>, IReviewRepository<BLLAppDTO.Review>
     {
         
     }

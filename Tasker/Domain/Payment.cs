@@ -1,9 +1,10 @@
 using System;
+using Contracts.DAL.Base;
 using Domain.Base;
 
 namespace Domain
 {
-    public class Payment : BaseEntity
+    public class Payment : BaseEntity, IDomainEntity
     {
 //        [Required]
         public string MeansOfPayment { get; set; }

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using Domain.Base;
 
 namespace Domain
 {
-    public class Address : BaseEntity
+    public class Address : BaseEntity, IDomainEntity
     {
         [MaxLength(64)]
         [MinLength(1)]

@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Identity;
 
 namespace Domain
 {
-    public class Review : BaseEntity
+    public class Review : BaseEntity, IDomainEntity
     {
 //        [Required]
         public int Rating { get; set; }

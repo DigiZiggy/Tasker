@@ -2,46 +2,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.DTO;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserTaskRepository : BaseRepository<UserTask, AppDbContext>, IUserTaskRepository
+    public class UserTaskRepository : BaseRepository<DAL.App.DTO.UserTask, Domain.UserTask, AppDbContext>, IUserTaskRepository
     {
-        public UserTaskRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public UserTaskRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new UserTaskMapper())
         {
         }
                
-        public override async Task<List<UserTask>> AllAsync()
+        public override async Task<List<DAL.App.DTO.UserTask>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(u => u.TaskGiver)
                 .Include(u => u.Tasker)
-                .ToListAsync(); 
+                .Select(e => UserTaskMapper.MapFromDomain(e)).ToListAsync(); 
         }
         
-        public async Task<List<UserTask>> AllForTaskGiverAsync(int userId)
-        {
-            return await RepositoryDbSet
-                .Include(u => u.TaskGiver)
-                .Include(u => u.Tasker)
-                .Include(t => t.TaskerTask)
-                .Where(c => c.TaskGiver.Id == userId).ToListAsync();
-        }
-        
-        public async Task<List<UserTask>> AllForTaskerAsync(int userId)
+        public async Task<List<DAL.App.DTO.UserTask>> AllForTaskGiverAsync(int userId)
         {
             return await RepositoryDbSet
                 .Include(u => u.TaskGiver)
                 .Include(u => u.Tasker)
                 .Include(t => t.TaskerTask)
-                .Where(c => c.Tasker.Id == userId).ToListAsync();
+                .Where(c => c.TaskGiver.Id == userId)
+                .Select(e => UserTaskMapper.MapFromDomain(e)).ToListAsync();
         }
         
-        public async Task<UserTask> FindAllIncludedAsync(params object[] id)
+        public async Task<List<DAL.App.DTO.UserTask>> AllForTaskerAsync(int userId)
+        {
+            return await RepositoryDbSet
+                .Include(u => u.TaskGiver)
+                .Include(u => u.Tasker)
+                .Include(t => t.TaskerTask)
+                .Where(c => c.Tasker.Id == userId)
+                .Select(e => UserTaskMapper.MapFromDomain(e)).ToListAsync();
+        }
+        
+        public async Task<DAL.App.DTO.UserTask> FindAllIncludedAsync(params object[] id)
         {
             var userTask = await base.FindAsync(id);
 
@@ -52,6 +56,11 @@ namespace DAL.App.EF.Repositories
             }
 
             return userTask;
+        }
+
+        public Task<UserTask> FindForUserAsync(int id, int userId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

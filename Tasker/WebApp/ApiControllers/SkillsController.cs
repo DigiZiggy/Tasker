@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Skills
         [HttpGet]
-        public async Task<List<Skill>> GetSkills()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Skill>>> GetSkills()
         {
             return await _bll.Skills.AllAsync();
         }
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Skill>> GetSkill(int id)
+        public async Task<ActionResult<BLL.App.DTO.Skill>> GetSkill(int id)
         {
             var skill = await _bll.Skills.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Skills/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSkill(int id, Skill skill)
+        public async Task<IActionResult> PutSkill(int id, BLL.App.DTO.Skill skill)
         {
             if (id != skill.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/Skills
         [HttpPost]
-        public async Task<ActionResult<Skill>> PostSkill(Skill skill)
+        public async Task<ActionResult<BLL.App.DTO.Skill>> PostSkill(BLL.App.DTO.Skill skill)
         {
             await _bll.Skills.AddAsync(skill);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/Skills/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Skill>> DeleteSkill(int id)
+        public async Task<ActionResult> DeleteSkill(int id)
         {
             var skill = await _bll.Skills.FindAsync(id);
             if (skill == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Skills.Remove(skill);
             await _bll.SaveChangesAsync();
 
-            return skill;
+            return NoContent();
         }
     }
 }

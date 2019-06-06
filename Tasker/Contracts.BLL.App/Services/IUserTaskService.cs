@@ -1,10 +1,11 @@
 using Contracts.BLL.Base.Services;
 using Contracts.DAL.App.Repositories;
-using Domain;
+using BLLAppDTO = BLL.App.DTO;
+
 
 namespace Contracts.BLL.App.Services
 {
-    public interface IUserTaskService : IBaseEntityService<UserTask>, IUserTaskRepository
+    public interface IUserTaskService : IBaseEntityService<BLLAppDTO.UserTask>, IUserTaskRepository<BLLAppDTO.UserTask>
     {
         
     }

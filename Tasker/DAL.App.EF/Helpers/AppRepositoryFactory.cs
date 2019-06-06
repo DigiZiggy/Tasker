@@ -4,7 +4,6 @@ using Contracts.DAL.Base.Helpers;
 using DAL.App.EF.Repositories;
 using DAL.App.EF.Repositories.Identity;
 using DAL.Base.EF.Helpers;
-using AppUserRepository = DAL.App.EF.Repositories.AppUserRepository;
 
 namespace DAL.App.EF.Helpers
 {

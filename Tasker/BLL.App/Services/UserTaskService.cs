@@ -1,31 +1,40 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.Mappers;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
-using Domain;
+
 
 namespace BLL.App.Services
 {
-    public class UserTaskService : BaseEntityService<UserTask, IAppUnitOfWork>, IUserTaskService
+    public class UserTaskService : BaseEntityService<BLL.App.DTO.UserTask, DAL.App.DTO.UserTask, IAppUnitOfWork>, IUserTaskService
     {
-        public UserTaskService(IAppUnitOfWork uow) : base(uow)
+        public UserTaskService(IAppUnitOfWork uow) : base(uow, new UserTaskMapper())
         {
+            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.UserTask, Domain.UserTask>();
         }
 
-        public async Task<UserTask> FindAllIncludedAsync(params object[] id)
+
+        public async Task<BLL.App.DTO.UserTask> FindAllIncludedAsync(params object[] id)
         {
-            return await Uow.UserTasks.FindAllIncludedAsync(id);
+            return UserTaskMapper.MapFromDAL(await Uow.UserTasks.FindAllIncludedAsync(id));
         }
         
-        public async Task<List<UserTask>> AllForTaskGiverAsync(int userId)
+        public async Task<BLL.App.DTO.UserTask> FindForUserAsync(int id, int userId)
         {
-            return await Uow.UserTasks.AllForTaskGiverAsync(userId);
+            return UserTaskMapper.MapFromDAL(await Uow.UserTasks.FindForUserAsync(id, userId));
+        }
+     
+        public async Task<List<BLL.App.DTO.UserTask>> AllForTaskGiverAsync(int userId)
+        {
+            return (await Uow.UserTasks.AllForTaskGiverAsync(userId)).Select(e => UserTaskMapper.MapFromDAL(e)).ToList();
         }
         
-        public async Task<List<UserTask>> AllForTaskerAsync(int userId)
+        public async Task<List<BLL.App.DTO.UserTask>> AllForTaskerAsync(int userId)
         {
-            return await Uow.UserTasks.AllForTaskerAsync(userId);
+            return (await Uow.UserTasks.AllForTaskerAsync(userId)).Select(e => UserTaskMapper.MapFromDAL(e)).ToList();
         }
     }
 }

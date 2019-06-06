@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Invoices
         [HttpGet]
-        public async Task<List<Invoice>> GetInvoices()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Invoice>>> GetInvoices()
         {
             return await _bll.Invoices.AllAsync();
         }
 
         // GET: api/Invoices/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Invoice>> GetInvoice(int id)
+        public async Task<ActionResult<BLL.App.DTO.Invoice>> GetInvoice(int id)
         {
             var invoice = await _bll.Invoices.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Invoices/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInvoice(int id, Invoice invoice)
+        public async Task<IActionResult> PutInvoice(int id, BLL.App.DTO.Invoice invoice)
         {
             if (id != invoice.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/Invoices
         [HttpPost]
-        public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
+        public async Task<ActionResult<BLL.App.DTO.Invoice>> PostInvoice(BLL.App.DTO.Invoice invoice)
         {
             await _bll.Invoices.AddAsync(invoice);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/Invoices/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Invoice>> DeleteInvoice(int id)
+        public async Task<ActionResult> DeleteInvoice(int id)
         {
             var invoice = await _bll.Invoices.FindAllIncludedAsync(id);
             if (invoice == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Invoices.Remove(invoice);
             await _bll.SaveChangesAsync();
 
-            return invoice;
+            return NoContent();
         }
     }
 }

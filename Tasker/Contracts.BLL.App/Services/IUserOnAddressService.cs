@@ -1,10 +1,11 @@
 using Contracts.BLL.Base.Services;
 using Contracts.DAL.App.Repositories;
-using Domain;
+using BLLAppDTO = BLL.App.DTO;
+
 
 namespace Contracts.BLL.App.Services
 {
-    public interface IUserOnAddressService : IBaseEntityService<UserOnAddress>, IUserOnAddressRepository
+    public interface IUserOnAddressService : IBaseEntityService<BLLAppDTO.UserOnAddress>, IUserOnAddressRepository<BLLAppDTO.UserOnAddress>
     {
         
     }

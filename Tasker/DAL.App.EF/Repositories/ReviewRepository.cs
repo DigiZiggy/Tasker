@@ -2,36 +2,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.DTO;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class ReviewRepository : BaseRepository<Review, AppDbContext>, IReviewRepository
+    public class ReviewRepository : BaseRepository<DAL.App.DTO.Review, Domain.Review, AppDbContext>, IReviewRepository
     {
-        public ReviewRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public ReviewRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new ReviewMapper())
         {
         }
         
-        public override async Task<List<Review>> AllAsync()
-        {
-            return await RepositoryDbSet
-                .Include(r => r.ReviewReceiver)
-                .Include(r => r.ReviewGiver)
-                .ToListAsync();          
-        }
-        
-        public async Task<List<Review>> AllForUserAsync(int userId)
+        public override async Task<List<DAL.App.DTO.Review>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(r => r.ReviewReceiver)
                 .Include(r => r.ReviewGiver)
-                .ToListAsync();
+                .Select(e => ReviewMapper.MapFromDomain(e)).ToListAsync();         
         }
         
-        public async Task<Review> FindAllIncludedAsync(params object[] id)
+        public async Task<List<DAL.App.DTO.Review>> AllForUserAsync(int userId)
+        {
+            return await RepositoryDbSet
+                .Include(r => r.ReviewReceiver)
+                .Include(r => r.ReviewGiver)
+                .Select(e => ReviewMapper.MapFromDomain(e)).ToListAsync();         
+        }
+        
+        public async Task<DAL.App.DTO.Review> FindAllIncludedAsync(params object[] id)
         {
             var review = await base.FindAsync(id);
 
@@ -42,6 +44,11 @@ namespace DAL.App.EF.Repositories
             }
 
             return review;
+        }
+
+        public Task<Review> FindForUserAsync(int id, int userId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

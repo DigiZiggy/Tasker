@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Enums;
 using Domain.Identity;
 
 namespace Domain
 {
-    public class TaskerTask : BaseEntity
+    public class TaskerTask : BaseEntity, IDomainEntity
     {       
         [MaxLength(64)]
         [MinLength(1)]

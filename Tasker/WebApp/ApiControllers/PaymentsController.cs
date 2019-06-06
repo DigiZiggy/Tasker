@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Payments
         [HttpGet]
-        public async Task<List<Payment>> GetPayments()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Payment>>> GetPayments()
         {
             return await _bll.Payments.AllAsync();
         }
 
         // GET: api/Payments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Payment>> GetPayment(int id)
+        public async Task<ActionResult<BLL.App.DTO.Payment>> GetPayment(int id)
         {
             var payment = await _bll.Payments.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Payments/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayment(int id, Payment payment)
+        public async Task<IActionResult> PutPayment(int id, BLL.App.DTO.Payment payment)
         {
             if (id != payment.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/Payments
         [HttpPost]
-        public async Task<ActionResult<Payment>> PostPayment(Payment payment)
+        public async Task<ActionResult<BLL.App.DTO.Payment>> PostPayment(BLL.App.DTO.Payment payment)
         {
             await _bll.Payments.AddAsync(payment);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/Payments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Payment>> DeletePayment(int id)
+        public async Task<ActionResult> DeletePayment(int id)
         {
             var payment = await _bll.Payments.FindAllIncludedAsync(id);
             if (payment == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Payments.Remove(payment);
             await _bll.SaveChangesAsync();
 
-            return payment;
+            return NoContent();
         }
     }
 }

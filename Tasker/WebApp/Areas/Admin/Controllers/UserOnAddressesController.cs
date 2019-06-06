@@ -1,9 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Domain;
-using Domain.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -52,8 +48,12 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new UserOnAddressCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id)),
-                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), nameof(Address.Id)),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id)),
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                    nameof(BLL.App.DTO.Address.Id), 
+                    nameof(BLL.App.DTO.Address.Id)),
             };
             
             return View(vm);
@@ -73,10 +73,14 @@ namespace WebApp.Areas.Admin.Controllers
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.UserOnAddress.AppUserId);
-            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
-                nameof(Address.Id), vm.UserOnAddress.AddressId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.UserOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                nameof(BLL.App.DTO.Address.Id), 
+                nameof(BLL.App.DTO.Address.Id), 
+                vm.UserOnAddress.AddressId);
 
             return View(vm);
 
@@ -97,10 +101,14 @@ namespace WebApp.Areas.Admin.Controllers
             }
             var vm = new UserOnAddressEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), userOnAddress.AppUserId),
-                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
-                    nameof(Address.Id), userOnAddress.AddressId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    userOnAddress.AppUserId),
+                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                    nameof(BLL.App.DTO.Address.Id), 
+                    nameof(BLL.App.DTO.Address.Id), 
+                    userOnAddress.AddressId),
             };
             
             return View(vm);
@@ -125,10 +133,14 @@ namespace WebApp.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.UserOnAddress.AppUserId);
-            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), nameof(Address.Id), 
-                nameof(Address.Id), vm.UserOnAddress.AddressId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.UserOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                nameof(BLL.App.DTO.Address.Id), 
+                nameof(BLL.App.DTO.Address.Id), 
+                vm.UserOnAddress.AddressId);
 
             return View(vm);
 

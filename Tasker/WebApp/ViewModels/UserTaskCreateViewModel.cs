@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using UserTask = BLL.App.DTO.UserTask;
 
 namespace WebApp.ViewModels
 {

@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Reviews
         [HttpGet]
-        public async Task<List<Review>> GetReviews()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Review>>> GetReviews()
         {
             return await _bll.Reviews.AllAsync();
         }
 
         // GET: api/Reviews/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Review>> GetReview(int id)
+        public async Task<ActionResult<BLL.App.DTO.Review>> GetReview(int id)
         {
             var review = await _bll.Reviews.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Reviews/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReview(int id, Review review)
+        public async Task<IActionResult> PutReview(int id, BLL.App.DTO.Review review)
         {
             if (id != review.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/Reviews
         [HttpPost]
-        public async Task<ActionResult<Review>> PostReview(Review review)
+        public async Task<ActionResult<BLL.App.DTO.Review>> PostReview(BLL.App.DTO.Review review)
         {
             await _bll.Reviews.AddAsync(review);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/Reviews/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Review>> DeleteReview(int id)
+        public async Task<ActionResult> DeleteReview(int id)
         {
             var review = await _bll.Reviews.FindAllIncludedAsync(id);
             if (review == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Reviews.Remove(review);
             await _bll.SaveChangesAsync();
 
-            return review;
+            return NoContent();
         }
     }
 }

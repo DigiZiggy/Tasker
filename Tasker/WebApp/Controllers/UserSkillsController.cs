@@ -56,8 +56,12 @@ namespace WebApp.Controllers
         {
             var vm = new UserSkillCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id)),
-                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), nameof(Skill.Id)),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id)),
+                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), 
+                    nameof(BLL.App.DTO.Skill.Id), 
+                    nameof(BLL.App.DTO.Skill.Id)),
 
             };
             return View(vm);
@@ -77,10 +81,14 @@ namespace WebApp.Controllers
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.UserSkill.AppUserId);
-            vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), 
-                nameof(Skill.Id), vm.UserSkill.SkillId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.UserSkill.AppUserId);
+            vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), 
+                nameof(BLL.App.DTO.Skill.Id), 
+                nameof(BLL.App.DTO.Skill.Id), 
+                vm.UserSkill.SkillId);
 
             return View(vm);
         }
@@ -100,10 +108,14 @@ namespace WebApp.Controllers
             }
             var vm = new UserSkillEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), userSkill.AppUserId),
-                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), 
-                    nameof(Skill.Id), userSkill.SkillId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    userSkill.AppUserId),
+                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), 
+                    nameof(BLL.App.DTO.Skill.Id), 
+                    nameof(BLL.App.DTO.Skill.Id), 
+                    userSkill.SkillId),
             };
 
             return View(vm);
@@ -128,10 +140,14 @@ namespace WebApp.Controllers
                     
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.UserSkill.AppUserId);
-            vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), nameof(Skill.Id), 
-                nameof(Skill.Id), vm.UserSkill.SkillId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.UserSkill.AppUserId);
+            vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), 
+                nameof(BLL.App.DTO.Skill.Id), 
+                nameof(BLL.App.DTO.Skill.Id), 
+                vm.UserSkill.SkillId);
             
             return View(vm);
 

@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/Addresses
         [HttpGet]
-        public async Task<List<Address>> GetAddresses()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Address>>> GetAddresses()
         {
             return await _bll.Addresses.AllAsync();
         }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Address>> GetAddress(int id)
+        public async Task<ActionResult<BLL.App.DTO.Address>> GetAddress(int id)
         {
             var address = await _bll.Addresses.FindAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Addresses/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(int id, Address address)
+        public async Task<IActionResult> PutAddress(int id, BLL.App.DTO.Address address)
         {
             if (id != address.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/Addresses
         [HttpPost]
-        public async Task<ActionResult<Address>> PostAddress(Address address)
+        public async Task<ActionResult<BLL.App.DTO.Address>> PostAddress(BLL.App.DTO.Address address)
         {
             await _bll.Addresses.AddAsync(address);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/Addresses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Address>> DeleteAddress(int id)
+        public async Task<ActionResult> DeleteAddress(int id)
         {
             var address = await _bll.Addresses.FindAsync(id);
             if (address == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Addresses.Remove(address);
             await _bll.SaveChangesAsync();
 
-            return address;
+            return NoContent();
         }
     }
 }

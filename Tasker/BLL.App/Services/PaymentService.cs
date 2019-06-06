@@ -1,26 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.Mappers;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
-using Domain;
+
 
 namespace BLL.App.Services
 {
-    public class PaymentService : BaseEntityService<Payment, IAppUnitOfWork>, IPaymentService
+    public class PaymentService : BaseEntityService<BLL.App.DTO.Payment, DAL.App.DTO.Payment, IAppUnitOfWork>, IPaymentService
     {
-        public PaymentService(IAppUnitOfWork uow) : base(uow)
+        public PaymentService(IAppUnitOfWork uow) : base(uow, new PaymentMapper())
         {
+            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Payment, Domain.Payment>();
         }
 
-        public async Task<Payment> FindAllIncludedAsync(params object[] id)
+        public async Task<BLL.App.DTO.Payment> FindAllIncludedAsync(params object[] id)
         {
-            return await Uow.Payments.FindAllIncludedAsync(id);
+            return PaymentMapper.MapFromDAL(await Uow.Payments.FindAllIncludedAsync(id));
         }
         
-        public async Task<List<Payment>> AllForUserAsync(int userId)
+        public async Task<BLL.App.DTO.Payment> FindForUserAsync(int id, int userId)
         {
-            return await Uow.Payments.AllForUserAsync(userId);
+            return PaymentMapper.MapFromDAL(await Uow.Payments.FindForUserAsync(id, userId));
+        }
+        
+        public async Task<List<BLL.App.DTO.Payment>> AllForUserAsync(int userId)
+        {
+            return (await Uow.Payments.AllForUserAsync(userId)).Select(e => PaymentMapper.MapFromDAL(e)).ToList();
         }
     }
 }

@@ -1,26 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.Mappers;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
-using Domain;
+
 
 namespace BLL.App.Services
 {
-    public class ReviewService : BaseEntityService<Review, IAppUnitOfWork>, IReviewService
+    public class ReviewService : BaseEntityService<BLL.App.DTO.Review, DAL.App.DTO.Review, IAppUnitOfWork>, IReviewService
     {
-        public ReviewService(IAppUnitOfWork uow) : base(uow)
+        public ReviewService(IAppUnitOfWork uow) : base(uow, new ReviewMapper())
         {
+            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Review, Domain.Review>();
         }
 
-        public async Task<Review> FindAllIncludedAsync(params object[] id)
+        public async Task<BLL.App.DTO.Review> FindAllIncludedAsync(params object[] id)
         {
-            return await Uow.Reviews.FindAllIncludedAsync(id);
+            return ReviewMapper.MapFromDAL(await Uow.Reviews.FindAllIncludedAsync(id));
         }
         
-        public async Task<List<Review>> AllForUserAsync(int userId)
+        public async Task<BLL.App.DTO.Review> FindForUserAsync(int id, int userId)
         {
-            return await Uow.Reviews.AllForUserAsync(userId);
+            return ReviewMapper.MapFromDAL(await Uow.Reviews.FindForUserAsync(id, userId));
+        }
+        
+        public async Task<List<BLL.App.DTO.Review>> AllForUserAsync(int userId)
+        {
+            return (await Uow.Reviews.AllForUserAsync(userId)).Select(e => ReviewMapper.MapFromDAL(e)).ToList();
         }
     }
 }

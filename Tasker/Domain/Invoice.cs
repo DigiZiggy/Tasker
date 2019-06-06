@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Identity;
 
 namespace Domain
 {
-    public class Invoice : BaseEntity
+    public class Invoice : BaseEntity, IDomainEntity
     {
 //        [Required]
         public int InvoiceNumber { get; set; }

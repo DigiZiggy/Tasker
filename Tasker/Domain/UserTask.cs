@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Identity;
 
 namespace Domain
 {
-    public class UserTask : BaseEntity
+    public class UserTask : BaseEntity, IDomainEntity
     {
 //        [Required]
         public DateTime Start { get; set; }

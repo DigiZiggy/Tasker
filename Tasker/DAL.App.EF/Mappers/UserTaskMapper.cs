@@ -1,0 +1,49 @@
+using System;
+using Contracts.DAL.Base.Mappers;
+using DAL.App.DTO;
+
+namespace DAL.App.EF.Mappers
+{
+    public class UserTaskMapper : IBaseDALMapper
+    {
+        public TOutObject Map<TOutObject>(object inObject)
+            where TOutObject : class
+        {
+            if (typeof(TOutObject) == typeof(DAL.App.DTO.UserTask))
+            {
+                return MapFromDomain((Domain.UserTask) inObject) as TOutObject;
+            }
+
+            if (typeof(TOutObject) == typeof(Domain.UserTask))
+            {
+                return MapFromDAL((DAL.App.DTO.UserTask) inObject) as TOutObject;
+            }
+
+            throw new InvalidCastException($"No conversion from {inObject.GetType().FullName} to {typeof(TOutObject).FullName}");
+        }
+
+        public static DAL.App.DTO.UserTask MapFromDomain(Domain.UserTask userTask)
+        {
+            var res = userTask == null ? null : new DAL.App.DTO.UserTask
+            {
+                Id = userTask.Id,
+
+            };
+
+
+            return res;
+        }
+
+        public static Domain.UserTask MapFromDAL(DAL.App.DTO.UserTask userTask)
+        {
+            var res = userTask == null ? null : new Domain.UserTask
+            {
+                Id = userTask.Id,
+
+            };
+
+
+            return res;
+        }
+    }
+}

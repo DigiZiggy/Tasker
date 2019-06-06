@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Enums;
 
 namespace Domain
 {
-    public class Skill : BaseEntity
+    public class Skill : BaseEntity, IDomainEntity
     {
         [MaxLength(64)]
         [MinLength(1)]

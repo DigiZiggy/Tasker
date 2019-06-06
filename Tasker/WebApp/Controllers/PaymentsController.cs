@@ -54,8 +54,9 @@ namespace WebApp.Controllers
         {
             var vm = new PaymentCreateViewModel()
             {
-                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id), 
-                    nameof(Invoice.Id)),
+                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                    nameof(BLL.App.DTO.Invoice.Id), 
+                    nameof(BLL.App.DTO.Invoice.Id)),
 
             };
 
@@ -71,12 +72,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Payments.AddAsync(vm.Payment);
+                _bll.Payments.Add(vm.Payment);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id),
-                nameof(Invoice.Id), vm.Payment.InvoiceId);
+            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                nameof(BLL.App.DTO.Invoice.Id),
+                nameof(BLL.App.DTO.Invoice.Id), 
+                vm.Payment.InvoiceId);
 
             return View(vm);
 
@@ -97,8 +100,10 @@ namespace WebApp.Controllers
             }
             var vm = new PaymentEditViewModel()
             {
-                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id), 
-                    nameof(Invoice.Id), payment.InvoiceId),
+                InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                    nameof(BLL.App.DTO.Invoice.Id), 
+                    nameof(BLL.App.DTO.Invoice.Id), 
+                    payment.InvoiceId),
 
             };
 
@@ -125,8 +130,10 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
                  
-            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), nameof(Invoice.Id),
-                nameof(Invoice.Id), vm.Payment.InvoiceId);
+            vm.InvoiceSelectList = new SelectList(await _bll.Invoices.AllAsync(), 
+                nameof(BLL.App.DTO.Invoice.Id),
+                nameof(BLL.App.DTO.Invoice.Id), 
+                vm.Payment.InvoiceId);
             
             return View(vm);
         }

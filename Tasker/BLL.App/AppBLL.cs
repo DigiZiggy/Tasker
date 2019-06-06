@@ -17,8 +17,7 @@ namespace BLL.App
             AppUnitOfWork = appUnitOfWork;
         }
 
-        public IAppUserService AppUsers => ServiceProvider.GetService<IAppUserService>();
-        
+        public IAppUserService AppUsers => ServiceProvider.GetService<IAppUserService>();        
         public IAppRoleService AppRoles => ServiceProvider.GetService<IAppRoleService>();
         public IAddressService Addresses => ServiceProvider.GetService<IAddressService>();
         public IHourlyRateService HourlyRates => ServiceProvider.GetService<IHourlyRateService>();

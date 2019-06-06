@@ -57,11 +57,11 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SkillName,Description,Category,Id")] Skill skill)
+        public async Task<IActionResult> Create([Bind("SkillName,Description,Category,Id")] BLL.App.DTO.Skill skill)
         {
             if (ModelState.IsValid)
             {
-                await _bll.Skills.AddAsync(skill);
+                _bll.Skills.Add(skill);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -89,7 +89,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SkillName,Description,Category,Id")] Skill skill)
+        public async Task<IActionResult> Edit(int id, [Bind("SkillName,Description,Category,Id")] BLL.App.DTO.Skill skill)
         {
             if (id != skill.Id)
             {

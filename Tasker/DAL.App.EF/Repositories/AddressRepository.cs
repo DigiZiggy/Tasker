@@ -1,13 +1,19 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace DAL.App.EF.Repositories
 {
-    public class AddressRepository : BaseRepository<Address, AppDbContext>, IAddressRepository
+    public class AddressRepository : BaseRepository<DAL.App.DTO.Address, Domain.Address, AppDbContext>, IAddressRepository
     {
-        public AddressRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public AddressRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new AddressMapper())
         {
         }
     }

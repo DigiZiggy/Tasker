@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Areas.Admin.Controllers
@@ -52,11 +49,11 @@ namespace WebApp.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Country,City,Street,HouseNumber,UnitNumber,PostalCode,Id")] Address address)
+        public async Task<IActionResult> Create([Bind("Country,City,Street,HouseNumber,UnitNumber,PostalCode,Id")] BLL.App.DTO.Address address)
         {
             if (ModelState.IsValid)
             {
-                await _bll.Addresses.AddAsync(address);
+                _bll.Addresses.Add(address);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -84,7 +81,7 @@ namespace WebApp.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Country,City,Street,HouseNumber,UnitNumber,PostalCode,Id")] Address address)
+        public async Task<IActionResult> Edit(int id, [Bind("Country,City,Street,HouseNumber,UnitNumber,PostalCode,Id")] BLL.App.DTO.Address address)
         {
             if (id != address.Id)
             {

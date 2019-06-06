@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Invoice = BLL.App.DTO.Invoice;
 
 namespace WebApp.ViewModels
 {

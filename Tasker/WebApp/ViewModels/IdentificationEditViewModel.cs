@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Identification = BLL.App.DTO.Identification;
 
 namespace WebApp.ViewModels
 {

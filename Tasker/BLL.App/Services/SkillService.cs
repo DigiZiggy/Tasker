@@ -1,14 +1,16 @@
+using BLL.App.Mappers;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
-using Domain;
+
 
 namespace BLL.App.Services
 {
-    public class SkillService : BaseEntityService<Skill, IAppUnitOfWork>, ISkillService
+    public class SkillService : BaseEntityService<BLL.App.DTO.Skill, DAL.App.DTO.Skill, IAppUnitOfWork>, ISkillService
     {
-        public SkillService(IAppUnitOfWork uow) : base(uow)
+        public SkillService(IAppUnitOfWork uow) : base(uow, new SkillMapper())
         {
+            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Skill, Domain.Skill>();
         }
     }
 }

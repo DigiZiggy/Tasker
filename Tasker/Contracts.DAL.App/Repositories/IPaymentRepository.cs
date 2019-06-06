@@ -1,14 +1,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.Base.Repositories;
-using Domain;
+using DALAppDTO = DAL.App.DTO;
+
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IPaymentRepository : IBaseRepositoryAsync<Payment>
+    public interface IPaymentRepository : IPaymentRepository<DALAppDTO.Payment>
     {
-        Task<Payment> FindAllIncludedAsync(params object[] id);
-
-        Task<List<Payment>> AllForUserAsync(int userId);
+        
+    }
+    
+    public interface IPaymentRepository<TDALEntity> : IBaseRepository<TDALEntity>
+        where TDALEntity : class, new()
+    {
+        Task<List<TDALEntity>> AllForUserAsync(int userId);
+        Task<TDALEntity> FindAllIncludedAsync(params object[] id);
+        Task<TDALEntity> FindForUserAsync(int id, int userId);
     }
 }

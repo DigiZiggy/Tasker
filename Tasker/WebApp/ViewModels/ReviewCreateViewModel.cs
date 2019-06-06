@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Review = BLL.App.DTO.Review;
 
 namespace WebApp.ViewModels
 {

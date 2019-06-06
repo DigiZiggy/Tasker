@@ -1,10 +1,11 @@
 using Contracts.BLL.Base.Services;
 using Contracts.DAL.App.Repositories;
-using Domain;
+using BLLAppDTO = BLL.App.DTO;
+
 
 namespace Contracts.BLL.App.Services
 {
-    public interface ITaskerTaskService : IBaseEntityService<TaskerTask>, ITaskerTaskRepository
+    public interface ITaskerTaskService : IBaseEntityService<BLLAppDTO.TaskerTask>, ITaskerTaskRepository<BLLAppDTO.TaskerTask>
     {
         
     }

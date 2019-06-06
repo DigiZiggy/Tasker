@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Payment = BLL.App.DTO.Payment;
 
 namespace WebApp.ViewModels
 {

@@ -1,26 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using BLL.App.Mappers;
 using BLL.Base.Services;
 using Contracts.BLL.App.Services;
 using Contracts.DAL.App;
-using Domain;
+
 
 namespace BLL.App.Services
 {
-    public class UserOnAddressService : BaseEntityService<UserOnAddress, IAppUnitOfWork>, IUserOnAddressService
+    public class UserOnAddressService : BaseEntityService<BLL.App.DTO.UserOnAddress, DAL.App.DTO.UserOnAddress, IAppUnitOfWork>, IUserOnAddressService
     {
-        public UserOnAddressService(IAppUnitOfWork uow) : base(uow)
+        public UserOnAddressService(IAppUnitOfWork uow) : base(uow, new UserOnAddressMapper())
         {
+            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.UserOnAddress, Domain.UserOnAddress>();
         }
 
-        public async Task<UserOnAddress> FindAllIncludedAsync(params object[] id)
+        public async Task<BLL.App.DTO.UserOnAddress> FindAllIncludedAsync(params object[] id)
         {
-            return await Uow.UserOnAddresses.FindAllIncludedAsync(id);
+            return UserOnAddressMapper.MapFromDAL(await Uow.UserOnAddresses.FindAllIncludedAsync(id));
         }
         
-        public async Task<List<UserOnAddress>> AllForUserAsync(int userId)
+        public async Task<BLL.App.DTO.UserOnAddress> FindForUserAsync(int id, int userId)
         {
-            return await Uow.UserOnAddresses.AllForUserAsync(userId);
+            return UserOnAddressMapper.MapFromDAL(await Uow.UserOnAddresses.FindForUserAsync(id, userId));
+        }
+        
+        public async Task<List<BLL.App.DTO.UserOnAddress>> AllForUserAsync(int userId)
+        {
+            return (await Uow.UserOnAddresses.AllForUserAsync(userId)).Select(e => UserOnAddressMapper.MapFromDAL(e)).ToList();
         }
     }
 }

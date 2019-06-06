@@ -2,34 +2,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
+using DAL.App.DTO;
+using DAL.App.EF.Helpers;
+using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class InvoiceRepository : BaseRepository<Invoice, AppDbContext>, IInvoiceRepository
+    public class InvoiceRepository : BaseRepository<DAL.App.DTO.Invoice, Domain.Invoice, AppDbContext>, IInvoiceRepository
     {
-        public InvoiceRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+        public InvoiceRepository(AppDbContext repositoryDbContext) 
+            : base(repositoryDbContext, new InvoiceMapper())
         {
         }
         
-        public override async Task<List<Invoice>> AllAsync()
-        {
-            return await RepositoryDbSet
-                .Include(i => i.AppUser)
-                .ToListAsync();          
-        }
-        
-        public async Task<List<Invoice>> AllForUserAsync(int userId)
+        public override async Task<List<DAL.App.DTO.Invoice>> AllAsync()
         {
             return await RepositoryDbSet
                 .Include(i => i.AppUser)
-                .Where(c => c.AppUser.Id == userId).ToListAsync();
+                .Select(e => InvoiceMapper.MapFromDomain(e)).ToListAsync();         
         }
         
-        public async Task<Invoice> FindAllIncludedAsync(params object[] id)
+        public async Task<List<DAL.App.DTO.Invoice>> AllForUserAsync(int userId)
+        {
+            return await RepositoryDbSet
+                .Include(i => i.AppUser)
+                .Where(c => c.AppUser.Id == userId)
+                .Select(e => InvoiceMapper.MapFromDomain(e)).ToListAsync();
+
+        }
+        
+        public async Task<DAL.App.DTO.Invoice> FindAllIncludedAsync(params object[] id)
         {
             var invoice = await base.FindAsync(id);
 
@@ -38,6 +42,11 @@ namespace DAL.App.EF.Repositories
                 await RepositoryDbContext.Entry(invoice).Reference(i => i.AppUser).LoadAsync();
             }
             return invoice;
+        }
+
+        public Task<Invoice> FindForUserAsync(int id, int userId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

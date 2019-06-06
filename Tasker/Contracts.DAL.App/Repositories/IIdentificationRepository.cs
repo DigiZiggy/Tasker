@@ -1,13 +1,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.DAL.Base.Repositories;
-using Domain;
+using DALAppDTO = DAL.App.DTO;
+
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IIdentificationRepository : IBaseRepositoryAsync<Identification>
+    public interface IIdentificationRepository : IIdentificationRepository<DALAppDTO.Identification>
     {
-        Task<Identification> FindAllIncludedAsync(params object[] id);
-        Task<List<Identification>> AllForUserAsync(int userId);
+
+    }
+    
+    public interface IIdentificationRepository<TDALEntity> : IBaseRepository<TDALEntity>
+        where TDALEntity : class, new()
+    {
+        Task<List<TDALEntity>> AllForUserAsync(int userId);
+        Task<TDALEntity> FindAllIncludedAsync(params object[] id);      
+        Task<TDALEntity> FindForUserAsync(int id, int userId);
+
     }
 }

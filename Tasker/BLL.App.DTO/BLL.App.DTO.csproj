@@ -3,9 +3,14 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
+    
 
     <ItemGroup>
-      <ProjectReference Include="..\Domain\Domain.csproj" />
+      <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DAL.App.DTO\DAL.App.DTO.csproj" />
     </ItemGroup>
 
 </Project>

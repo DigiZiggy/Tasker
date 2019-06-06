@@ -1,5 +1,6 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using UserOnAddress = BLL.App.DTO.UserOnAddress;
 
 namespace WebApp.ViewModels
 {

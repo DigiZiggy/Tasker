@@ -1,8 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Domain.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;
@@ -51,10 +48,12 @@ namespace WebApp.Areas.Admin.Controllers
             
             var vm = new ReviewCreateViewModel()
             {
-                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id)),
-                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id))
+                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id)),
+                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id))
             };
            
             return View(vm);
@@ -69,14 +68,18 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Reviews.AddAsync(vm.Review);
+                _bll.Reviews.Add(vm.Review);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Review.ReviewGiverId);
-            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Review.ReviewReceiverId);
+            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Review.ReviewGiverId);
+            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Review.ReviewReceiverId);
 
             return View(vm);
         }
@@ -96,10 +99,14 @@ namespace WebApp.Areas.Admin.Controllers
             }
             var vm = new ReviewEditViewModel()
             {
-                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), review.ReviewGiverId),
-                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), review.ReviewReceiverId)
+                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    review.ReviewGiverId),
+                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    review.ReviewReceiverId)
             };
 
             return View(vm);
@@ -124,10 +131,14 @@ namespace WebApp.Areas.Admin.Controllers
   
                 return RedirectToAction(nameof(Index));
             }
-            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Review.ReviewGiverId);
-            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Review.ReviewReceiverId);
+            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Review.ReviewGiverId);
+            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Review.ReviewReceiverId);
 
             return View(vm);
         }

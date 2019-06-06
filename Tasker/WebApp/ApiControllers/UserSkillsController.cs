@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/UserSkills
         [HttpGet]
-        public async Task<List<UserSkill>> GetUserSkills()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.UserSkill>>> GetUserSkills()
         {
             return await _bll.UserSkills.AllAsync();
         }
 
         // GET: api/UserSkills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserSkill>> GetUserSkill(int id)
+        public async Task<ActionResult<BLL.App.DTO.UserSkill>> GetUserSkill(int id)
         {
             var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/UserSkills/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserSkill(int id, UserSkill userSkill)
+        public async Task<IActionResult> PutUserSkill(int id, BLL.App.DTO.UserSkill userSkill)
         {
             if (id != userSkill.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/UserSkills
         [HttpPost]
-        public async Task<ActionResult<UserSkill>> PostUserSkill(UserSkill userSkill)
+        public async Task<ActionResult<BLL.App.DTO.UserSkill>> PostUserSkill(BLL.App.DTO.UserSkill userSkill)
         {
             await _bll.UserSkills.AddAsync(userSkill);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/UserSkills/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserSkill>> DeleteUserSkill(int id)
+        public async Task<ActionResult> DeleteUserSkill(int id)
         {
             var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
             if (userSkill == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.UserSkills.Remove(userSkill);
             await _bll.SaveChangesAsync();
 
-            return userSkill;
+            return NoContent();
         }
     }
 }

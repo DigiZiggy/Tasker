@@ -57,7 +57,9 @@ namespace WebApp.Controllers
         {
             var vm = new IdentificationCreateViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), nameof(AppUser.Id))
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id))
             };
             
             return View(vm);
@@ -72,12 +74,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _bll.Identifications.AddAsync(vm.Identification);
+                _bll.Identifications.Add(vm.Identification);
                 await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Identification.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Identification.AppUserId);
       
             return View(vm);
         }
@@ -97,8 +101,10 @@ namespace WebApp.Controllers
             }
             var vm = new IdentificationEditViewModel()
             {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id), 
-                    nameof(AppUser.Id), identification.AppUserId),
+                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                    identification.AppUserId),
             };
            
             return View(vm);
@@ -124,8 +130,10 @@ namespace WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), nameof(AppUser.Id),
-                nameof(AppUser.Id), vm.Identification.AppUserId);
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id), 
+                vm.Identification.AppUserId);
         
             return View(vm);
         }

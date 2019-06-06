@@ -25,14 +25,14 @@ namespace WebApp.ApiControllers
 
         // GET: api/TaskerTasks
         [HttpGet]
-        public async Task<List<TaskerTask>> GetTasks()
+        public async Task<ActionResult<IEnumerable<BLL.App.DTO.TaskerTask>>> GetTasks()
         {
             return await _bll.Tasks.AllAsync();
         }
 
         // GET: api/TaskerTasks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TaskerTask>> GetTaskerTask(int id)
+        public async Task<ActionResult<BLL.App.DTO.TaskerTask>> GetTaskerTask(int id)
         {
             var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
 
@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers
 
         // PUT: api/TaskerTasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTaskerTask(int id, TaskerTask taskerTask)
+        public async Task<IActionResult> PutTaskerTask(int id, BLL.App.DTO.TaskerTask taskerTask)
         {
             if (id != taskerTask.Id)
             {
@@ -61,7 +61,7 @@ namespace WebApp.ApiControllers
 
         // POST: api/TaskerTasks
         [HttpPost]
-        public async Task<ActionResult<TaskerTask>> PostTaskerTask(TaskerTask taskerTask)
+        public async Task<ActionResult<BLL.App.DTO.TaskerTask>> PostTaskerTask(BLL.App.DTO.TaskerTask taskerTask)
         {
             await _bll.Tasks.AddAsync(taskerTask);
             await _bll.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace WebApp.ApiControllers
 
         // DELETE: api/TaskerTasks/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TaskerTask>> DeleteTaskerTask(int id)
+        public async Task<ActionResult> DeleteTaskerTask(int id)
         {
             var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
             if (taskerTask == null)
@@ -82,7 +82,7 @@ namespace WebApp.ApiControllers
             _bll.Tasks.Remove(taskerTask);
             await _bll.SaveChangesAsync();
 
-            return taskerTask;
+            return NoContent();
         }
     }
 }
