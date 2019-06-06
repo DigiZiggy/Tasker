@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using BLL.App.DTO;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,7 +29,9 @@ namespace BLL.App.Mappers
             var res = skill == null ? null : new BLL.App.DTO.Skill
             {
                 Id = skill.Id,
-
+                SkillName = skill.SkillName,
+                Description = skill.Description,
+                AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromDAL(e)) as ICollection<UserSkill>
             };
 
             return res;
@@ -36,6 +42,9 @@ namespace BLL.App.Mappers
             var res = skill == null ? null : new DAL.App.DTO.Skill
             {
                 Id = skill.Id,
+                SkillName = skill.SkillName,
+                Description = skill.Description,
+                AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.UserSkill>
             };
 
             return res;

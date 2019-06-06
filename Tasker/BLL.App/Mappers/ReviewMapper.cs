@@ -1,4 +1,5 @@
 using System;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,7 +26,12 @@ namespace BLL.App.Mappers
             var res = review == null ? null : new BLL.App.DTO.Review
             {
                 Id = review.Id,
-
+                Rating = review.Rating,
+                ReviewComment = review.ReviewComment,
+                ReviewGiverId = review.ReviewGiverId,
+                ReviewReceiverId = review.ReviewReceiverId,
+                ReviewGiver = AppUserMapper.MapFromDAL(review.ReviewGiver),
+                ReviewReceiver = AppUserMapper.MapFromDAL(review.ReviewReceiver)
             };
 
             return res;
@@ -36,7 +42,12 @@ namespace BLL.App.Mappers
             var res = review == null ? null : new DAL.App.DTO.Review
             {
                 Id = review.Id,
-            };
+                Rating = review.Rating,
+                ReviewComment = review.ReviewComment,
+                ReviewGiverId = review.ReviewGiverId,
+                ReviewReceiverId = review.ReviewReceiverId,
+                ReviewGiver = AppUserMapper.MapFromBLL(review.ReviewGiver),
+                ReviewReceiver = AppUserMapper.MapFromBLL(review.ReviewReceiver)            };
 
             return res;
         }

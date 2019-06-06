@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using BLL.App.DTO;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,7 +29,15 @@ namespace BLL.App.Mappers
             var res = invoice == null ? null : new BLL.App.DTO.Invoice
             {
                 Id = invoice.Id,
-
+                InvoiceNumber = invoice.InvoiceNumber,
+                Date = invoice.Date,
+                TotalWithVAT = invoice.TotalWithVAT,
+                TotalWithoutVAT = invoice.TotalWithoutVAT,
+                VAT = invoice.VAT,
+                Comment = invoice.Comment,
+                AppUserId = invoice.AppUserId,
+                AppUser = AppUserMapper.MapFromDAL(invoice.AppUser),
+                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromDAL(e)) as ICollection<Payment>
             };
 
             return res;
@@ -36,6 +48,15 @@ namespace BLL.App.Mappers
             var res = invoice == null ? null : new DAL.App.DTO.Invoice
             {
                 Id = invoice.Id,
+                InvoiceNumber = invoice.InvoiceNumber,
+                Date = invoice.Date,
+                TotalWithVAT = invoice.TotalWithVAT,
+                TotalWithoutVAT = invoice.TotalWithoutVAT,
+                VAT = invoice.VAT,
+                Comment = invoice.Comment,
+                AppUserId = invoice.AppUserId,
+                AppUser = AppUserMapper.MapFromBLL(invoice.AppUser),
+                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.Payment>
             };
 
             return res;

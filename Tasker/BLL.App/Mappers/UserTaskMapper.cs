@@ -1,4 +1,5 @@
 using System;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,6 +26,14 @@ namespace BLL.App.Mappers
             var res = userTask == null ? null : new BLL.App.DTO.UserTask
             {
                 Id = userTask.Id,
+                Start = userTask.Start,
+                End = userTask.End,
+                TaskId = userTask.TaskId,
+                TaskGiverId = userTask.TaskGiverId,
+                TaskerId = userTask.TaskerId,
+                TaskerTask = TaskerTaskMapper.MapFromDAL(userTask.TaskerTask),
+                TaskGiver = AppUserMapper.MapFromDAL(userTask.TaskGiver),
+                Tasker = AppUserMapper.MapFromDAL(userTask.Tasker)
 
             };
 
@@ -36,7 +45,14 @@ namespace BLL.App.Mappers
             var res = userTask == null ? null : new DAL.App.DTO.UserTask
             {
                 Id = userTask.Id,
-            };
+                Start = userTask.Start,
+                End = userTask.End,
+                TaskId = userTask.TaskId,
+                TaskGiverId = userTask.TaskGiverId,
+                TaskerId = userTask.TaskerId,
+                TaskerTask = TaskerTaskMapper.MapFromBLL(userTask.TaskerTask),
+                TaskGiver = AppUserMapper.MapFromBLL(userTask.TaskGiver),
+                Tasker = AppUserMapper.MapFromBLL(userTask.Tasker)            };
 
             return res;
         }

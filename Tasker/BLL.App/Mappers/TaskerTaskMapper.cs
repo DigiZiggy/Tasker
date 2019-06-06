@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Contracts.BLL.Base.Mappers;
+using DAL.App.DTO;
+using UserTask = BLL.App.DTO.UserTask;
 
 namespace BLL.App.Mappers
 {
@@ -25,7 +29,12 @@ namespace BLL.App.Mappers
             var res = taskerTask == null ? null : new BLL.App.DTO.TaskerTask
             {
                 Id = taskerTask.Id,
-
+                TaskName = taskerTask.TaskName,
+                Description = taskerTask.Description,
+                TimeEstimate = taskerTask.TimeEstimate,
+                AddressId = taskerTask.AddressId,
+                Address = AddressMapper.MapFromDAL(taskerTask.Address),
+                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromDAL(e)) as ICollection<UserTask>
             };
 
             return res;
@@ -36,6 +45,12 @@ namespace BLL.App.Mappers
             var res = taskerTask == null ? null : new DAL.App.DTO.TaskerTask
             {
                 Id = taskerTask.Id,
+                TaskName = taskerTask.TaskName,
+                Description = taskerTask.Description,
+                TimeEstimate = taskerTask.TimeEstimate,
+                AddressId = taskerTask.AddressId,
+                Address = AddressMapper.MapFromBLL(taskerTask.Address),
+                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.UserTask>
             };
 
             return res;

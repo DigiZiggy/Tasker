@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using DAL.App.DTO.Identity;
+using AppUser = BLL.App.DTO.Identity.AppUser;
 
 namespace BLL.App.DTO
 {
@@ -12,7 +13,7 @@ namespace BLL.App.DTO
         public string ReviewComment { get; set; }
         
         public int ReviewGiverId { get; set; } 
-        public AppUser ReviewGiver { get; set; }        
+        public Identity.AppUser ReviewGiver { get; set; }        
         
         public int ReviewReceiverId { get; set; }
         public AppUser ReviewReceiver { get; set; }  

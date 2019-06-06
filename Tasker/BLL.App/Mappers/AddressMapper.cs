@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using BLL.App.DTO;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,7 +28,15 @@ namespace BLL.App.Mappers
             var res = address == null ? null : new BLL.App.DTO.Address
             {
                 Id = address.Id,
-
+                Country = address.Country,
+                City = address.City,
+                Street = address.Street,
+                HouseNumber = address.HouseNumber,
+                UnitNumber = address.UnitNumber,
+                PostalCode = address.PostalCode,
+                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromDAL(e)) as ICollection<UserOnAddress>,
+//                TasksOnAddress = address.TasksOnAddress.Select(e => UserTaskMapper.MapFromDAL(e))
+          
             };
 
             return res;
@@ -36,6 +47,15 @@ namespace BLL.App.Mappers
             var res = address == null ? null : new DAL.App.DTO.Address
             {
                 Id = address.Id,
+                Country = address.Country,
+                City = address.City,
+                Street = address.Street,
+                HouseNumber = address.HouseNumber,
+                UnitNumber = address.UnitNumber,
+                PostalCode = address.PostalCode,
+                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.UserOnAddress>,
+//                TasksOnAddress = address.TasksOnAddress.Select(e => UserTaskMapper.MapFromBLL(e))
+
             };
             
             return res;

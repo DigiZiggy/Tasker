@@ -1,4 +1,5 @@
 using System;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,6 +26,12 @@ namespace BLL.App.Mappers
             var res = userOnAddress == null ? null : new BLL.App.DTO.UserOnAddress
             {
                 Id = userOnAddress.Id,
+                Start = userOnAddress.Start,
+                End = userOnAddress.End,
+                AddressId = userOnAddress.AddressId,
+                AppUserId = userOnAddress.AppUserId,
+                Address = AddressMapper.MapFromDAL(userOnAddress.Address),
+                AppUser = AppUserMapper.MapFromDAL(userOnAddress.AppUser)
 
             };
 
@@ -36,6 +43,12 @@ namespace BLL.App.Mappers
             var res = userOnAddress == null ? null : new DAL.App.DTO.UserOnAddress
             {
                 Id = userOnAddress.Id,
+                Start = userOnAddress.Start,
+                End = userOnAddress.End,
+                AddressId = userOnAddress.AddressId,
+                AppUserId = userOnAddress.AppUserId,
+                Address = AddressMapper.MapFromBLL(userOnAddress.Address),
+                AppUser = AppUserMapper.MapFromBLL(userOnAddress.AppUser)
             };
 
             return res;

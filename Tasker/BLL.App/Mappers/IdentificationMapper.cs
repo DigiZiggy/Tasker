@@ -1,4 +1,5 @@
 using System;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,6 +26,11 @@ namespace BLL.App.Mappers
             var res = identification == null ? null : new BLL.App.DTO.Identification
             {
                 Id = identification.Id,
+                DocNumber = identification.DocNumber,
+                Start = identification.Start,
+                End = identification.End,
+                AppUserId = identification.AppUserId,
+                AppUser = AppUserMapper.MapFromDAL(identification.AppUser)
 
             };
 
@@ -36,6 +42,12 @@ namespace BLL.App.Mappers
             var res = identification == null ? null : new DAL.App.DTO.Identification
             {
                 Id = identification.Id,
+                DocNumber = identification.DocNumber,
+                Start = identification.Start,
+                End = identification.End,
+                AppUserId = identification.AppUserId,
+                AppUser = AppUserMapper.MapFromBLL(identification.AppUser)
+                
             };
 
             return res;

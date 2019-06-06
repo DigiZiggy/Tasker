@@ -1,4 +1,5 @@
 using System;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
 
 namespace BLL.App.Mappers
@@ -25,6 +26,12 @@ namespace BLL.App.Mappers
             var res = userSkill == null ? null : new BLL.App.DTO.UserSkill
             {
                 Id = userSkill.Id,
+                Start = userSkill.Start,
+                End = userSkill.End,
+                SkillId = userSkill.SkillId,
+                AppUserId = userSkill.AppUserId,
+                Skill = SkillMapper.MapFromDAL(userSkill.Skill),
+                AppUser = AppUserMapper.MapFromDAL(userSkill.AppUser)
 
             };
 
@@ -36,7 +43,12 @@ namespace BLL.App.Mappers
             var res = userSkill == null ? null : new DAL.App.DTO.UserSkill
             {
                 Id = userSkill.Id,
-            };
+                Start = userSkill.Start,
+                End = userSkill.End,
+                SkillId = userSkill.SkillId,
+                AppUserId = userSkill.AppUserId,
+                Skill = SkillMapper.MapFromBLL(userSkill.Skill),
+                AppUser = AppUserMapper.MapFromBLL(userSkill.AppUser)            };
 
             return res;
         }

@@ -1,5 +1,7 @@
 using System;
 using Contracts.BLL.Base.Mappers;
+using DAL.App.DTO.Identity;
+using AppUser = BLL.App.DTO.Identity.AppUser;
 
 namespace BLL.App.Mappers.Identity
 {
@@ -31,7 +33,7 @@ namespace BLL.App.Mappers.Identity
             return res;
         }
 
-        public static DAL.App.DTO.Identity.AppUser MapFromBLL(BLL.App.DTO.Identity.AppUser appUser)
+        public static DAL.App.DTO.Identity.AppUser MapFromBLL(AppUser appUser)
         {
             var res = appUser == null ? null : new DAL.App.DTO.Identity.AppUser
             {
