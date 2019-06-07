@@ -9,6 +9,9 @@
     <thead>
     <tr>
       <th>
+        Means Of Payment
+      </th>
+      <th>
         Payment Code
       </th>
       <th>
@@ -17,11 +20,18 @@
       <th>
         Total
       </th>
+      <th>
+        Comment
+      </th>
     </tr>
     </thead>
     <tbody>
     <!-- repeat this tr element, iterate over payments -->
     <tr repeat.for="payment of payments">
+      <td>
+        <!-- string interpolation -->
+        ${payment.MeansOfPayment}
+      </td>
       <td>
         <!-- string interpolation -->
         ${payment.PaymentCode}
@@ -33,6 +43,10 @@
       <td>
         <!-- string interpolation -->
         ${payment.Total}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${payment.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

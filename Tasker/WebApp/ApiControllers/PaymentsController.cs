@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PaymentsController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/Payments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Payment>>> GetPayments()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.Payment>>> GetPayments()
         {
-            return await _bll.Payments.AllAsync();
+            return (await _bll.Payments.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.PaymentMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/Payments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.Payment>> GetPayment(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.Payment>> GetPayment(int id)
         {
-            var payment = await _bll.Payments.FindAllIncludedAsync(id);
+            var payment = PublicApi.v1.Mappers.PaymentMapper.MapFromBLL(await _bll.Payments.FindAllIncludedAsync(id));
 
             if (payment == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Payments/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayment(int id, BLL.App.DTO.Payment payment)
+        public async Task<IActionResult> PutPayment(int id, PublicApi.v1.DTO.Payment payment)
         {
             if (id != payment.Id)
             {
                 return BadRequest();
             }
             
-            _bll.Payments.Update(payment);
+            _bll.Payments.Update(PublicApi.v1.Mappers.PaymentMapper.MapFromExternal(payment));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/Payments
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.Payment>> PostPayment(BLL.App.DTO.Payment payment)
+        public async Task<ActionResult<PublicApi.v1.DTO.Payment>> PostPayment(PublicApi.v1.DTO.Payment payment)
         {
-            await _bll.Payments.AddAsync(payment);
+            _bll.Payments.Add(PublicApi.v1.Mappers.PaymentMapper.MapFromExternal(payment));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);

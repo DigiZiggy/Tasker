@@ -15,13 +15,16 @@
         Date
       </th>
       <th>
+        Total with VAT
+      </th>
+      <th>
         Total without VAT
       </th>
       <th>
         VAT
       </th>
       <th>
-        Total
+        Comment
       </th>
     </tr>
     </thead>
@@ -38,6 +41,10 @@
       </td>
       <td>
         <!-- string interpolation -->
+        ${invoice.TotalWithVAT}
+      </td>
+      <td>
+        <!-- string interpolation -->
         ${invoice.TotalWithoutVAT}
       </td>
       <td>
@@ -46,7 +53,7 @@
       </td>
       <td>
         <!-- string interpolation -->
-        ${invoice.TotalWithVAT}
+        ${invoice.Comment}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

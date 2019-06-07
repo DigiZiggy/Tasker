@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReviewsController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/Reviews
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Review>>> GetReviews()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.Review>>> GetReviews()
         {
-            return await _bll.Reviews.AllAsync();
+            return (await _bll.Reviews.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.ReviewMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/Reviews/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.Review>> GetReview(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.Review>> GetReview(int id)
         {
-            var review = await _bll.Reviews.FindAllIncludedAsync(id);
+            var review = PublicApi.v1.Mappers.ReviewMapper.MapFromBLL(await _bll.Reviews.FindAllIncludedAsync(id));
 
             if (review == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Reviews/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReview(int id, BLL.App.DTO.Review review)
+        public async Task<IActionResult> PutReview(int id, PublicApi.v1.DTO.Review review)
         {
             if (id != review.Id)
             {
                 return BadRequest();
             }
            
-            _bll.Reviews.Update(review);
+            _bll.Reviews.Update(PublicApi.v1.Mappers.ReviewMapper.MapFromExternal(review));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/Reviews
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.Review>> PostReview(BLL.App.DTO.Review review)
+        public async Task<ActionResult<PublicApi.v1.DTO.Review>> PostReview(PublicApi.v1.DTO.Review review)
         {
-            await _bll.Reviews.AddAsync(review);
+            _bll.Reviews.Add(PublicApi.v1.Mappers.ReviewMapper.MapFromExternal(review));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetReview", new { id = review.Id }, review);

@@ -9,10 +9,19 @@
     <thead>
     <tr>
       <th>
+        Country
+      </th>
+      <th>
+        City
+      </th>
+      <th>
         Street
       </th>
       <th>
-        District
+        House Number
+      </th>
+      <th>
+        Unit Number
       </th>
       <th>
         PostalCode
@@ -24,11 +33,23 @@
     <tr repeat.for="address of addresses">
       <td>
         <!-- string interpolation -->
+        ${address.Country}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${address.City}
+      </td>
+      <td>
+        <!-- string interpolation -->
         ${address.Street}
       </td>
       <td>
         <!-- string interpolation -->
-        ${address.District}
+        ${address.HouseNumber}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${address.UnitNumber}
       </td>
       <td>
         <!-- string interpolation -->

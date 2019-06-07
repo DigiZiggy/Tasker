@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class IdentificationsController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/Identifications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Identification>>> GetIdentifications()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.Identification>>> GetIdentifications()
         {
-            return await _bll.Identifications.AllAsync();
+            return (await _bll.Identifications.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.IdentificationMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/Identifications/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.Identification>> GetIdentification(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.Identification>> GetIdentification(int id)
         {
-            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
+            var identification = PublicApi.v1.Mappers.IdentificationMapper.MapFromBLL(await _bll.Identifications.FindAllIncludedAsync(id));
 
             if (identification == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Identifications/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIdentification(int id, BLL.App.DTO.Identification identification)
+        public async Task<IActionResult> PutIdentification(int id, PublicApi.v1.DTO.Identification identification)
         {
             if (id != identification.Id)
             {
                 return BadRequest();
             }
             
-            _bll.Identifications.Update(identification);
+            _bll.Identifications.Update(PublicApi.v1.Mappers.IdentificationMapper.MapFromExternal(identification));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/Identifications
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.Identification>> PostIdentification(BLL.App.DTO.Identification identification)
+        public async Task<ActionResult<PublicApi.v1.DTO.Identification>> PostIdentification(PublicApi.v1.DTO.Identification identification)
         {
-            await _bll.Identifications.AddAsync(identification);
+            _bll.Identifications.Add(PublicApi.v1.Mappers.IdentificationMapper.MapFromExternal(identification));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetIdentification", new { id = identification.Id }, identification);

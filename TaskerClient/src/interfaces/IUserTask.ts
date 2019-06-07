@@ -1,6 +1,7 @@
 import {IBaseEntity} from "./IBaseEntity";
+import DateTimeFormat = Intl.DateTimeFormat;
 
 export interface IUserTask extends IBaseEntity {
-  userTaskValue: string;
-  userTaskCount: number;
+  Start: DateTimeFormat;
+  End: DateTimeFormat;
 }

@@ -1,4 +1,4 @@
-import { IdentityService } from '../services/identity-service';
+import { IdentityService } from './../services/identity-service';
 import {LogManager, View, autoinject} from "aurelia-framework";
 import {RouteConfig, NavigationInstruction, Router} from "aurelia-router";
 import { AppConfig } from 'app-config';

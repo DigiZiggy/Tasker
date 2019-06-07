@@ -14,7 +14,6 @@ export class Index {
     private skillsService : SkillsService
   ) {
     log.debug('constructor');
-    this.skills.push({id: 99, skillValue: 'testing', skillCount: 2});
   }
 
   // ============ View LifeCycle events ==============

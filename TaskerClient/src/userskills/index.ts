@@ -14,7 +14,6 @@ export class Index {
     private userSkillsService : UserSkillsService
   ) {
     log.debug('constructor');
-    this.userSkills.push({id: 99, userSkillValue: 'testing', userSkillCount: 2});
   }
 
   // ============ View LifeCycle events ==============

@@ -14,7 +14,6 @@ export class Index {
     private hourlyRatesService : HourlyRatesService
   ) {
     log.debug('constructor');
-    this.hourlyRates.push({id: 99, hourlyRateValue: 'testing', hourlyRateCount: 2});
   }
 
   // ============ View LifeCycle events ==============

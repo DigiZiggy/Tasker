@@ -14,7 +14,6 @@ export class Index {
     private userOnAddressesService : UserOnAddressesService
   ) {
     log.debug('constructor');
-    this.userOnAddresses.push({id: 99, userOnAddressValue: 'testing', userOnAddressCount: 2});
   }
 
   // ============ View LifeCycle events ==============

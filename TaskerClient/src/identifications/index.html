@@ -12,10 +12,13 @@
         Document Number
       </th>
       <th>
-        When Added
+        Identification Type
       </th>
       <th>
-        Comments
+        Valid From
+      </th>
+      <th>
+        Valid To
       </th>
     </tr>
     </thead>
@@ -24,15 +27,19 @@
     <tr repeat.for="identification of identifications">
       <td>
         <!-- string interpolation -->
-        ${identification.DocumentNumber}
+        ${identification.docNumber}
       </td>
       <td>
         <!-- string interpolation -->
-        ${identification.Start}
+        ${identification.identificationType}
       </td>
       <td>
         <!-- string interpolation -->
-        ${identification.Comment}
+        ${identification.start}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${identification.end}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

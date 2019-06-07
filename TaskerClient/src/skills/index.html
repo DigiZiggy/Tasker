@@ -15,7 +15,7 @@
         Descriptions
       </th>
       <th>
-        Comments
+        Task Type
       </th>
     </tr>
     </thead>
@@ -24,7 +24,7 @@
     <tr repeat.for="skill of skills">
       <td>
         <!-- string interpolation -->
-        ${skill.Name}
+        ${skill.SkillName}
       </td>
       <td>
         <!-- string interpolation -->
@@ -32,7 +32,7 @@
       </td>
       <td>
         <!-- string interpolation -->
-        ${skill.Comment}
+        ${skill.Category}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

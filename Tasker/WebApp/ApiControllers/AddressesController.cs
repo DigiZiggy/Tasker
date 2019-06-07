@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AddressesController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/Addresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Address>>> GetAddresses()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.Address>>> GetAddresses()
         {
-            return await _bll.Addresses.AllAsync();
+            return (await _bll.Addresses.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.AddressMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.Address>> GetAddress(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.Address>> GetAddress(int id)
         {
-            var address = await _bll.Addresses.FindAsync(id);
+            var address = PublicApi.v1.Mappers.AddressMapper.MapFromBLL(await _bll.Addresses.FindAsync(id));
 
             if (address == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Addresses/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAddress(int id, BLL.App.DTO.Address address)
+        public async Task<IActionResult> PutAddress(int id, PublicApi.v1.DTO.Address address)
         {
             if (id != address.Id)
             {
                 return BadRequest();
             }
 
-            _bll.Addresses.Update(address);
+            _bll.Addresses.Update(PublicApi.v1.Mappers.AddressMapper.MapFromExternal(address));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/Addresses
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.Address>> PostAddress(BLL.App.DTO.Address address)
+        public async Task<ActionResult<PublicApi.v1.DTO.Address>> PostAddress(PublicApi.v1.DTO.Address address)
         {
-            await _bll.Addresses.AddAsync(address);
+            _bll.Addresses.Add(PublicApi.v1.Mappers.AddressMapper.MapFromExternal(address));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetAddress", new { id = address.Id }, address);

@@ -9,13 +9,22 @@
       <form method="post" submit.delegate="submit()">
 
         <div class="form-group">
-          <label class="control-label" for="SkillValue">SkillValue</label>
-          <!-- value.bind - bind this value to class variable -->
+          <label asp-for="SkillName" class="control-label">Skill</label>
           <input class="form-control" type="text"
-                 id="SkillValue" name="SkillValue" value.bind="Skill.skillValue"/>
+                 id="SkillName" name="SkillName" value.bind="Skill.SkillName"/>
         </div>
         <div class="form-group">
-          <input type="submit" value="Create" class="btn btn-primary"/>
+          <label asp-for="Description" class="control-label">Description</label>
+          <input class="form-control" type="text"
+                 id="Description" name="Description" value.bind="Skill.Description"/>
+        </div>
+        <div class="form-group">
+          <label asp-for="Category" class="control-label"></label>
+          <select asp-for="Category" class="form-control" asp-items="Html.GetEnumSelectList<TaskType>()"></select>
+          <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Create" class="btn btn-primary" />
         </div>
       </form>
     </div>

@@ -1,6 +1,7 @@
 import {IBaseEntity} from "./IBaseEntity";
+import DateTimeFormat = Intl.DateTimeFormat;
 
 export interface IUserSkill extends IBaseEntity {
-  userSkillValue: string;
-  userSkillCount: number;
+  Start: DateTimeFormat;
+  End: DateTimeFormat;
 }

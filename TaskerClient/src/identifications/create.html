@@ -9,13 +9,35 @@
       <form method="post" submit.delegate="submit()">
 
         <div class="form-group">
-          <label class="control-label" for="IdentificationValue">IdentificationValue</label>
-          <!-- value.bind - bind this value to class variable -->
+          <label asp-for="DocNumber" class="control-label">Document Number</label>
           <input class="form-control" type="text"
-                 id="IdentificationValue" name="IdentificationValue" value.bind="Identification.identificationValue"/>
+                 id="DocNumber" name="DocNumber" value.bind="Identification.DocNumber"/>
         </div>
         <div class="form-group">
-          <input type="submit" value="Create" class="btn btn-primary"/>
+          <label asp-for="IdentificationType" class="control-label">Identification Type</label>
+          <select asp-for="IdentificationType" class="form-control" asp-items="Html.GetEnumSelectList<IdentificationType>()"></select>
+        </div>
+        <div class="form-group">
+          <label asp-for="Start" class="control-label">Start</label>
+          <input class="form-control" type="text"
+                 id="Start" name="Start" value.bind="Identification.Start"/>
+        </div>
+        <div class="form-group">
+          <label asp-for="End" class="control-label">End</label>
+          <input class="form-control" type="text"
+                 id="End" name="End" value.bind="Identification.End"/>
+        </div>
+        <div class="form-group">
+          <label asp-for="Comment" class="control-label">Comment</label>
+          <input class="form-control" type="text"
+                 id="Comment" name="Comment" value.bind="Identification.Comment"/>
+        </div>
+        <div class="form-group">
+          <label asp-for="AppUserId" class="control-label">AppUser</label>
+          <select asp-for="AppUserId" class ="form-control" asp-items="Model.AppUserSelectList"></select>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Create" class="btn btn-primary" />
         </div>
       </form>
     </div>

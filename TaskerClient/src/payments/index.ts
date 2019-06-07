@@ -14,7 +14,6 @@ export class Index {
     private paymentsService : PaymentsService
   ) {
     log.debug('constructor');
-    this.payments.push({id: 99, paymentValue: 'testing', paymentCount: 2});
   }
 
   // ============ View LifeCycle events ==============

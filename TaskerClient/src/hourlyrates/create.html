@@ -9,13 +9,22 @@
       <form method="post" submit.delegate="submit()">
 
         <div class="form-group">
-          <label class="control-label" for="HourlyRateValue">HourlyRateValue</label>
-          <!-- value.bind - bind this value to class variable -->
+          <label asp-for="HourRate" class="control-label">Hourly Rate</label>
           <input class="form-control" type="text"
-                 id="HourlyRateValue" name="HourlyRateValue" value.bind="HourlyRate.hourlyRateValue"/>
+                 id="HourRate" name="HourRate" value.bind="HourlyRate.HourRate"/>
         </div>
         <div class="form-group">
-          <input type="submit" value="Create" class="btn btn-primary"/>
+          <label asp-for="Start" class="control-label">Start</label>
+          <input class="form-control" type="text"
+                 id="Start" name="Start" value.bind="HourlyRate.Start"/>
+        </div>
+        <div class="form-group">
+          <label asp-for="End" class="control-label">End</label>
+          <input class="form-control" type="text"
+                 id="End" name="End" value.bind="HourlyRate.End"/>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Create" class="btn btn-primary" />
         </div>
       </form>
     </div>

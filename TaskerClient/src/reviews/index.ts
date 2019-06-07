@@ -14,7 +14,6 @@ export class Index {
     private reviewsService : ReviewsService
   ) {
     log.debug('constructor');
-    this.reviews.push({id: 99, reviewValue: 'testing', reviewCount: 2});
   }
 
   // ============ View LifeCycle events ==============

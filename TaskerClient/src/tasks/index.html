@@ -9,19 +9,29 @@
     <thead>
     <tr>
       <th>
+        Task Title
+      </th>
+      <th>
         Task Description
       </th>
       <th>
         Time Estimate
       </th>
       <th>
-        Address
+        Task Type
+      </th>
+      <th>
+        Task Status
       </th>
     </tr>
     </thead>
     <tbody>
     <!-- repeat this tr element, iterate over tasks -->
     <tr repeat.for="task of tasks">
+      <td>
+        <!-- string interpolation -->
+        ${task.TaskName}
+      </td>
       <td>
         <!-- string interpolation -->
         ${task.Description}
@@ -32,7 +42,11 @@
       </td>
       <td>
         <!-- string interpolation -->
-        ${task.Address}
+        ${task.TaskType}
+      </td>
+      <td>
+        <!-- string interpolation -->
+        ${task.TaskStatus}
       </td>
       <td>
         <!-- gdenerate links, based on routing table defined in main-router -->

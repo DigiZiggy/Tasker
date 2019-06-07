@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserTasksController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/UserTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.UserTask>>> GetUserTasks()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.UserTask>>> GetUserTasks()
         {
-            return await _bll.UserTasks.AllAsync();
+            return (await _bll.UserTasks.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.UserTaskMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/UserTasks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.UserTask>> GetUserTask(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.UserTask>> GetUserTask(int id)
         {
-            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
+            var userTask = PublicApi.v1.Mappers.UserTaskMapper.MapFromBLL(await _bll.UserTasks.FindAllIncludedAsync(id));
 
             if (userTask == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/UserTasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserTask(int id, BLL.App.DTO.UserTask userTask)
+        public async Task<IActionResult> PutUserTask(int id, PublicApi.v1.DTO.UserTask userTask)
         {
             if (id != userTask.Id)
             {
                 return BadRequest();
             }
 
-            _bll.UserTasks.Update(userTask);
+            _bll.UserTasks.Update(PublicApi.v1.Mappers.UserTaskMapper.MapFromExternal(userTask));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/UserTasks
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.UserTask>> PostUserTask(BLL.App.DTO.UserTask userTask)
+        public async Task<ActionResult<PublicApi.v1.DTO.UserTask>> PostUserTask(PublicApi.v1.DTO.UserTask userTask)
         {
-            await _bll.UserTasks.AddAsync(userTask);
+            _bll.UserTasks.Add(PublicApi.v1.Mappers.UserTaskMapper.MapFromExternal(userTask));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetUserTask", new { id = userTask.Id }, userTask);

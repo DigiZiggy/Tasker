@@ -9,7 +9,7 @@ using Contracts.DAL.Base.Repositories;
 
 namespace BLL.Base.Services
 {
-    // ABSTRACT - since we dont want to add generic domain entity here, so no direct instances from this class
+   // ABSTRACT - since we dont want to add generic domain entity here, so no direct instances from this class
     public abstract class BaseEntityService<TBLLEntity, TDALEntity, TUnitOfWork> : BaseService, IBaseEntityService<TBLLEntity> 
         where TBLLEntity : class,  new()
         where TDALEntity : class,  new()
@@ -33,7 +33,7 @@ namespace BLL.Base.Services
 
         public virtual void Remove(TBLLEntity entity)
         {
-            ServiceRepository.Remove(entity);
+            ServiceRepository.Remove(_mapper.Map<TDALEntity>(entity));
         }
 
         public virtual void Remove(params object[] id)

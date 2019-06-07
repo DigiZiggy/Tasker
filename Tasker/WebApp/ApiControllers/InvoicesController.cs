@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class InvoicesController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/Invoices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Invoice>>> GetInvoices()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.Invoice>>> GetInvoices()
         {
-            return await _bll.Invoices.AllAsync();
+            return (await _bll.Invoices.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.InvoiceMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/Invoices/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.Invoice>> GetInvoice(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.Invoice>> GetInvoice(int id)
         {
-            var invoice = await _bll.Invoices.FindAllIncludedAsync(id);
+            var invoice = PublicApi.v1.Mappers.InvoiceMapper.MapFromBLL(await _bll.Invoices.FindAllIncludedAsync(id));
 
             if (invoice == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Invoices/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutInvoice(int id, BLL.App.DTO.Invoice invoice)
+        public async Task<IActionResult> PutInvoice(int id, PublicApi.v1.DTO.Invoice invoice)
         {
             if (id != invoice.Id)
             {
                 return BadRequest();
             }
             
-            _bll.Invoices.Update(invoice);
+            _bll.Invoices.Update(PublicApi.v1.Mappers.InvoiceMapper.MapFromExternal(invoice));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/Invoices
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.Invoice>> PostInvoice(BLL.App.DTO.Invoice invoice)
+        public async Task<ActionResult<PublicApi.v1.DTO.Invoice>> PostInvoice(PublicApi.v1.DTO.Invoice invoice)
         {
-            await _bll.Invoices.AddAsync(invoice);
+            _bll.Invoices.Add(PublicApi.v1.Mappers.InvoiceMapper.MapFromExternal(invoice));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetInvoice", new { id = invoice.Id }, invoice);

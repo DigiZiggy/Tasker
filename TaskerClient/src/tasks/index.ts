@@ -14,7 +14,6 @@ export class Index {
     private tasksService : TasksService
   ) {
     log.debug('constructor');
-    this.tasks.push({id: 99, taskValue: 'testing', taskCount: 2});
   }
 
   // ============ View LifeCycle events ==============

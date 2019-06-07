@@ -1,6 +1,7 @@
 import {IBaseEntity} from "./IBaseEntity";
 
 export interface ISkill extends IBaseEntity {
-  skillValue: string;
-  skillCount: number;
+  SkillName: string;
+  Description: string;
+  Category: number;
 }

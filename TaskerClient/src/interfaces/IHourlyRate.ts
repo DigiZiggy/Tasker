@@ -1,6 +1,8 @@
 import {IBaseEntity} from "./IBaseEntity";
+import DateTimeFormat = Intl.DateTimeFormat;
 
 export interface IHourlyRate extends IBaseEntity {
-  hourlyRateValue: string;
-  hourlyRateCount: number;
+  HourRate: number;
+  Start: DateTimeFormat;
+  End: DateTimeFormat;
 }

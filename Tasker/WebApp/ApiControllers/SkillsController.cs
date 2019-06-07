@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SkillsController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/Skills
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.Skill>>> GetSkills()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.Skill>>> GetSkills()
         {
-            return await _bll.Skills.AllAsync();
+            return (await _bll.Skills.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.SkillMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/Skills/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.Skill>> GetSkill(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.Skill>> GetSkill(int id)
         {
-            var skill = await _bll.Skills.FindAsync(id);
+            var skill = PublicApi.v1.Mappers.SkillMapper.MapFromBLL(await _bll.Skills.FindAsync(id));
 
             if (skill == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/Skills/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSkill(int id, BLL.App.DTO.Skill skill)
+        public async Task<IActionResult> PutSkill(int id, PublicApi.v1.DTO.Skill skill)
         {
             if (id != skill.Id)
             {
                 return BadRequest();
             }
 
-            _bll.Skills.Update(skill);
+            _bll.Skills.Update(PublicApi.v1.Mappers.SkillMapper.MapFromExternal(skill));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/Skills
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.Skill>> PostSkill(BLL.App.DTO.Skill skill)
+        public async Task<ActionResult<PublicApi.v1.DTO.Skill>> PostSkill(PublicApi.v1.DTO.Skill skill)
         {
-            await _bll.Skills.AddAsync(skill);
+            _bll.Skills.Add(PublicApi.v1.Mappers.SkillMapper.MapFromExternal(skill));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetSkill", new { id = skill.Id }, skill);

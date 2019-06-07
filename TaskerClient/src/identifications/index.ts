@@ -14,7 +14,6 @@ export class Index {
     private identificationsService : IdentificationsService
   ) {
     log.debug('constructor');
-    this.identifications.push({id: 99, identificationValue: 'testing', identificationCount: 2});
   }
 
   // ============ View LifeCycle events ==============

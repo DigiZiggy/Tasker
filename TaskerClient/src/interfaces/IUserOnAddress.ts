@@ -1,6 +1,7 @@
 import {IBaseEntity} from "./IBaseEntity";
+import DateTimeFormat = Intl.DateTimeFormat;
 
 export interface IUserOnAddress extends IBaseEntity {
-  userOnAddressValue: string;
-  userOnAddressCount: number;
+  Start: DateTimeFormat;
+  End: DateTimeFormat;
 }

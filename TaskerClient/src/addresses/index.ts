@@ -14,7 +14,6 @@ export class Index {
     private addressesService : AddressesService
   ) {
     log.debug('constructor');
-    this.addresses.push({id: 99, addressValue: 'testing', addressCount: 2});
   }
 
   // ============ View LifeCycle events ==============

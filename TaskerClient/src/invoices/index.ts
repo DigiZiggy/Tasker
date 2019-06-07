@@ -14,7 +14,6 @@ export class Index {
     private invoicesService : InvoicesService
   ) {
     log.debug('constructor');
-    this.invoices.push({id: 99, invoiceValue: 'testing', invoiceCount: 2});
   }
 
   // ============ View LifeCycle events ==============

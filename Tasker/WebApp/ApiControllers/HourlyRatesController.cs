@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HourlyRatesController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/HourlyRates
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.HourlyRate>>> GetHourlyRates()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.HourlyRate>>> GetHourlyRates()
         {
-            return await _bll.HourlyRates.AllAsync();
+            return (await _bll.HourlyRates.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.HourlyRateMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/HourlyRates/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.HourlyRate>> GetHourlyRate(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.HourlyRate>> GetHourlyRate(int id)
         {
-            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
+            var hourlyRate = PublicApi.v1.Mappers.HourlyRateMapper.MapFromBLL(await _bll.HourlyRates.FindAsync(id));
 
             if (hourlyRate == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/HourlyRates/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHourlyRate(int id, BLL.App.DTO.HourlyRate hourlyRate)
+        public async Task<IActionResult> PutHourlyRate(int id, PublicApi.v1.DTO.HourlyRate hourlyRate)
         {
             if (id != hourlyRate.Id)
             {
                 return BadRequest();
             }
 
-            _bll.HourlyRates.Update(hourlyRate);
+            _bll.HourlyRates.Update(PublicApi.v1.Mappers.HourlyRateMapper.MapFromExternal(hourlyRate));
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/HourlyRates
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.HourlyRate>> PostHourlyRate(BLL.App.DTO.HourlyRate hourlyRate)
+        public async Task<ActionResult<PublicApi.v1.DTO.HourlyRate>> PostHourlyRate(PublicApi.v1.DTO.HourlyRate hourlyRate)
         {
-            await _bll.HourlyRates.AddAsync(hourlyRate);
+            _bll.HourlyRates.Add(PublicApi.v1.Mappers.HourlyRateMapper.MapFromExternal(hourlyRate));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetHourlyRate", new { id = hourlyRate.Id }, hourlyRate);

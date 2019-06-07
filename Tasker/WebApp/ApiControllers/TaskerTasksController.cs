@@ -14,6 +14,7 @@ namespace WebApp.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TaskerTasksController : ControllerBase
     {
         private readonly IAppBLL _bll;
@@ -25,16 +26,17 @@ namespace WebApp.ApiControllers
 
         // GET: api/TaskerTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BLL.App.DTO.TaskerTask>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.TaskerTask>>> GetTasks()
         {
-            return await _bll.Tasks.AllAsync();
+            return (await _bll.Tasks.AllAsync())
+                .Select(e => PublicApi.v1.Mappers.TaskerTaskMapper.MapFromBLL(e)).ToList();
         }
 
         // GET: api/TaskerTasks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BLL.App.DTO.TaskerTask>> GetTaskerTask(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.TaskerTask>> GetTaskerTask(int id)
         {
-            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
+            var taskerTask = PublicApi.v1.Mappers.TaskerTaskMapper.MapFromBLL(await _bll.Tasks.FindAllIncludedAsync(id));
 
             if (taskerTask == null)
             {
@@ -46,14 +48,14 @@ namespace WebApp.ApiControllers
 
         // PUT: api/TaskerTasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTaskerTask(int id, BLL.App.DTO.TaskerTask taskerTask)
+        public async Task<IActionResult> PutTaskerTask(int id, PublicApi.v1.DTO.TaskerTask taskerTask)
         {
             if (id != taskerTask.Id)
             {
                 return BadRequest();
             }
 
-            _bll.Tasks.Update(taskerTask);
+            _bll.Tasks.Update(PublicApi.v1.Mappers.TaskerTaskMapper.MapFromExternal(taskerTask));
             await _bll.SaveChangesAsync();
             
             return NoContent();
@@ -61,9 +63,9 @@ namespace WebApp.ApiControllers
 
         // POST: api/TaskerTasks
         [HttpPost]
-        public async Task<ActionResult<BLL.App.DTO.TaskerTask>> PostTaskerTask(BLL.App.DTO.TaskerTask taskerTask)
+        public async Task<ActionResult<PublicApi.v1.DTO.TaskerTask>> PostTaskerTask(PublicApi.v1.DTO.TaskerTask taskerTask)
         {
-            await _bll.Tasks.AddAsync(taskerTask);
+            _bll.Tasks.Add(PublicApi.v1.Mappers.TaskerTaskMapper.MapFromExternal(taskerTask));
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetTaskerTask", new { id = taskerTask.Id }, taskerTask);

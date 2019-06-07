@@ -41,7 +41,7 @@ export class IdentityService {
     let registerDTO = {
       email: user,
       password: password
-    }
+    };
 
     return this.httpClient.post(url, JSON.stringify(registerDTO), { cache: 'no-store' }).then(
       response => {
