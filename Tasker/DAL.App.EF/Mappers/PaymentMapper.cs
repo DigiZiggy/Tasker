@@ -27,7 +27,13 @@ namespace DAL.App.EF.Mappers
             var res = payment == null ? null : new DAL.App.DTO.Payment
             {
                 Id = payment.Id,
-
+                MeansOfPayment = payment.MeansOfPayment,
+                PaymentCode = payment.PaymentCode,
+                TimeOfPayment = payment.TimeOfPayment,
+                Total = payment.Total,
+                Comment = payment.Comment,
+                InvoiceId = payment.InvoiceId,
+                Invoice = InvoiceMapper.MapFromDomain(payment.Invoice)
             };
 
 
@@ -39,7 +45,13 @@ namespace DAL.App.EF.Mappers
             var res = payment == null ? null : new Domain.Payment
             {
                 Id = payment.Id,
-
+                MeansOfPayment = payment.MeansOfPayment,
+                PaymentCode = payment.PaymentCode,
+                TimeOfPayment = payment.TimeOfPayment,
+                Total = payment.Total,
+                Comment = payment.Comment,
+                InvoiceId = payment.InvoiceId,
+                Invoice = InvoiceMapper.MapFromDAL(payment.Invoice)            
             };
 
 

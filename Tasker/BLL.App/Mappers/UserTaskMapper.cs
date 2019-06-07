@@ -34,7 +34,6 @@ namespace BLL.App.Mappers
                 TaskerTask = TaskerTaskMapper.MapFromDAL(userTask.TaskerTask),
                 TaskGiver = AppUserMapper.MapFromDAL(userTask.TaskGiver),
                 Tasker = AppUserMapper.MapFromDAL(userTask.Tasker)
-
             };
 
             return res;
@@ -52,7 +51,8 @@ namespace BLL.App.Mappers
                 TaskerId = userTask.TaskerId,
                 TaskerTask = TaskerTaskMapper.MapFromBLL(userTask.TaskerTask),
                 TaskGiver = AppUserMapper.MapFromBLL(userTask.TaskGiver),
-                Tasker = AppUserMapper.MapFromBLL(userTask.Tasker)            };
+                Tasker = AppUserMapper.MapFromBLL(userTask.Tasker)            
+            };
 
             return res;
         }

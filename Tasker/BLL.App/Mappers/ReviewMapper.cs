@@ -47,7 +47,8 @@ namespace BLL.App.Mappers
                 ReviewGiverId = review.ReviewGiverId,
                 ReviewReceiverId = review.ReviewReceiverId,
                 ReviewGiver = AppUserMapper.MapFromBLL(review.ReviewGiver),
-                ReviewReceiver = AppUserMapper.MapFromBLL(review.ReviewReceiver)            };
+                ReviewReceiver = AppUserMapper.MapFromBLL(review.ReviewReceiver)            
+            };
 
             return res;
         }

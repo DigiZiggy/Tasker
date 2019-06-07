@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +30,15 @@ namespace DAL.App.EF.Mappers
             var res = invoice == null ? null : new DAL.App.DTO.Invoice
             {
                 Id = invoice.Id,
-
+                InvoiceNumber = invoice.InvoiceNumber,
+                Date = invoice.Date,
+                TotalWithVAT = invoice.TotalWithVAT,
+                TotalWithoutVAT = invoice.TotalWithoutVAT,
+                VAT = invoice.VAT,
+                Comment = invoice.Comment,
+                AppUserId = invoice.AppUserId,
+                AppUser = AppUserMapper.MapFromDomain(invoice.AppUser),
+                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromDomain(e)) as ICollection<Payment>
             };
 
 
@@ -39,7 +50,15 @@ namespace DAL.App.EF.Mappers
             var res = invoice == null ? null : new Domain.Invoice
             {
                 Id = invoice.Id,
-
+                InvoiceNumber = invoice.InvoiceNumber,
+                Date = invoice.Date,
+                TotalWithVAT = invoice.TotalWithVAT,
+                TotalWithoutVAT = invoice.TotalWithoutVAT,
+                VAT = invoice.VAT,
+                Comment = invoice.Comment,
+                AppUserId = invoice.AppUserId,
+                AppUser = AppUserMapper.MapFromDAL(invoice.AppUser),
+                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromDAL(e)) as ICollection<Domain.Payment>
             };
 
 

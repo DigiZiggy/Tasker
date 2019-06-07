@@ -32,8 +32,7 @@ namespace BLL.App.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDAL(e)) as ICollection<DAL.App.DTO.Identity.AppUser>
-
+                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDAL(e)) as ICollection<BLL.App.DTO.Identity.AppUser>
             };
 
             return res;
@@ -47,7 +46,7 @@ namespace BLL.App.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-//                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromBLL(e))
+                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.Identity.AppUser>
             };
 
             return res;

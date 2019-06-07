@@ -48,7 +48,8 @@ namespace BLL.App.Mappers
                 Total = payment.Total,
                 Comment = payment.Comment,
                 InvoiceId = payment.InvoiceId,
-                Invoice = InvoiceMapper.MapFromBLL(payment.Invoice)            };
+                Invoice = InvoiceMapper.MapFromBLL(payment.Invoice)            
+            };
 
             return res;
         }

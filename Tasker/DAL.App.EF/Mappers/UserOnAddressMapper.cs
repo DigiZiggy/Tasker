@@ -1,6 +1,7 @@
 using System;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +28,12 @@ namespace DAL.App.EF.Mappers
             var res = userOnAddress == null ? null : new DAL.App.DTO.UserOnAddress
             {
                 Id = userOnAddress.Id,
-
+                Start = userOnAddress.Start,
+                End = userOnAddress.End,
+                AddressId = userOnAddress.AddressId,
+                AppUserId = userOnAddress.AppUserId,
+                Address = AddressMapper.MapFromDomain(userOnAddress.Address),
+                AppUser = AppUserMapper.MapFromDomain(userOnAddress.AppUser)
             };
 
 
@@ -39,7 +45,12 @@ namespace DAL.App.EF.Mappers
             var res = userOnAddress == null ? null : new Domain.UserOnAddress
             {
                 Id = userOnAddress.Id,
-
+                Start = userOnAddress.Start,
+                End = userOnAddress.End,
+                AddressId = userOnAddress.AddressId,
+                AppUserId = userOnAddress.AppUserId,
+                Address = AddressMapper.MapFromDAL(userOnAddress.Address),
+                AppUser = AppUserMapper.MapFromDAL(userOnAddress.AppUser)
             };
 
 

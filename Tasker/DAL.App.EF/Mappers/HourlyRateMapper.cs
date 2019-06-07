@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.DTO.Identity;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +31,10 @@ namespace DAL.App.EF.Mappers
             var res = hourlyRate == null ? null : new DAL.App.DTO.HourlyRate
             {
                 Id = hourlyRate.Id,
-
+                HourRate = hourlyRate.HourRate,
+                Start = hourlyRate.Start,
+                End = hourlyRate.End,
+                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDomain(e)) as ICollection<AppUser>
             };
 
 
@@ -39,7 +46,10 @@ namespace DAL.App.EF.Mappers
             var res = hourlyRate == null ? null : new Domain.HourlyRate
             {
                 Id = hourlyRate.Id,
-
+                HourRate = hourlyRate.HourRate,
+                Start = hourlyRate.Start,
+                End = hourlyRate.End,
+                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDAL(e)) as ICollection<Domain.Identity.AppUser>
             };
 
 

@@ -1,6 +1,7 @@
 using System;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +28,12 @@ namespace DAL.App.EF.Mappers
             var res = userSkill == null ? null : new DAL.App.DTO.UserSkill
             {
                 Id = userSkill.Id,
-
+                Start = userSkill.Start,
+                End = userSkill.End,
+                SkillId = userSkill.SkillId,
+                AppUserId = userSkill.AppUserId,
+                Skill = SkillMapper.MapFromDomain(userSkill.Skill),
+                AppUser = AppUserMapper.MapFromDomain(userSkill.AppUser)
             };
 
 
@@ -39,7 +45,12 @@ namespace DAL.App.EF.Mappers
             var res = userSkill == null ? null : new Domain.UserSkill
             {
                 Id = userSkill.Id,
-
+                Start = userSkill.Start,
+                End = userSkill.End,
+                SkillId = userSkill.SkillId,
+                AppUserId = userSkill.AppUserId,
+                Skill = SkillMapper.MapFromDAL(userSkill.Skill),
+                AppUser = AppUserMapper.MapFromDAL(userSkill.AppUser)            
             };
 
 

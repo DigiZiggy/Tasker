@@ -32,7 +32,6 @@ namespace BLL.App.Mappers
                 AppUserId = userOnAddress.AppUserId,
                 Address = AddressMapper.MapFromDAL(userOnAddress.Address),
                 AppUser = AppUserMapper.MapFromDAL(userOnAddress.AppUser)
-
             };
 
             return res;

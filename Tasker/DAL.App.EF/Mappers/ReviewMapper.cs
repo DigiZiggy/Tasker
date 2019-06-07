@@ -1,6 +1,7 @@
 using System;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +28,12 @@ namespace DAL.App.EF.Mappers
             var res = review == null ? null : new DAL.App.DTO.Review
             {
                 Id = review.Id,
-
+                Rating = review.Rating,
+                ReviewComment = review.ReviewComment,
+                ReviewGiverId = review.ReviewGiverId,
+                ReviewReceiverId = review.ReviewReceiverId,
+                ReviewGiver = AppUserMapper.MapFromDomain(review.ReviewGiver),
+                ReviewReceiver = AppUserMapper.MapFromDomain(review.ReviewReceiver)
             };
 
 
@@ -39,7 +45,12 @@ namespace DAL.App.EF.Mappers
             var res = review == null ? null : new Domain.Review
             {
                 Id = review.Id,
-
+                Rating = review.Rating,
+                ReviewComment = review.ReviewComment,
+                ReviewGiverId = review.ReviewGiverId,
+                ReviewReceiverId = review.ReviewReceiverId,
+                ReviewGiver = AppUserMapper.MapFromDAL(review.ReviewGiver),
+                ReviewReceiver = AppUserMapper.MapFromDAL(review.ReviewReceiver)            
             };
 
 

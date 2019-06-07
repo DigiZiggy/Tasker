@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
 
@@ -27,7 +29,19 @@ namespace DAL.App.EF.Mappers.Identity
             var res = appUser == null ? null : new DAL.App.DTO.Identity.AppUser
             {
                 Id = appUser.Id,
-
+                FirstName = appUser.FirstName,
+                LastName = appUser.LastName,
+                SelfDescription = appUser.SelfDescription,
+                HourlyRateId = appUser.HourlyRateId,
+                HourlyRate = HourlyRateMapper.MapFromDomain(appUser.HourlyRate),
+                Skills = appUser.Skills.Select(e => UserSkillMapper.MapFromDomain(e)) as ICollection<UserSkill>,
+                TasksCreated = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromDomain(e)) as ICollection<UserTask>,
+                TasksWorkedOn = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromDomain(e)) as ICollection<UserTask>,
+                Addresses = appUser.Addresses.Select(e => UserOnAddressMapper.MapFromDomain(e)) as ICollection<UserOnAddress>,
+                GivenReviews = appUser.GivenReviews.Select(e => ReviewMapper.MapFromDomain(e)) as ICollection<Review>,
+                ReceivedReviews = appUser.ReceivedReviews.Select(e => ReviewMapper.MapFromDomain(e)) as ICollection<Review>,
+                Invoices = appUser.Invoices.Select(e => InvoiceMapper.MapFromDomain(e)) as ICollection<Invoice>,
+                Identifications = appUser.Identifications.Select(e => IdentificationMapper.MapFromDomain(e)) as ICollection<Identification>
             };
 
 
@@ -39,7 +53,19 @@ namespace DAL.App.EF.Mappers.Identity
             var res = appUser == null ? null : new Domain.Identity.AppUser
             {
                 Id = appUser.Id,
-
+                FirstName = appUser.FirstName,
+                LastName = appUser.LastName,
+                SelfDescription = appUser.SelfDescription,
+                HourlyRateId = appUser.HourlyRateId,
+                HourlyRate = HourlyRateMapper.MapFromDAL(appUser.HourlyRate),
+                Skills = appUser.Skills.Select(e => UserSkillMapper.MapFromDAL(e)) as ICollection<Domain.UserSkill>,
+                TasksCreated = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromDAL(e)) as ICollection<Domain.UserTask>,
+                TasksWorkedOn = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromDAL(e)) as ICollection<Domain.UserTask>,
+                Addresses = appUser.Addresses.Select(e => UserOnAddressMapper.MapFromDAL(e)) as ICollection<Domain.UserOnAddress>,
+                GivenReviews = appUser.GivenReviews.Select(e => ReviewMapper.MapFromDAL(e)) as ICollection<Domain.Review>,
+                ReceivedReviews = appUser.ReceivedReviews.Select(e => ReviewMapper.MapFromDAL(e)) as ICollection<Domain.Review>,
+                Invoices = appUser.Invoices.Select(e => InvoiceMapper.MapFromDAL(e)) as ICollection<Domain.Invoice>,
+                Identifications = appUser.Identifications.Select(e => IdentificationMapper.MapFromDAL(e)) as ICollection<Domain.Identification>
             };
 
 

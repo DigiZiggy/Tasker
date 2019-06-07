@@ -31,7 +31,6 @@ namespace BLL.App.Mappers
                 End = identification.End,
                 AppUserId = identification.AppUserId,
                 AppUser = AppUserMapper.MapFromDAL(identification.AppUser)
-
             };
 
             return res;
@@ -46,8 +45,7 @@ namespace BLL.App.Mappers
                 Start = identification.Start,
                 End = identification.End,
                 AppUserId = identification.AppUserId,
-                AppUser = AppUserMapper.MapFromBLL(identification.AppUser)
-                
+                AppUser = AppUserMapper.MapFromBLL(identification.AppUser)               
             };
 
             return res;

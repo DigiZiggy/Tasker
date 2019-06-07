@@ -32,7 +32,6 @@ namespace BLL.App.Mappers
                 AppUserId = userSkill.AppUserId,
                 Skill = SkillMapper.MapFromDAL(userSkill.Skill),
                 AppUser = AppUserMapper.MapFromDAL(userSkill.AppUser)
-
             };
 
             return res;
@@ -48,7 +47,8 @@ namespace BLL.App.Mappers
                 SkillId = userSkill.SkillId,
                 AppUserId = userSkill.AppUserId,
                 Skill = SkillMapper.MapFromBLL(userSkill.Skill),
-                AppUser = AppUserMapper.MapFromBLL(userSkill.AppUser)            };
+                AppUser = AppUserMapper.MapFromBLL(userSkill.AppUser)            
+            };
 
             return res;
         }

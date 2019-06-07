@@ -10,6 +10,8 @@ namespace BLL.App.DTO.Identity
         public string FirstName { get; set; }       
         public string LastName { get; set; }                
         
+        public string SelfDescription { get; set; } 
+        
         public int? HourlyRateId { get; set; }
         public HourlyRate HourlyRate { get; set; }
 
@@ -23,12 +25,15 @@ namespace BLL.App.DTO.Identity
         
         public ICollection<UserOnAddress> Addresses { get; set; }
                 
-        public ICollection<Review> Reviews { get; set; }
+        [InverseProperty("ReviewGiver")]
+        public ICollection<Review> GivenReviews { get; set; }
+        
+        [InverseProperty("ReviewReceiver")]
+        public ICollection<Review> ReceivedReviews { get; set; }
         
         public ICollection<Invoice> Invoices { get; set; }
         
-        public ICollection<Identification> Identifications { get; set; }
-        
+        public ICollection<Identification> Identifications { get; set; }        
         public string FirstLastName => FirstName + " " + LastName;
     }
 }

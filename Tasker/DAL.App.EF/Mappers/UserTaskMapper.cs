@@ -1,6 +1,7 @@
 using System;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +28,14 @@ namespace DAL.App.EF.Mappers
             var res = userTask == null ? null : new DAL.App.DTO.UserTask
             {
                 Id = userTask.Id,
-
+                Start = userTask.Start,
+                End = userTask.End,
+                TaskId = userTask.TaskId,
+                TaskGiverId = userTask.TaskGiverId,
+                TaskerId = userTask.TaskerId,
+                TaskerTask = TaskerTaskMapper.MapFromDomain(userTask.TaskerTask),
+                TaskGiver = AppUserMapper.MapFromDomain(userTask.TaskGiver),
+                Tasker = AppUserMapper.MapFromDomain(userTask.Tasker)
             };
 
 
@@ -39,7 +47,14 @@ namespace DAL.App.EF.Mappers
             var res = userTask == null ? null : new Domain.UserTask
             {
                 Id = userTask.Id,
-
+                Start = userTask.Start,
+                End = userTask.End,
+                TaskId = userTask.TaskId,
+                TaskGiverId = userTask.TaskGiverId,
+                TaskerId = userTask.TaskerId,
+                TaskerTask = TaskerTaskMapper.MapFromDAL(userTask.TaskerTask),
+                TaskGiver = AppUserMapper.MapFromDAL(userTask.TaskGiver),
+                Tasker = AppUserMapper.MapFromDAL(userTask.Tasker)  
             };
 
 

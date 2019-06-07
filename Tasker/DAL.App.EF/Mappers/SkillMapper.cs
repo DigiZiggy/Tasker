@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
 
@@ -27,7 +29,9 @@ namespace DAL.App.EF.Mappers
             var res = skill == null ? null : new DAL.App.DTO.Skill
             {
                 Id = skill.Id,
-
+                SkillName = skill.SkillName,
+                Description = skill.Description,
+                AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromDomain(e)) as ICollection<UserSkill>
             };
 
 
@@ -39,7 +43,9 @@ namespace DAL.App.EF.Mappers
             var res = skill == null ? null : new Domain.Skill
             {
                 Id = skill.Id,
-
+                SkillName = skill.SkillName,
+                Description = skill.Description,
+                AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromDAL(e)) as ICollection<Domain.UserSkill>
             };
 
 

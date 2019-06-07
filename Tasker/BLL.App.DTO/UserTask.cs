@@ -11,7 +11,7 @@ namespace BLL.App.DTO
 
         public DateTime Start { get; set; }
         
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
         
         public int TaskId { get; set; }
         public TaskerTask TaskerTask { get; set; }

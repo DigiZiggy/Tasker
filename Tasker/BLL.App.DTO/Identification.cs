@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using DAL.App.DTO.Enums;
 using DAL.App.DTO.Identity;
 using AppUser = BLL.App.DTO.Identity.AppUser;
+using IdentificationType = BLL.App.DTO.Enums.IdentificationType;
 
 
 namespace BLL.App.DTO
@@ -17,7 +18,7 @@ namespace BLL.App.DTO
         
         public DateTime Start { get; set; }
         
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
         
         public string Comment { get; set; }
 

@@ -35,8 +35,7 @@ namespace BLL.App.Mappers
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
                 AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromDAL(e)) as ICollection<UserOnAddress>,
-//                TasksOnAddress = address.TasksOnAddress.Select(e => UserTaskMapper.MapFromDAL(e))
-          
+                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromDAL(e)) as ICollection<TaskerTask>
             };
 
             return res;
@@ -54,8 +53,7 @@ namespace BLL.App.Mappers
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
                 AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.UserOnAddress>,
-//                TasksOnAddress = address.TasksOnAddress.Select(e => UserTaskMapper.MapFromBLL(e))
-
+                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.TaskerTask>
             };
             
             return res;

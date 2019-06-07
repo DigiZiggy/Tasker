@@ -1,6 +1,7 @@
 using System;
 using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using DAL.App.EF.Mappers.Identity;
 
 namespace DAL.App.EF.Mappers
 {
@@ -27,7 +28,11 @@ namespace DAL.App.EF.Mappers
             var res = identification == null ? null : new DAL.App.DTO.Identification
             {
                 Id = identification.Id,
-
+                DocNumber = identification.DocNumber,
+                Start = identification.Start,
+                End = identification.End,
+                AppUserId = identification.AppUserId,
+                AppUser = AppUserMapper.MapFromDomain(identification.AppUser)
             };
 
 
@@ -39,7 +44,11 @@ namespace DAL.App.EF.Mappers
             var res = identification == null ? null : new Domain.Identification
             {
                 Id = identification.Id,
-
+                DocNumber = identification.DocNumber,
+                Start = identification.Start,
+                End = identification.End,
+                AppUserId = identification.AppUserId,
+                AppUser = AppUserMapper.MapFromDAL(identification.AppUser)               
             };
 
 
