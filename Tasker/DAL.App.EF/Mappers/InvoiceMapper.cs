@@ -35,7 +35,7 @@ namespace DAL.App.EF.Mappers
                 TotalWithVAT = invoice.TotalWithVAT,
                 TotalWithoutVAT = invoice.TotalWithoutVAT,
                 VAT = invoice.VAT,
-                Comment = invoice.Comment,
+                Comment = invoice.Comment.Translate(),
                 AppUserId = invoice.AppUserId,
                 AppUser = AppUserMapper.MapFromDomain(invoice.AppUser),
                 Payments = invoice.Payments.Select(e => PaymentMapper.MapFromDomain(e)) as ICollection<Payment>
@@ -55,7 +55,7 @@ namespace DAL.App.EF.Mappers
                 TotalWithVAT = invoice.TotalWithVAT,
                 TotalWithoutVAT = invoice.TotalWithoutVAT,
                 VAT = invoice.VAT,
-                Comment = invoice.Comment,
+                Comment = new Domain.MultiLangString(invoice.Comment),
                 AppUserId = invoice.AppUserId,
                 AppUser = AppUserMapper.MapFromDAL(invoice.AppUser),
                 Payments = invoice.Payments.Select(e => PaymentMapper.MapFromDAL(e)) as ICollection<Domain.Payment>

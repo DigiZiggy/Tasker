@@ -11,12 +11,20 @@ namespace BLL.App.DTO
 
         public string City { get; set; }
         
+        
+        [Display(Name = nameof(Street), ResourceType = typeof(Resources.Domain.Address))]
         public string Street { get; set; }
         
+        
+        [Display(Name = nameof(HouseNumber), ResourceType = typeof(Resources.Domain.Address))]
         public string HouseNumber { get; set; }
         
+        
+        [Display(Name = nameof(UnitNumber), ResourceType = typeof(Resources.Domain.Address))]
         public string UnitNumber { get; set; }
         
+        
+        [Display(Name = nameof(PostalCode), ResourceType = typeof(Resources.Domain.Address))]
         public string PostalCode { get; set; }
         
         public ICollection<UserOnAddress> AppUsersOnAddress { get; set; }

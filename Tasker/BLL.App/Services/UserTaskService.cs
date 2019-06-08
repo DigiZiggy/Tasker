@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public UserTaskService(IAppUnitOfWork uow) : base(uow, new UserTaskMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.UserTask, Domain.UserTask>();
+            ServiceRepository = Uow.UserTasks;
         }
 
 

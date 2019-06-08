@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public InvoiceService(IAppUnitOfWork uow) : base(uow, new InvoiceMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Invoice, Domain.Invoice>();
+            ServiceRepository = Uow.Invoices;
         }
 
         public async Task<BLL.App.DTO.Invoice> FindAllIncludedAsync(params object[] id)

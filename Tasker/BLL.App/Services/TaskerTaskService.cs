@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public TaskerTaskService(IAppUnitOfWork uow) : base(uow, new TaskerTaskMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.TaskerTask, Domain.TaskerTask>();
+            ServiceRepository = Uow.Tasks;
         }
 
         public async Task<BLL.App.DTO.TaskerTask> FindAllIncludedAsync(params object[] id)

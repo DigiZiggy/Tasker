@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Enums;
@@ -19,7 +20,11 @@ namespace Domain
 //        [Required]
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
-        public string Comment { get; set; }
+        
+        [ForeignKey(nameof(Comment))]
+        public int CommentId { get; set; }
+
+        public MultiLangString Comment { get; set; }
       
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }

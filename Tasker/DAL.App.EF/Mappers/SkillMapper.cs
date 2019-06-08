@@ -29,8 +29,8 @@ namespace DAL.App.EF.Mappers
             var res = skill == null ? null : new DAL.App.DTO.Skill
             {
                 Id = skill.Id,
-                SkillName = skill.SkillName,
-                Description = skill.Description,
+                SkillName = skill.SkillName.Translate(),
+                Description = skill.Description.Translate(),
                 AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromDomain(e)) as ICollection<UserSkill>
             };
 
@@ -43,8 +43,8 @@ namespace DAL.App.EF.Mappers
             var res = skill == null ? null : new Domain.Skill
             {
                 Id = skill.Id,
-                SkillName = skill.SkillName,
-                Description = skill.Description,
+                SkillName = new Domain.MultiLangString(skill.SkillName),
+                Description = new Domain.MultiLangString(skill.Description),
                 AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromDAL(e)) as ICollection<Domain.UserSkill>
             };
 

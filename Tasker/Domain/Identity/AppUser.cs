@@ -17,8 +17,11 @@ namespace Domain.Identity
         [MinLength(1)]
 //        [Required]
         public string LastName { get; set; }   
+
         
-        public string SelfDescription { get; set; }                
+        [ForeignKey(nameof(SelfDescription))]
+        public int? SelfDescriptionId { get; set; }
+        public MultiLangString SelfDescription { get; set; }                
         
         public int? HourlyRateId { get; set; }
         public HourlyRate HourlyRate { get; set; }

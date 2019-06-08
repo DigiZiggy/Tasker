@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public PaymentService(IAppUnitOfWork uow) : base(uow, new PaymentMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Payment, Domain.Payment>();
+            ServiceRepository = Uow.Payments;
         }
 
         public async Task<BLL.App.DTO.Payment> FindAllIncludedAsync(params object[] id)

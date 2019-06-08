@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public UserSkillService(IAppUnitOfWork uow) : base(uow, new UserSkillMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.UserSkill, Domain.UserSkill>();
+            ServiceRepository = Uow.UserSkills;
         }
 
         public async Task<BLL.App.DTO.UserSkill> FindAllIncludedAsync(params object[] id)

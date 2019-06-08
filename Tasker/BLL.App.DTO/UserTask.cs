@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using DAL.App.DTO.Identity;
 using AppUser = BLL.App.DTO.Identity.AppUser;
 
 namespace BLL.App.DTO

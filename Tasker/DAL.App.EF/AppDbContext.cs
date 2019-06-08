@@ -21,6 +21,9 @@ namespace DAL.App.EF
         public DbSet<UserOnAddress> UserOnAddresses { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<UserSkill> UserSkills { get; set; }
+                
+        public DbSet<MultiLangString> MultiLangStrings { get; set; }
+        public DbSet<Translation> Translations { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

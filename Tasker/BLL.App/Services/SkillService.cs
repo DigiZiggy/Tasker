@@ -10,7 +10,7 @@ namespace BLL.App.Services
     {
         public SkillService(IAppUnitOfWork uow) : base(uow, new SkillMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Skill, Domain.Skill>();
+            ServiceRepository = Uow.Skills;
         }
     }
 }

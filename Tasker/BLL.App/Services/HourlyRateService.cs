@@ -10,7 +10,7 @@ namespace BLL.App.Services
     {
         public HourlyRateService(IAppUnitOfWork uow) : base(uow, new HourlyRateMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.HourlyRate, Domain.HourlyRate>();
+            ServiceRepository = Uow.HourlyRates;
         }
     }
 }

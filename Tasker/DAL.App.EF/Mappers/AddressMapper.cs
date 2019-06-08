@@ -29,8 +29,8 @@ namespace DAL.App.EF.Mappers
             var res = address == null ? null : new DAL.App.DTO.Address
             {
                 Id = address.Id,
-                Country = address.Country,
-                City = address.City,
+                Country = address.Country.Translate(),
+                City = address.City.Translate(),
                 Street = address.Street,
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
@@ -48,8 +48,8 @@ namespace DAL.App.EF.Mappers
             var res = address == null ? null : new Domain.Address
             {
                 Id = address.Id,
-                Country = address.Country,
-                City = address.City,
+                Country = new Domain.MultiLangString(address.Country),
+                City = new Domain.MultiLangString(address.City),
                 Street = address.Street,
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,

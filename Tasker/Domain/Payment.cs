@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.DAL.Base;
 using Domain.Base;
 
@@ -6,8 +7,10 @@ namespace Domain
 {
     public class Payment : BaseEntity, IDomainEntity
     {
-//        [Required]
-        public string MeansOfPayment { get; set; }
+
+        [ForeignKey(nameof(MeansOfPayment))]
+        public int MeansOfPaymentId { get; set; }
+        public MultiLangString MeansOfPayment { get; set; }
         
 //        [Required]
         public int PaymentCode { get; set; }
@@ -17,7 +20,10 @@ namespace Domain
         
 //        [Required]
         public decimal Total { get; set; }
-        public string Comment { get; set; }
+        
+        [ForeignKey(nameof(Comment))]
+        public int CommentId { get; set; }
+        public MultiLangString Comment { get; set; }
 
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }

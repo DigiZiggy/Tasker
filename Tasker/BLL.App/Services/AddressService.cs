@@ -10,7 +10,7 @@ namespace BLL.App.Services
     {
         public AddressService(IAppUnitOfWork uow) : base(uow, new AddressMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Address, Domain.Address>();
+            ServiceRepository = Uow.Addresses;
         }
     }
 }

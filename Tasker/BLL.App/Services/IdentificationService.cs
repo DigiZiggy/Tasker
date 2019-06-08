@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public IdentificationService(IAppUnitOfWork uow) : base(uow, new IdentificationMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Identification, Domain.Identification>();
+            ServiceRepository = Uow.Identifications;
         }
 
         public async Task<BLL.App.DTO.Identification> FindAllIncludedAsync(params object[] id)

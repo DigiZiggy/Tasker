@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public UserOnAddressService(IAppUnitOfWork uow) : base(uow, new UserOnAddressMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.UserOnAddress, Domain.UserOnAddress>();
+            ServiceRepository = Uow.UserOnAddresses;
         }
 
         public async Task<BLL.App.DTO.UserOnAddress> FindAllIncludedAsync(params object[] id)

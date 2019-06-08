@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Identity;
@@ -22,8 +23,11 @@ namespace Domain
         
 //        [Required]
         public decimal VAT { get; set; }
-        public string Comment { get; set; }
-
+        
+        [ForeignKey(nameof(Comment))]
+        public int CommentId { get; set; }
+        public MultiLangString Comment { get; set; }
+ 
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         

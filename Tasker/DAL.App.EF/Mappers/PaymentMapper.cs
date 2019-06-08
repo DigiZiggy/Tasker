@@ -27,11 +27,11 @@ namespace DAL.App.EF.Mappers
             var res = payment == null ? null : new DAL.App.DTO.Payment
             {
                 Id = payment.Id,
-                MeansOfPayment = payment.MeansOfPayment,
+                MeansOfPayment = payment.MeansOfPayment.Translate(),
                 PaymentCode = payment.PaymentCode,
                 TimeOfPayment = payment.TimeOfPayment,
                 Total = payment.Total,
-                Comment = payment.Comment,
+                Comment = payment.Comment.Translate(),
                 InvoiceId = payment.InvoiceId,
                 Invoice = InvoiceMapper.MapFromDomain(payment.Invoice)
             };
@@ -45,11 +45,11 @@ namespace DAL.App.EF.Mappers
             var res = payment == null ? null : new Domain.Payment
             {
                 Id = payment.Id,
-                MeansOfPayment = payment.MeansOfPayment,
+                MeansOfPayment = new Domain.MultiLangString(payment.MeansOfPayment),
                 PaymentCode = payment.PaymentCode,
                 TimeOfPayment = payment.TimeOfPayment,
                 Total = payment.Total,
-                Comment = payment.Comment,
+                Comment = new Domain.MultiLangString(payment.Comment),
                 InvoiceId = payment.InvoiceId,
                 Invoice = InvoiceMapper.MapFromDAL(payment.Invoice)            
             };

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DAL.App.DTO.Enums;
-using DAL.App.DTO.Identity;
 using TaskType = BLL.App.DTO.Enums.TaskType;
 
 

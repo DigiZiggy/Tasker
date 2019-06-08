@@ -13,7 +13,7 @@ namespace BLL.App.Services
     {
         public ReviewService(IAppUnitOfWork uow) : base(uow, new ReviewMapper())
         {
-            ServiceRepository = Uow.BaseRepository<DAL.App.DTO.Review, Domain.Review>();
+            ServiceRepository = Uow.Reviews;
         }
 
         public async Task<BLL.App.DTO.Review> FindAllIncludedAsync(params object[] id)

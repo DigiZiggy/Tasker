@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.DAL.Base;
 using Domain.Base;
 using Domain.Enums;
@@ -9,16 +10,14 @@ namespace Domain
 {
     public class TaskerTask : BaseEntity, IDomainEntity
     {       
-        [MaxLength(64)]
-        [MinLength(1)]
-//        [Required]
-        public string TaskName { get; set; }
+        [ForeignKey(nameof(TaskName))]
+        public int TaskNameId { get; set; }
+        public MultiLangString TaskName { get; set; }
         
-        [MaxLength(1264)]
-        [MinLength(1)]
-//        [Required]
-        public string Description { get; set; }
-        
+        [ForeignKey(nameof(Description))]
+        public int DescriptionId { get; set; }
+        public MultiLangString Description { get; set; }
+                
 //        [Required]
         public decimal TimeEstimate { get; set; }
         

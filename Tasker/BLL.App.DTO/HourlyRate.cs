@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DAL.App.DTO.Identity;
 using AppUser = BLL.App.DTO.Identity.AppUser;
 
 
