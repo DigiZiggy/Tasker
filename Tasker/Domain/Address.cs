@@ -2,22 +2,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.DAL.Base;
-using Domain.Base;
 
 namespace Domain
 {
-    public class Address : BaseEntity, IDomainEntity
+    public class Address : DomainEntity
     {
-
-        [ForeignKey(nameof(Country))]
-        public int CountryId { get; set; }
-        public MultiLangString Country { get; set; }
-        
-        [ForeignKey(nameof(City))]
-        public int CityId { get; set; }
-        public MultiLangString City { get; set; }
-        
-        
+        public string Country { get; set; }        
+        public string City { get; set; }
+                
         [MaxLength(64)]
         [MinLength(1)]
 //        [Required]
@@ -38,9 +30,9 @@ namespace Domain
 //        [Required]
         public string PostalCode { get; set; }
         
-        public ICollection<UserOnAddress> AppUsersOnAddress { get; set; }
+        public List<UserOnAddress> AppUsersOnAddress { get; set; }
         
-        public ICollection<TaskerTask> TasksOnAddress { get; set; }
+        public List<TaskerTask> TasksOnAddress { get; set; }
         
     }
 }

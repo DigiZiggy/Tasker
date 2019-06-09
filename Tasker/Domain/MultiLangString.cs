@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
-using Domain.Base;
 
 namespace Domain
 {
-    public class MultiLangString : BaseEntity
+    public class MultiLangString : DomainEntity
     {
         private static string _defaultCulture = "en";
 

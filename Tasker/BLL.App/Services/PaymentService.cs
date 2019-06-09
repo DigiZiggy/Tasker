@@ -16,19 +16,10 @@ namespace BLL.App.Services
             ServiceRepository = Uow.Payments;
         }
 
-        public async Task<BLL.App.DTO.Payment> FindAllIncludedAsync(params object[] id)
+        public override async Task<BLL.App.DTO.Payment> FindAsync(params object[] id)
         {
-            return PaymentMapper.MapFromDAL(await Uow.Payments.FindAllIncludedAsync(id));
+            return PaymentMapper.MapFromDAL(await Uow.Payments.FindAsync(id));
         }
-        
-        public async Task<BLL.App.DTO.Payment> FindForUserAsync(int id, int userId)
-        {
-            return PaymentMapper.MapFromDAL(await Uow.Payments.FindForUserAsync(id, userId));
-        }
-        
-        public async Task<List<BLL.App.DTO.Payment>> AllForUserAsync(int userId)
-        {
-            return (await Uow.Payments.AllForUserAsync(userId)).Select(e => PaymentMapper.MapFromDAL(e)).ToList();
-        }
+
     }
 }

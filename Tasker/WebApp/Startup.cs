@@ -12,14 +12,14 @@ using Contracts.BLL.App;
 using Contracts.BLL.Base.Helpers;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
-using Contracts.DAL.Base;
 using Contracts.DAL.Base.Helpers;
 using DAL;
 using DAL.App.EF;
 using DAL.App.EF.Helpers;
-using DAL.App.EF.Repositories;
 using DAL.Base.EF.Helpers;
+using Domain;
 using Domain.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -29,13 +29,14 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using WebApp.Helpers;
 
 namespace WebApp
@@ -59,36 +60,34 @@ namespace WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            // set up db with pomelo mysql
+            
+            
             services.AddDbContext<AppDbContext>(options =>
-                // UseMySQL is oracle non-functional driver
                 options.UseMySql(
                     Configuration.GetConnectionString("MySqlConnection")));
 
-
-            //services.AddScoped<IDataContext, AppDbContext>();
+            
             services.AddScoped<IBaseRepositoryProvider, BaseRepositoryProvider<AppDbContext>>();
             services.AddSingleton<IBaseRepositoryFactory<AppDbContext>, AppRepositoryFactory>();
+
+            
             services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
 
             services.AddSingleton<IBaseServiceFactory<IAppUnitOfWork>, AppServiceFactory>();
+
+
             services.AddScoped<IBaseServiceProvider, BaseServiceProvider<IAppUnitOfWork>>();
             services.AddScoped<IAppBLL, AppBLL>();
+
+            
+            services.AddSingleton<IEmailSender, EmailSender>();
             
             
-            
-            /*
-            services.AddDefaultIdentity<AppUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<AppDbContext>();
-*/
-            services
-                .AddIdentity<AppUser, AppRole>()
+            services.AddIdentity<AppUser, AppRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
             
-            // Relax password requirements for easy testing
             // TODO: Remove in production
             services.Configure<IdentityOptions>(options =>
             {
@@ -100,7 +99,7 @@ namespace WebApp
                 options.Password.RequireNonAlphanumeric = false;
 
             });
-
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsAllowAll",
@@ -112,20 +111,23 @@ namespace WebApp
                     });
                 
             });
+
             
-            services
-                .AddMvc()
+            services.AddMvc(options => options.EnableEndpointRouting = true)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(options =>
                 {
                     options.AllowAreas = true;
                     options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
                     options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-                }).AddJsonOptions(options =>
+                })
+                .AddJsonOptions(options =>
                 {
                     //options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
                     options.SerializerSettings.Formatting = Formatting.Indented;
                 });
+            
+            services.AddApiVersioning(options => { options.ReportApiVersions = true; });
             
             services.ConfigureApplicationCookie(options =>
             {
@@ -134,8 +136,7 @@ namespace WebApp
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
-            services.AddSingleton<IEmailSender, EmailSender>();
-
+            
             // =============== JWT support ===============
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services
@@ -153,10 +154,12 @@ namespace WebApp
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
-            
+
             //  =============== i18n support ===============
-            services.Configure<RequestLocalizationOptions>(options => {
-                var supportedCultures = new[]{
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
                     new CultureInfo(name: "en"),
                     new CultureInfo(name: "et")
                 };
@@ -172,13 +175,15 @@ namespace WebApp
             });
 
 
+            // Api explorer + OpenAPI/Swagger
+            services.AddVersionedApiExplorer( options => options.GroupNameFormat = "'v'VVV" );
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
         }
-
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
-            //TODO: Handle internal exception in case of API request - return correct response
-            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -201,24 +206,30 @@ namespace WebApp
             
             
             // ======= plug i18n locale switcher into pipeline ================
-            app.UseRequestLocalization(options: 
+            app.UseRequestLocalization(options:
                 app.ApplicationServices
                     .GetService<IOptions<RequestLocalizationOptions>>().Value);
 
-            
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                options =>
+                {
+                    foreach ( var description in provider.ApiVersionDescriptions )
+                    {
+                        options.SwaggerEndpoint(
+                            $"/swagger/{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpperInvariant() );
+                    }
+                } );
+
+
             app.UseMvc(routes =>
             {
 
                 routes.MapRoute(
-                    name: "area",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-                
-                routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{area=Admin}/{controller=Home}/{action=Index}/{id?}");
             });
-                      
         }
     }
 }

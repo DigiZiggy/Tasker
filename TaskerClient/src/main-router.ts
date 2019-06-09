@@ -17,7 +17,7 @@ export class MainRouter {
     log.debug('configureRouter');
 
     this.router = router;
-    config.title = "Contact App - Aurelia";
+    config.title = "Tasker App - Aurelia";
     config.map(
       [
         {route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('home'), nav: true, title: 'Home'},
@@ -76,7 +76,6 @@ export class MainRouter {
         {route: 'reviews/details/:id', name: 'reviews' + 'Details', moduleId: PLATFORM.moduleName('reviews/details'), nav: false, title: 'Reviews Details'},
 
       ]
-      
     );
   }
 }

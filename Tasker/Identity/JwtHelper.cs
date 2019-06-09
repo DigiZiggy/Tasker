@@ -12,17 +12,18 @@ namespace Identity
     {
         public static string GenerateJwt(IEnumerable<Claim> claims, string key, string issuer, int expiresInDays)
         {
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var signingCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256);
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(expiresInDays);
+            
             var token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: issuer,
                 claims: claims,
                 expires: expires,
-                signingCredentials: signingCredentials
+                signingCredentials: signingCredentials   
             );
-            
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

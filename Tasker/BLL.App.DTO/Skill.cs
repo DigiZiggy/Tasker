@@ -15,6 +15,5 @@ namespace BLL.App.DTO
         
         public TaskType Category { get; set; }
         
-        public ICollection<UserSkill> AppUsers { get; set; }
     }
 }

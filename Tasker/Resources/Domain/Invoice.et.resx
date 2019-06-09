@@ -117,10 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FirstName" xml:space="preserve">
-    <value>Eesnimi</value>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Arve number</value>
   </data>
-  <data name="LastName" xml:space="preserve">
-    <value>Perenimi</value>
+  <data name="Date" xml:space="preserve">
+    <value>Kuupäev</value>
+  </data>
+  <data name="TotalWithVAT" xml:space="preserve">
+    <value>Summa koos VAT'ga</value>
+  </data>
+  <data name="TotalWithoutVAT" xml:space="preserve">
+    <value>Summa ilma VAT'ta</value>
+  </data>
+  <data name="VAT" xml:space="preserve">
+    <value>VAT</value>
   </data>
 </root>

@@ -1,18 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DAL.App.EF;
-using Domain;
 
-namespace WebApp.ApiControllers
+namespace WebApp.ApiControllers.v1_0
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserSkillsController : ControllerBase
@@ -24,19 +19,28 @@ namespace WebApp.ApiControllers
             _bll = bll;
         }
 
+        /// <summary>
+        /// Get user skills
+        /// </summary>
+        /// <returns>Array of user skills</returns>
         // GET: api/UserSkills
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.UserSkill>>> GetUserSkills()
+        public async Task<List<PublicApi.v1.DTO.UserSkill>> GetUserSkills()
         {
             return (await _bll.UserSkills.AllAsync())
                 .Select(e => PublicApi.v1.Mappers.UserSkillMapper.MapFromBLL(e)).ToList();
         }
-
+        
+        /// <summary>
+        /// Get user skill by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Certain user skill</returns>
         // GET: api/UserSkills/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PublicApi.v1.DTO.UserSkill>> GetUserSkill(int id)
         {
-            var userSkill = PublicApi.v1.Mappers.UserSkillMapper.MapFromBLL(await _bll.UserSkills.FindAllIncludedAsync(id));
+            var userSkill = PublicApi.v1.Mappers.UserSkillMapper.MapFromBLL(await _bll.UserSkills.FindAsync(id));
 
             if (userSkill == null)
             {
@@ -46,6 +50,12 @@ namespace WebApp.ApiControllers
             return userSkill;
         }
 
+        /// <summary>
+        /// Update user skill
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userSkill"></param>
+        /// <returns>No content</returns>
         // PUT: api/UserSkills/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserSkill(int id, PublicApi.v1.DTO.UserSkill userSkill)
@@ -61,6 +71,11 @@ namespace WebApp.ApiControllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Post user skill
+        /// </summary>
+        /// <param name="userSkill"></param>
+        /// <returns>User skill</returns>
         // POST: api/UserSkills
         [HttpPost]
         public async Task<ActionResult<PublicApi.v1.DTO.UserSkill>> PostUserSkill(PublicApi.v1.DTO.UserSkill userSkill)
@@ -68,20 +83,25 @@ namespace WebApp.ApiControllers
             _bll.UserSkills.Add(PublicApi.v1.Mappers.UserSkillMapper.MapFromExternal(userSkill));
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserSkill", new { id = userSkill.Id }, userSkill);
+            return CreatedAtAction(
+                nameof(GetUserSkill), 
+                new
+                {
+                    version = HttpContext.GetRequestedApiVersion().ToString(),
+                    id = userSkill.Id
+                }, userSkill);
         }
 
+        /// <summary>
+        /// Delete user skill by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>No content</returns>
         // DELETE: api/UserSkills/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUserSkill(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.UserSkill>> DeleteUserSkill(int id)
         {
-            var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
-            if (userSkill == null)
-            {
-                return NotFound();
-            }
-
-            _bll.UserSkills.Remove(userSkill);
+            _bll.UserSkills.Remove(id);
             await _bll.SaveChangesAsync();
 
             return NoContent();

@@ -45,5 +45,23 @@ namespace Resources.Domain {
                 resourceCulture = value;
             }
         }
+        
+        public static string PaymentCode {
+            get {
+                return ResourceManager.GetString("PaymentCode", resourceCulture);
+            }
+        }
+        
+        public static string TimeOfPayment {
+            get {
+                return ResourceManager.GetString("TimeOfPayment", resourceCulture);
+            }
+        }
+        
+        public static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
     }
 }

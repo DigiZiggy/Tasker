@@ -20,30 +20,10 @@ namespace BLL.App.DTO.Identity
         [Display(Name = nameof(LastName), ResourceType = typeof(Resources.Domain.AppUser))]
         public string LastName { get; set; }                
         
-        public string SelfDescription { get; set; } 
-        
+        public string SelfDescription { get; set; }        
+        public string Email { get; set; }         
         public int? HourlyRateId { get; set; }
         public HourlyRate HourlyRate { get; set; }
-
-        public ICollection<UserSkill> Skills { get; set; }
-        
-        [InverseProperty("TaskGiver")]
-        public ICollection<UserTask> TasksCreated { get; set; }
-        
-        [InverseProperty("Tasker")]
-        public ICollection<UserTask> TasksWorkedOn { get; set; }
-        
-        public ICollection<UserOnAddress> Addresses { get; set; }
-                
-        [InverseProperty("ReviewGiver")]
-        public ICollection<Review> GivenReviews { get; set; }
-        
-        [InverseProperty("ReviewReceiver")]
-        public ICollection<Review> ReceivedReviews { get; set; }
-        
-        public ICollection<Invoice> Invoices { get; set; }
-        
-        public ICollection<Identification> Identifications { get; set; }        
-        public string FirstLastName => FirstName + " " + LastName;
+     
     }
 }

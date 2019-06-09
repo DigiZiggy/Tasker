@@ -34,9 +34,7 @@ namespace DAL.App.EF.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDomain(e)) as ICollection<AppUser>
             };
-
 
             return res;
         }
@@ -49,7 +47,6 @@ namespace DAL.App.EF.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDAL(e)) as ICollection<Domain.Identity.AppUser>
             };
 
 

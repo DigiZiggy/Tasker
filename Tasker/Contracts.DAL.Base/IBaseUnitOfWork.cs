@@ -12,5 +12,4 @@ namespace Contracts.DAL.Base
         Task<int> SaveChangesAsync();
         int SaveChanges();
     }
-
 }

@@ -27,8 +27,5 @@ namespace BLL.App.DTO
         [Display(Name = nameof(PostalCode), ResourceType = typeof(Resources.Domain.Address))]
         public string PostalCode { get; set; }
         
-        public ICollection<UserOnAddress> AppUsersOnAddress { get; set; }
-        
-        public ICollection<TaskerTask> TasksOnAddress { get; set; }
     }
 }

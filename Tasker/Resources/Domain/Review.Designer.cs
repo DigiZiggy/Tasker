@@ -45,5 +45,11 @@ namespace Resources.Domain {
                 resourceCulture = value;
             }
         }
+        
+        public static string Rating {
+            get {
+                return ResourceManager.GetString("Rating", resourceCulture);
+            }
+        }
     }
 }

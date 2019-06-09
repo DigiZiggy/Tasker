@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FirstName" xml:space="preserve">
-    <value>Eesnimi</value>
+  <data name="HourRate" xml:space="preserve">
+    <value>Tunni hind</value>
   </data>
-  <data name="LastName" xml:space="preserve">
-    <value>Perenimi</value>
+  <data name="Start" xml:space="preserve">
+    <value>Alates</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>Kuni</value>
   </data>
 </root>

@@ -28,9 +28,7 @@ namespace WebApp.Controllers
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
-            var invoices = await _bll.Invoices.AllForUserAsync(User.GetUserId());
-
-            return View(invoices);
+            return View(await _bll.Invoices.AllAsync());
         }
 
         // GET: Invoices/Details/5
@@ -41,7 +39,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _bll.Invoices.FindAllIncludedAsync(id);
+            var invoice = await _bll.Invoices.FindAsync(id);
 
             if (invoice == null)
             {
@@ -146,7 +144,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var invoice = await _bll.Invoices.FindAllIncludedAsync(id);
+            var invoice = await _bll.Invoices.FindAsync(id);
 
             if (invoice == null)
             {

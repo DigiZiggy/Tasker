@@ -98,4 +98,13 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="TimeEstimate" xml:space="preserve">
+      <value>Time Estimate</value>
+    </data>
+	<data name="TaskType" xml:space="preserve">
+      <value>Task Type</value>
+    </data>
+	<data name="TaskStatus" xml:space="preserve">
+      <value>Task Status</value>
+    </data>
 </root>

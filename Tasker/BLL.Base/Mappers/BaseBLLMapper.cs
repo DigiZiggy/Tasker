@@ -24,5 +24,4 @@ namespace BLL.Base.Mappers
             return _mapper.Map<TOutObject>(inObject);
         }
     }
-
 }

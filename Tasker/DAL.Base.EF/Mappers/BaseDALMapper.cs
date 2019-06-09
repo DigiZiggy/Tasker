@@ -25,5 +25,4 @@ namespace DAL.Base.EF.Mappers
             return _mapper.Map<TOutObject>(inObject);
         }
     }
-
 }

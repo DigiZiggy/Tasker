@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
-using DAL.App.DTO;
-using UserTask = BLL.App.DTO.UserTask;
+using internalDTO = DAL.App.DTO;
+using externalDTO = BLL.App.DTO;
 
 namespace BLL.App.Mappers
 {
@@ -34,7 +33,6 @@ namespace BLL.App.Mappers
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromDAL(taskerTask.Address),
-                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromDAL(e)) as ICollection<UserTask>
             };
 
             return res;
@@ -50,7 +48,6 @@ namespace BLL.App.Mappers
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromBLL(taskerTask.Address),
-                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.UserTask>
             };
 
             return res;

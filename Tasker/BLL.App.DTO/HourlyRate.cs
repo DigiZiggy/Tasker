@@ -16,6 +16,5 @@ namespace BLL.App.DTO
         
         public DateTime? End { get; set; }
         
-        public ICollection<AppUser> AppUsers { get; set; }
     }
 }

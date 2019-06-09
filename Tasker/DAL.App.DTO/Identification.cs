@@ -13,7 +13,7 @@ namespace DAL.App.DTO
         public string DocNumber { get; set; }
         
         public IdentificationType IdentificationType { get; set; }
-        
+                
         public DateTime Start { get; set; }
         
         public DateTime? End { get; set; }

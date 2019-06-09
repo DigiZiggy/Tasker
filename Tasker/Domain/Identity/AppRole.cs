@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class AppRole : IdentityRole<int>, IBaseEntity, IDomainEntity
+    public class AppRole  :  IdentityRole<int>, IDomainEntity
     {
         
     }

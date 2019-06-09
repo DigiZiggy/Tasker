@@ -7,9 +7,8 @@ namespace PublicApi.v1.DTO
         public int Id { get; set; }
 
         public int Rating { get; set; }
-        
         public string ReviewComment { get; set; }
-        
+              
         public int ReviewGiverId { get; set; } 
         public AppUser ReviewGiver { get; set; }        
         

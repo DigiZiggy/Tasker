@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using BLL.App.DTO;
 using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
+using internalDTO = DAL.App.DTO;
+using externalDTO = BLL.App.DTO;
 
 namespace BLL.App.Mappers
 {
@@ -37,7 +36,6 @@ namespace BLL.App.Mappers
                 Comment = invoice.Comment,
                 AppUserId = invoice.AppUserId,
                 AppUser = AppUserMapper.MapFromDAL(invoice.AppUser),
-                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromDAL(e)) as ICollection<Payment>
             };
 
             return res;
@@ -56,7 +54,6 @@ namespace BLL.App.Mappers
                 Comment = invoice.Comment,
                 AppUserId = invoice.AppUserId,
                 AppUser = AppUserMapper.MapFromBLL(invoice.AppUser),
-                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.Payment>
             };
 
             return res;

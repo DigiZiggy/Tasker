@@ -19,9 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: TaskerTasks
         public async Task<IActionResult> Index()
         {
-            var tasks = await _bll.Tasks.AllAsync();
-
-            return View(tasks);
+            return View(await _bll.Tasks.AllAsync());
         }
 
         // GET: TaskerTasks/Details/5
@@ -32,7 +30,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
+            var taskerTask = await _bll.Tasks.FindAsync(id);
 
             if (taskerTask == null)
             {
@@ -138,7 +136,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
+            var taskerTask = await _bll.Tasks.FindAsync(id);
 
             if (taskerTask == null)
             {

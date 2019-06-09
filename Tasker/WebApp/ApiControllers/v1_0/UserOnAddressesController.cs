@@ -1,18 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DAL.App.EF;
-using Domain;
 
-namespace WebApp.ApiControllers
+namespace WebApp.ApiControllers.v1_0
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserOnAddressesController : ControllerBase
@@ -24,19 +19,28 @@ namespace WebApp.ApiControllers
             _bll = bll;
         }
 
+        /// <summary>
+        /// Get user on addresses
+        /// </summary>
+        /// <returns>Array of user on addresses</returns>
         // GET: api/UserOnAddresses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.UserOnAddress>>> GetUserOnAddresses()
+        public async Task<List<PublicApi.v1.DTO.UserOnAddress>> GetUserOnAddresses()
         {
             return (await _bll.UserOnAddresses.AllAsync())
                 .Select(e => PublicApi.v1.Mappers.UserOnAddressMapper.MapFromBLL(e)).ToList();
         }
-
+        
+        /// <summary>
+        /// Get user on address by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Certain user on address</returns>
         // GET: api/UserOnAddresses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PublicApi.v1.DTO.UserOnAddress>> GetUserOnAddress(int id)
         {
-            var userOnAddress = PublicApi.v1.Mappers.UserOnAddressMapper.MapFromBLL(await _bll.UserOnAddresses.FindAllIncludedAsync(id));
+            var userOnAddress = PublicApi.v1.Mappers.UserOnAddressMapper.MapFromBLL(await _bll.UserOnAddresses.FindAsync(id));
 
             if (userOnAddress == null)
             {
@@ -46,6 +50,12 @@ namespace WebApp.ApiControllers
             return userOnAddress;
         }
 
+        /// <summary>
+        /// Update user on address
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userOnAddress"></param>
+        /// <returns>No content</returns>
         // PUT: api/UserOnAddresses/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserOnAddress(int id, PublicApi.v1.DTO.UserOnAddress userOnAddress)
@@ -61,6 +71,11 @@ namespace WebApp.ApiControllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Post user on address
+        /// </summary>
+        /// <param name="userOnAddress"></param>
+        /// <returns>User on address</returns>
         // POST: api/UserOnAddresses
         [HttpPost]
         public async Task<ActionResult<PublicApi.v1.DTO.UserOnAddress>> PostUserOnAddress(PublicApi.v1.DTO.UserOnAddress userOnAddress)
@@ -68,20 +83,25 @@ namespace WebApp.ApiControllers
             _bll.UserOnAddresses.Add(PublicApi.v1.Mappers.UserOnAddressMapper.MapFromExternal(userOnAddress));
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserOnAddress", new { id = userOnAddress.Id }, userOnAddress);
+            return CreatedAtAction(
+                nameof(GetUserOnAddress), 
+                new
+                {
+                    version = HttpContext.GetRequestedApiVersion().ToString(),
+                    id = userOnAddress.Id
+                }, userOnAddress);
         }
 
+        /// <summary>
+        /// Delete user on address by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>No content</returns>
         // DELETE: api/UserOnAddresses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUserOnAddress(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.UserOnAddress>> DeleteUserOnAddress(int id)
         {
-            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
-            if (userOnAddress == null)
-            {
-                return NotFound();
-            }
-
-            _bll.UserOnAddresses.Remove(userOnAddress);
+            _bll.UserOnAddresses.Remove(id);
             await _bll.SaveChangesAsync();
 
             return NoContent();

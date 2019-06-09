@@ -8,9 +8,8 @@ namespace PublicApi.v1.DTO
         public int Id { get; set; }
 
         public DateTime Start { get; set; }
-        
         public DateTime? End { get; set; }
-        
+
         public int AddressId { get; set; }
         public Address Address { get; set; }
         

@@ -29,12 +29,11 @@ namespace DAL.App.EF.Mappers
             var res = taskerTask == null ? null : new DAL.App.DTO.TaskerTask
             {
                 Id = taskerTask.Id,
-                TaskName = taskerTask.TaskName.Translate(),
-                Description = taskerTask.Description.Translate(),
+                TaskName = taskerTask.TaskName,
+                Description = taskerTask.Description,
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromDomain(taskerTask.Address),
-                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromDomain(e)) as ICollection<UserTask>
             };
 
 
@@ -46,12 +45,11 @@ namespace DAL.App.EF.Mappers
             var res = taskerTask == null ? null : new Domain.TaskerTask
             {
                 Id = taskerTask.Id,
-                TaskName = new Domain.MultiLangString(taskerTask.TaskName),
-                Description = new Domain.MultiLangString(taskerTask.Description),
+                TaskName = taskerTask.TaskName,
+                Description = taskerTask.Description,
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromDAL(taskerTask.Address),
-                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromDAL(e)) as ICollection<Domain.UserTask>
             };
 
 

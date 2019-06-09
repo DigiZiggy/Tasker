@@ -4,7 +4,7 @@ using DALAppDTO = DAL.App.DTO;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface ISkillRepository : ISkillRepository<DALAppDTO.Skill>
+    public interface ISkillRepository : IBaseRepository<DALAppDTO.Skill>
     {
         
     }

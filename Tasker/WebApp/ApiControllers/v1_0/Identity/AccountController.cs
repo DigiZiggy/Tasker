@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Domain.Identity;
 using Identity;
@@ -11,9 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WebApp.Areas.Identity.Pages.Account;
 
-namespace WebApp.ApiControllers.Identity
+namespace WebApp.ApiControllers.v1_0.Identity
 {
-    [Route("api/[controller]/[action]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -32,6 +31,11 @@ namespace WebApp.ApiControllers.Identity
             _emailSender = emailSender;
         }
 
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>StatusCode</returns>
         [HttpPost]
         public async Task<ActionResult<string>> Login([FromBody] LoginDTO model)
         {
@@ -66,6 +70,11 @@ namespace WebApp.ApiControllers.Identity
             return StatusCode(403);
         }
         
+        /// <summary>
+        /// Register
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>StatusCode</returns>
         [HttpPost]
         public async Task<ActionResult<string>> Register([FromBody] RegisterDTO model)
         {
@@ -109,18 +118,22 @@ namespace WebApp.ApiControllers.Identity
         }
 
 
+        /// <summary>
+        /// Login Data Transfer Object
+        /// </summary>
         public class LoginDTO
         {
             public string Email { get; set; }
             public string Password { get; set; }
         }
 
+        /// <summary>
+        /// Register Data Transfer Object
+        /// </summary>
         public class RegisterDTO
         {
             public string Email { get; set; }
 
-            [Required]
-            [MinLength(6)]
             public string Password { get; set; }
         }       
     }

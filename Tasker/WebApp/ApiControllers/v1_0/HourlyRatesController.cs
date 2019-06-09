@@ -1,18 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DAL.App.EF;
-using Domain;
 
-namespace WebApp.ApiControllers
+namespace WebApp.ApiControllers.v1_0
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HourlyRatesController : ControllerBase
@@ -24,14 +19,23 @@ namespace WebApp.ApiControllers
             _bll = bll;
         }
 
+        /// <summary>
+        /// Get houlry rates
+        /// </summary>
+        /// <returns>Array of hourly rates</returns>
         // GET: api/HourlyRates
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.HourlyRate>>> GetHourlyRates()
+        public async Task<List<PublicApi.v1.DTO.HourlyRate>> GetHourlyRates()
         {
             return (await _bll.HourlyRates.AllAsync())
                 .Select(e => PublicApi.v1.Mappers.HourlyRateMapper.MapFromBLL(e)).ToList();
         }
 
+        /// <summary>
+        /// Get hourly rate by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Certain hourly rate</returns>
         // GET: api/HourlyRates/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PublicApi.v1.DTO.HourlyRate>> GetHourlyRate(int id)
@@ -46,6 +50,12 @@ namespace WebApp.ApiControllers
             return hourlyRate;
         }
 
+        /// <summary>
+        /// Update hourly rate
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="hourlyRate"></param>
+        /// <returns>No Content</returns>
         // PUT: api/HourlyRates/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHourlyRate(int id, PublicApi.v1.DTO.HourlyRate hourlyRate)
@@ -61,6 +71,11 @@ namespace WebApp.ApiControllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Post hourly rate
+        /// </summary>
+        /// <param name="hourlyRate"></param>
+        /// <returns>Hourly Rate</returns>
         // POST: api/HourlyRates
         [HttpPost]
         public async Task<ActionResult<PublicApi.v1.DTO.HourlyRate>> PostHourlyRate(PublicApi.v1.DTO.HourlyRate hourlyRate)
@@ -68,20 +83,25 @@ namespace WebApp.ApiControllers
             _bll.HourlyRates.Add(PublicApi.v1.Mappers.HourlyRateMapper.MapFromExternal(hourlyRate));
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetHourlyRate", new { id = hourlyRate.Id }, hourlyRate);
+            return CreatedAtAction(
+                nameof(GetHourlyRate), 
+                new
+                {
+                    version = HttpContext.GetRequestedApiVersion().ToString(),
+                    id = hourlyRate.Id
+                }, hourlyRate);
         }
 
+        /// <summary>
+        /// Delete hourly rate by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>No content</returns>
         // DELETE: api/HourlyRates/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteHourlyRate(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.HourlyRate>> DeleteHourlyRate(int id)
         {
-            var hourlyRate = await _bll.HourlyRates.FindAsync(id);
-            if (hourlyRate == null)
-            {
-                return NotFound();
-            }
-
-            _bll.HourlyRates.Remove(hourlyRate);
+            _bll.HourlyRates.Remove(id);
             await _bll.SaveChangesAsync();
 
             return NoContent();

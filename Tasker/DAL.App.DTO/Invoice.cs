@@ -20,9 +20,7 @@ namespace DAL.App.DTO
         public decimal VAT { get; set; }
         
         public string Comment { get; set; }
-        
-        public ICollection<Payment> Payments { get; set; }
-        
+                
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
     }

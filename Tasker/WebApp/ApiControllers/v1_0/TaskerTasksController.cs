@@ -1,18 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DAL.App.EF;
-using Domain;
 
-namespace WebApp.ApiControllers
+namespace WebApp.ApiControllers.v1_0
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TaskerTasksController : ControllerBase
@@ -24,19 +19,28 @@ namespace WebApp.ApiControllers
             _bll = bll;
         }
 
+        /// <summary>
+        /// Get tasks
+        /// </summary>
+        /// <returns>Array of tasks</returns>
         // GET: api/TaskerTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.TaskerTask>>> GetTasks()
+        public async Task<List<PublicApi.v1.DTO.TaskerTask>> GetTasks()
         {
             return (await _bll.Tasks.AllAsync())
                 .Select(e => PublicApi.v1.Mappers.TaskerTaskMapper.MapFromBLL(e)).ToList();
         }
-
+        
+        /// <summary>
+        /// Get task by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Certain task</returns>
         // GET: api/TaskerTasks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PublicApi.v1.DTO.TaskerTask>> GetTaskerTask(int id)
         {
-            var taskerTask = PublicApi.v1.Mappers.TaskerTaskMapper.MapFromBLL(await _bll.Tasks.FindAllIncludedAsync(id));
+            var taskerTask = PublicApi.v1.Mappers.TaskerTaskMapper.MapFromBLL(await _bll.Tasks.FindAsync(id));
 
             if (taskerTask == null)
             {
@@ -46,6 +50,12 @@ namespace WebApp.ApiControllers
             return taskerTask;
         }
 
+        /// <summary>
+        /// Update task
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="taskerTask"></param>
+        /// <returns>No content</returns>
         // PUT: api/TaskerTasks/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTaskerTask(int id, PublicApi.v1.DTO.TaskerTask taskerTask)
@@ -61,6 +71,11 @@ namespace WebApp.ApiControllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Post task
+        /// </summary>
+        /// <param name="taskerTask"></param>
+        /// <returns>Task</returns>
         // POST: api/TaskerTasks
         [HttpPost]
         public async Task<ActionResult<PublicApi.v1.DTO.TaskerTask>> PostTaskerTask(PublicApi.v1.DTO.TaskerTask taskerTask)
@@ -68,20 +83,25 @@ namespace WebApp.ApiControllers
             _bll.Tasks.Add(PublicApi.v1.Mappers.TaskerTaskMapper.MapFromExternal(taskerTask));
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetTaskerTask", new { id = taskerTask.Id }, taskerTask);
+            return CreatedAtAction(
+                nameof(GetTaskerTask), 
+                new
+                {
+                    version = HttpContext.GetRequestedApiVersion().ToString(),
+                    id = taskerTask.Id
+                }, taskerTask);
         }
 
+        /// <summary>
+        /// Delete task by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>No content</returns>
         // DELETE: api/TaskerTasks/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteTaskerTask(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.TaskerTask>> DeleteTaskerTask(int id)
         {
-            var taskerTask = await _bll.Tasks.FindAllIncludedAsync(id);
-            if (taskerTask == null)
-            {
-                return NotFound();
-            }
-
-            _bll.Tasks.Remove(taskerTask);
+            _bll.Tasks.Remove(id);
             await _bll.SaveChangesAsync();
 
             return NoContent();

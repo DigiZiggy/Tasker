@@ -19,9 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Payments
         public async Task<IActionResult> Index()
         {
-            var payments = await _bll.Payments.AllAsync();
-
-            return View(payments);
+            return View(await _bll.Payments.AllAsync());
         }
 
         // GET: Payments/Details/5
@@ -32,7 +30,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var payment = await _bll.Payments.FindAllIncludedAsync(id);
+            var payment = await _bll.Payments.FindAsync(id);
 
             if (payment == null)
             {
@@ -139,7 +137,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var payment = await _bll.Payments.FindAllIncludedAsync(id);
+            var payment = await _bll.Payments.FindAsync(id);
 
             if (payment == null)
             {

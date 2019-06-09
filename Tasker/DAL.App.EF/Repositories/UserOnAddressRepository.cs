@@ -23,34 +23,6 @@ namespace DAL.App.EF.Repositories
                 .Include(u => u.Address)
                 .Include(u => u.AppUser)
                 .Select(e => UserOnAddressMapper.MapFromDomain(e)).ToListAsync(); 
-        }
-        
-        public async Task<List<DAL.App.DTO.UserOnAddress>> AllForUserAsync(int userId)
-        {
-            return await RepositoryDbSet
-                .Include(u => u.Address)
-                .Include(u => u.AppUser)
-                .Where(c => c.AppUser.Id == userId)
-                .Select(e => UserOnAddressMapper.MapFromDomain(e)).ToListAsync();
-
-        }
-
-        public async Task<DAL.App.DTO.UserOnAddress> FindAllIncludedAsync(params object[] id)
-        {
-            var userOnAddress = await base.FindAsync(id);
-
-            if (userOnAddress != null)
-            {
-                await RepositoryDbContext.Entry(userOnAddress).Reference(u => u.Address).LoadAsync();
-                await RepositoryDbContext.Entry(userOnAddress).Reference(u => u.AppUser).LoadAsync();
-            }
-
-            return userOnAddress;
-        }
-
-        public Task<UserOnAddress> FindForUserAsync(int id, int userId)
-        {
-            throw new System.NotImplementedException();
-        }
+        }       
     }
 }

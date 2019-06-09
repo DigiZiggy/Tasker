@@ -45,5 +45,29 @@ namespace Resources.Domain {
                 resourceCulture = value;
             }
         }
+        
+        public static string DocNumber {
+            get {
+                return ResourceManager.GetString("DocNumber", resourceCulture);
+            }
+        }
+        
+        public static string IdentificationType {
+            get {
+                return ResourceManager.GetString("IdentificationType", resourceCulture);
+            }
+        }
+        
+        public static string Start {
+            get {
+                return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        public static string End {
+            get {
+                return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
     }
 }

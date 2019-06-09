@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
-using DAL.App.DTO.Identity;
+using internalDTO = DAL.App.DTO;
+using externalDTO = BLL.App.DTO;
 
 namespace BLL.App.Mappers
 {
@@ -32,7 +31,6 @@ namespace BLL.App.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromDAL(e)) as ICollection<BLL.App.DTO.Identity.AppUser>
             };
 
             return res;
@@ -46,7 +44,6 @@ namespace BLL.App.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.Identity.AppUser>
             };
 
             return res;

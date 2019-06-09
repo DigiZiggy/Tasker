@@ -27,9 +27,7 @@ namespace WebApp.Controllers
         // GET: UserSkills
         public async Task<IActionResult> Index()
         {
-            var userSkills = await _bll.UserSkills.AllAsync();
-
-            return View(userSkills);
+            return View(await _bll.UserSkills.AllAsync());
         }
 
         // GET: UserSkills/Details/5
@@ -40,7 +38,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
+            var userSkill = await _bll.UserSkills.FindAsync(id);
 
 
             if (userSkill == null)
@@ -161,7 +159,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userSkill = await _bll.UserSkills.FindAllIncludedAsync(id);
+            var userSkill = await _bll.UserSkills.FindAsync(id);
 
             if (userSkill == null)
             {

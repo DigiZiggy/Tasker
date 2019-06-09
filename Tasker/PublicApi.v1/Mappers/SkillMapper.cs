@@ -32,7 +32,6 @@ namespace PublicApi.v1.Mappers
                 Id = skill.Id,
                 SkillName = skill.SkillName,
                 Description = skill.Description,
-                AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromBLL(e)) as ICollection<externalDTO.UserSkill>
             };
 
             return res;
@@ -45,7 +44,6 @@ namespace PublicApi.v1.Mappers
                 Id = skill.Id,
                 SkillName = skill.SkillName,
                 Description = skill.Description,
-                AppUsers = skill.AppUsers.Select(e => UserSkillMapper.MapFromExternal(e)) as ICollection<internalDTO.UserSkill>
             };
             return res;
         }

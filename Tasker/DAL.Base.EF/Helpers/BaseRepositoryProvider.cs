@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF.Helpers
 {
-public class BaseRepositoryProvider<TDbContext> : IBaseRepositoryProvider
+    public class BaseRepositoryProvider<TDbContext> : IBaseRepositoryProvider
     where TDbContext: DbContext
     {
         protected readonly Dictionary<Type, object> _repositoryCache;

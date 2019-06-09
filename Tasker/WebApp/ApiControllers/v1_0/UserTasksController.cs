@@ -1,18 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using DAL.App.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DAL.App.EF;
-using Domain;
 
-namespace WebApp.ApiControllers
+namespace WebApp.ApiControllers.v1_0
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserTasksController : ControllerBase
@@ -24,19 +19,28 @@ namespace WebApp.ApiControllers
             _bll = bll;
         }
 
+        /// <summary>
+        /// Get user tasks
+        /// </summary>
+        /// <returns>Array of user tasks</returns>
         // GET: api/UserTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PublicApi.v1.DTO.UserTask>>> GetUserTasks()
+        public async Task<List<PublicApi.v1.DTO.UserTask>> GetUserTasks()
         {
             return (await _bll.UserTasks.AllAsync())
                 .Select(e => PublicApi.v1.Mappers.UserTaskMapper.MapFromBLL(e)).ToList();
         }
-
+        
+        /// <summary>
+        /// Get user task by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Certain user task</returns>
         // GET: api/UserTasks/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PublicApi.v1.DTO.UserTask>> GetUserTask(int id)
         {
-            var userTask = PublicApi.v1.Mappers.UserTaskMapper.MapFromBLL(await _bll.UserTasks.FindAllIncludedAsync(id));
+            var userTask = PublicApi.v1.Mappers.UserTaskMapper.MapFromBLL(await _bll.UserTasks.FindAsync(id));
 
             if (userTask == null)
             {
@@ -46,6 +50,12 @@ namespace WebApp.ApiControllers
             return userTask;
         }
 
+        /// <summary>
+        /// Update user task
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userTask"></param>
+        /// <returns>No content</returns>
         // PUT: api/UserTasks/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserTask(int id, PublicApi.v1.DTO.UserTask userTask)
@@ -61,6 +71,11 @@ namespace WebApp.ApiControllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Post user task
+        /// </summary>
+        /// <param name="userTask"></param>
+        /// <returns>User task</returns>
         // POST: api/UserTasks
         [HttpPost]
         public async Task<ActionResult<PublicApi.v1.DTO.UserTask>> PostUserTask(PublicApi.v1.DTO.UserTask userTask)
@@ -68,20 +83,25 @@ namespace WebApp.ApiControllers
             _bll.UserTasks.Add(PublicApi.v1.Mappers.UserTaskMapper.MapFromExternal(userTask));
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserTask", new { id = userTask.Id }, userTask);
+            return CreatedAtAction(
+                nameof(GetUserTask), 
+                new
+                {
+                    version = HttpContext.GetRequestedApiVersion().ToString(),
+                    id = userTask.Id
+                }, userTask);
         }
 
+        /// <summary>
+        /// Delete user task by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>No content</returns>
         // DELETE: api/UserTasks/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUserTask(int id)
+        public async Task<ActionResult<PublicApi.v1.DTO.UserTask>> DeleteUserTask(int id)
         {
-            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
-            if (userTask == null)
-            {
-                return NotFound();
-            }
-
-            _bll.UserTasks.Remove(userTask);
+            _bll.UserTasks.Remove(id);
             await _bll.SaveChangesAsync();
 
             return NoContent();

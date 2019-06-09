@@ -4,7 +4,7 @@ using DALAppDTO = DAL.App.DTO;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IHourlyRateRepository : IHourlyRateRepository<DALAppDTO.HourlyRate>
+    public interface IHourlyRateRepository : IBaseRepository<DALAppDTO.HourlyRate>
     {
         
     }

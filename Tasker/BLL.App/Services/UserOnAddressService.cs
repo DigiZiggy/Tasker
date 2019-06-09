@@ -16,19 +16,10 @@ namespace BLL.App.Services
             ServiceRepository = Uow.UserOnAddresses;
         }
 
-        public async Task<BLL.App.DTO.UserOnAddress> FindAllIncludedAsync(params object[] id)
+        public override async Task<BLL.App.DTO.UserOnAddress> FindAsync(params object[] id)
         {
-            return UserOnAddressMapper.MapFromDAL(await Uow.UserOnAddresses.FindAllIncludedAsync(id));
+            return UserOnAddressMapper.MapFromDAL(await Uow.UserOnAddresses.FindAsync(id));
         }
-        
-        public async Task<BLL.App.DTO.UserOnAddress> FindForUserAsync(int id, int userId)
-        {
-            return UserOnAddressMapper.MapFromDAL(await Uow.UserOnAddresses.FindForUserAsync(id, userId));
-        }
-        
-        public async Task<List<BLL.App.DTO.UserOnAddress>> AllForUserAsync(int userId)
-        {
-            return (await Uow.UserOnAddresses.AllForUserAsync(userId)).Select(e => UserOnAddressMapper.MapFromDAL(e)).ToList();
-        }
+
     }
 }

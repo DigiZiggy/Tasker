@@ -14,13 +14,11 @@ namespace DAL.App.DTO
         
         public decimal TimeEstimate { get; set; }
         
+        public int AddressId { get; set; }
+        public Address Address { get; set; }
+        
         public TaskType TaskType { get; set; }
 
         public TaskStatus TaskStatus { get; set; }
-        
-        public ICollection<UserTask> AppUsersInvolved { get; set; }
-        
-        public int AddressId { get; set; }
-        public Address Address { get; set; }
     }
 }

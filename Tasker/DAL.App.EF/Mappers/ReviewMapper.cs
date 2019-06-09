@@ -29,7 +29,7 @@ namespace DAL.App.EF.Mappers
             {
                 Id = review.Id,
                 Rating = review.Rating,
-                ReviewComment = review.ReviewComment.Translate(),
+                ReviewComment = review.ReviewComment,
                 ReviewGiverId = review.ReviewGiverId,
                 ReviewReceiverId = review.ReviewReceiverId,
                 ReviewGiver = AppUserMapper.MapFromDomain(review.ReviewGiver),
@@ -46,7 +46,7 @@ namespace DAL.App.EF.Mappers
             {
                 Id = review.Id,
                 Rating = review.Rating,
-                ReviewComment = new Domain.MultiLangString(review.ReviewComment),
+                ReviewComment = review.ReviewComment,
                 ReviewGiverId = review.ReviewGiverId,
                 ReviewReceiverId = review.ReviewReceiverId,
                 ReviewGiver = AppUserMapper.MapFromDAL(review.ReviewGiver),

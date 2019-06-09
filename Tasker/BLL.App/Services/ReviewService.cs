@@ -16,19 +16,9 @@ namespace BLL.App.Services
             ServiceRepository = Uow.Reviews;
         }
 
-        public async Task<BLL.App.DTO.Review> FindAllIncludedAsync(params object[] id)
+        public override async Task<BLL.App.DTO.Review> FindAsync(params object[] id)
         {
-            return ReviewMapper.MapFromDAL(await Uow.Reviews.FindAllIncludedAsync(id));
-        }
-        
-        public async Task<BLL.App.DTO.Review> FindForUserAsync(int id, int userId)
-        {
-            return ReviewMapper.MapFromDAL(await Uow.Reviews.FindForUserAsync(id, userId));
-        }
-        
-        public async Task<List<BLL.App.DTO.Review>> AllForUserAsync(int userId)
-        {
-            return (await Uow.Reviews.AllForUserAsync(userId)).Select(e => ReviewMapper.MapFromDAL(e)).ToList();
+            return ReviewMapper.MapFromDAL(await Uow.Reviews.FindAsync(id));
         }
     }
 }

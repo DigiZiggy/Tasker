@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
@@ -7,6 +8,7 @@ using DAL.App.EF.Helpers;
 using DAL.App.EF.Mappers;
 using DAL.Base.EF.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Payment = DAL.App.DTO.Payment;
 
 namespace DAL.App.EF.Repositories
 {
@@ -17,37 +19,58 @@ namespace DAL.App.EF.Repositories
         {
         }
         
-        public override async Task<List<DAL.App.DTO.Payment>> AllAsync()
-        {
-            return await RepositoryDbSet
-                .Include(p => p.Invoice)
-                .Select(p => PaymentMapper.MapFromDomain(p)).ToListAsync();          
-        }
-        
-        public async Task<List<DAL.App.DTO.Payment>> AllForUserAsync(int userId)
-        {
-            return await RepositoryDbSet
-                .Include(p => p.Invoice)
-                .Where(c => c.Invoice.AppUser.Id == userId)
-                .Select(p => PaymentMapper.MapFromDomain(p)).ToListAsync();
-
-        }
-        
-        public async Task<DAL.App.DTO.Payment> FindAllIncludedAsync(params object[] id)
-        {
-            var payment = await base.FindAsync(id);
-
-            if (payment != null)
-            {
-                await RepositoryDbContext.Entry(payment).Reference(p => p.Invoice).LoadAsync();
-            }
-
-            return payment;
-        }
-
-        public Task<Payment> FindForUserAsync(int id, int userId)
-        {
-            throw new System.NotImplementedException();
-        }
+//        public override async Task<Payment> FindAsync(params object[] id)
+//        {
+//            var culture = Thread.CurrentThread.CurrentUICulture.Name.Substring(0, 2).ToLower();
+//            
+//            var payment = await RepositoryDbSet.FindAsync(id);
+//            if (payment != null)
+//            {
+//                await RepositoryDbContext.Entry(payment)
+//                    .Reference(c => c.MeansOfPayment)
+//                    .LoadAsync();
+//                await RepositoryDbContext.Entry(payment)
+//                    .Reference(c => c.Comment)
+//                    .LoadAsync();
+//                
+//                await RepositoryDbContext.Entry(payment.MeansOfPayment)
+//                    .Collection(b => b.Translations)
+//                    .Query()
+//                    .Where(t => t.Culture == culture)
+//                    .LoadAsync();
+//                await RepositoryDbContext.Entry(payment.Comment)
+//                    .Collection(b => b.Translations)
+//                    .Query()
+//                    .Where(t => t.Culture == culture)
+//                    .LoadAsync();
+//            }
+// 
+//            return PaymentMapper.MapFromDomain(payment);
+//        }
+//
+//        public override Payment Update(Payment entity)
+//        {
+//            var entityInDb = RepositoryDbSet
+//                .Include(m => m.MeansOfPayment)
+//                .Include(m => m.Comment)
+//                .ThenInclude(t => t.Translations)
+//                .FirstOrDefault(x => x.Id == entity.Id);
+//
+//            entityInDb.MeansOfPayment.SetTranslation(entity.MeansOfPayment);
+//            entityInDb.Comment.SetTranslation(entity.Comment);
+//
+//            return entity;
+//        }
+//        
+//        public override async Task<List<DAL.App.DTO.Payment>> AllAsync()
+//        {
+//            return await RepositoryDbSet
+//                .Include(m => m.MeansOfPayment)
+//                .ThenInclude(t => t.Translations)
+//                .Include(m => m.Comment)
+//                .ThenInclude(t => t.Translations)
+//                .Include(p => p.Invoice)
+//                .Select(p => PaymentMapper.MapFromDomain(p)).ToListAsync();          
+//        }
     }
 }

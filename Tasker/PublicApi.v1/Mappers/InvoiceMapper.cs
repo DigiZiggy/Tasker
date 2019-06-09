@@ -39,7 +39,6 @@ namespace PublicApi.v1.Mappers
                 Comment = invoice.Comment,
                 AppUserId = invoice.AppUserId,
                 AppUser = AppUserMapper.MapFromBLL(invoice.AppUser),
-                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromBLL(e)) as ICollection<externalDTO.Payment>
             };
 
             return res;
@@ -58,7 +57,6 @@ namespace PublicApi.v1.Mappers
                 Comment = invoice.Comment,
                 AppUserId = invoice.AppUserId,
                 AppUser = AppUserMapper.MapFromExternal(invoice.AppUser),
-                Payments = invoice.Payments.Select(e => PaymentMapper.MapFromExternal(e)) as ICollection<internalDTO.Payment>
             };
             return res;
         }

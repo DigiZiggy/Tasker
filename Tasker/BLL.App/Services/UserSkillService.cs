@@ -16,19 +16,9 @@ namespace BLL.App.Services
             ServiceRepository = Uow.UserSkills;
         }
 
-        public async Task<BLL.App.DTO.UserSkill> FindAllIncludedAsync(params object[] id)
+        public override async Task<BLL.App.DTO.UserSkill> FindAsync(params object[] id)
         {
-            return UserSkillMapper.MapFromDAL(await Uow.UserSkills.FindAllIncludedAsync(id));
-        }
-        
-        public async Task<BLL.App.DTO.UserSkill> FindForUserAsync(int id, int userId)
-        {
-            return UserSkillMapper.MapFromDAL(await Uow.UserSkills.FindForUserAsync(id, userId));
-        }
-        
-        public async Task<List<BLL.App.DTO.UserSkill>> AllForUserAsync(int userId)
-        {
-            return (await Uow.UserSkills.AllForUserAsync(userId)).Select(e => UserSkillMapper.MapFromDAL(e)).ToList();
+            return UserSkillMapper.MapFromDAL(await Uow.UserSkills.FindAsync(id));
         }
     }
 }

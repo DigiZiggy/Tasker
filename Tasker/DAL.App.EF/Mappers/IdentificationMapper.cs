@@ -31,6 +31,7 @@ namespace DAL.App.EF.Mappers
                 DocNumber = identification.DocNumber,
                 Start = identification.Start,
                 End = identification.End,
+                Comment = identification.Comment,
                 AppUserId = identification.AppUserId,
                 AppUser = AppUserMapper.MapFromDomain(identification.AppUser)
             };
@@ -47,6 +48,7 @@ namespace DAL.App.EF.Mappers
                 DocNumber = identification.DocNumber,
                 Start = identification.Start,
                 End = identification.End,
+                Comment = identification.Comment,
                 AppUserId = identification.AppUserId,
                 AppUser = AppUserMapper.MapFromDAL(identification.AppUser)               
             };

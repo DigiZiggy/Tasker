@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PublicApi.v1.DTO
 {
@@ -6,20 +7,29 @@ namespace PublicApi.v1.DTO
     {
         public int Id { get; set; }
 
-        public string Country { get; set; }
+        public string Country { get; set; }       
 
         public string City { get; set; }
         
+        
+        [MaxLength(64)]
+        [MinLength(1)]
         public string Street { get; set; }
         
+        [MaxLength(64)]
+        [MinLength(1)]
         public string HouseNumber { get; set; }
         
+        [MaxLength(64)]
+        [MinLength(1)]
         public string UnitNumber { get; set; }
         
+        [MaxLength(64)]
+        [MinLength(1)]
         public string PostalCode { get; set; }
         
-        public ICollection<UserOnAddress> AppUsersOnAddress { get; set; }
+        public List<UserOnAddress> AppUsersOnAddress { get; set; }
         
-        public ICollection<TaskerTask> TasksOnAddress { get; set; }
+        public List<TaskerTask> TasksOnAddress { get; set; }
     }
 }

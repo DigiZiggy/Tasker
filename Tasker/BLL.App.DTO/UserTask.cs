@@ -16,7 +16,7 @@ namespace BLL.App.DTO
         public TaskerTask TaskerTask { get; set; }
 
         public int TaskGiverId { get; set; } 
-        public Identity.AppUser TaskGiver { get; set; }        
+        public AppUser TaskGiver { get; set; }        
         
         public int TaskerId { get; set; }
         public AppUser Tasker { get; set; }   

@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Domain.Base;
 
 namespace Domain
 {
-    public class Translation  : BaseEntity
+    public class Translation  : DomainEntity
     {
         [MaxLength(5)] // et-EE
         public string Culture { get; set; }

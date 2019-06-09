@@ -12,7 +12,6 @@ namespace BLL.Base
     {
         public virtual Guid InstanceId { get; } = Guid.NewGuid();
 
-
         protected readonly TUnitOfWork UnitOfWork;
         protected readonly IBaseServiceProvider ServiceProvider;
 

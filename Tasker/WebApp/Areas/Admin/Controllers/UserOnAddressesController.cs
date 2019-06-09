@@ -19,9 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: UserOnAddresses
         public async Task<IActionResult> Index()
         {
-            var userOnAddresses = await _bll.UserOnAddresses.AllAsync();
-
-            return View(userOnAddresses);
+            return View(await _bll.UserOnAddresses.AllAsync());
         }
 
         // GET: UserOnAddresses/Details/5
@@ -32,7 +30,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAsync(id);
 
             if (userOnAddress == null)
             {
@@ -154,7 +152,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userOnAddress = await _bll.UserOnAddresses.FindAllIncludedAsync(id);
+            var userOnAddress = await _bll.UserOnAddresses.FindAsync(id);
 
             if (userOnAddress == null)
             {

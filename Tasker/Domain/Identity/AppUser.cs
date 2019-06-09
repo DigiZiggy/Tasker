@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Identity
 {
-    public class AppUser : IdentityUser<int>, IBaseEntity, IDomainEntity
+    public class AppUser  :  IdentityUser<int>, IDomainEntity
     {
         [MaxLength(64)]
         [MinLength(1)]
@@ -17,34 +17,29 @@ namespace Domain.Identity
         [MinLength(1)]
 //        [Required]
         public string LastName { get; set; }   
-
-        
-        [ForeignKey(nameof(SelfDescription))]
-        public int? SelfDescriptionId { get; set; }
-        public MultiLangString SelfDescription { get; set; }                
-        
+        public string SelfDescription { get; set; }                       
         public int? HourlyRateId { get; set; }
         public HourlyRate HourlyRate { get; set; }
 
-        public ICollection<UserSkill> Skills { get; set; }
+        public List<UserSkill> Skills { get; set; }
         
         [InverseProperty("TaskGiver")]
-        public ICollection<UserTask> TasksCreated { get; set; }
+        public List<UserTask> TasksCreated { get; set; }
         
         [InverseProperty("Tasker")]
-        public ICollection<UserTask> TasksWorkedOn { get; set; }
+        public List<UserTask> TasksWorkedOn { get; set; }
         
-        public ICollection<UserOnAddress> Addresses { get; set; }
+        public List<UserOnAddress> Addresses { get; set; }
                 
         [InverseProperty("ReviewGiver")]
-        public ICollection<Review> GivenReviews { get; set; }
+        public List<Review> GivenReviews { get; set; }
         
         [InverseProperty("ReviewReceiver")]
-        public ICollection<Review> ReceivedReviews { get; set; }
+        public List<Review> ReceivedReviews { get; set; }
         
-        public ICollection<Invoice> Invoices { get; set; }
+        public List<Invoice> Invoices { get; set; }
         
-        public ICollection<Identification> Identifications { get; set; }
+        public List<Identification> Identifications { get; set; }
        
     }
 }

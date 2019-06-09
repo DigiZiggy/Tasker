@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using BLL.App.DTO;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
+using internalDTO = DAL.App.DTO;
+using externalDTO = BLL.App.DTO;
 
 namespace BLL.App.Mappers
 {
@@ -11,21 +11,21 @@ namespace BLL.App.Mappers
         public TOutObject Map<TOutObject>(object inObject)
             where TOutObject : class
         {
-            if (typeof(TOutObject) == typeof(BLL.App.DTO.Address))
+            if (typeof(TOutObject) == typeof(externalDTO.Address))
             {
-                return MapFromDAL((DAL.App.DTO.Address) inObject) as TOutObject;
+                return MapFromDAL((internalDTO.Address) inObject) as TOutObject;
             }
 
-            if (typeof(TOutObject) == typeof(DAL.App.DTO.Address))
+            if (typeof(TOutObject) == typeof(internalDTO.Address))
             {
-                return MapFromBLL((BLL.App.DTO.Address) inObject) as TOutObject;
+                return MapFromBLL((externalDTO.Address) inObject) as TOutObject;
             }
             throw new InvalidCastException($"No conversion from {inObject.GetType().FullName} to {typeof(TOutObject).FullName}");
         }
 
-        public static BLL.App.DTO.Address MapFromDAL(DAL.App.DTO.Address address)
+        public static externalDTO.Address MapFromDAL(internalDTO.Address address)
         {
-            var res = address == null ? null : new BLL.App.DTO.Address
+            var res = address == null ? null : new externalDTO.Address
             {
                 Id = address.Id,
                 Country = address.Country,
@@ -34,16 +34,14 @@ namespace BLL.App.Mappers
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
-                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromDAL(e)) as ICollection<UserOnAddress>,
-                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromDAL(e)) as ICollection<TaskerTask>
             };
 
             return res;
         }
 
-        public static DAL.App.DTO.Address MapFromBLL(BLL.App.DTO.Address address)
+        public static internalDTO.Address MapFromBLL(externalDTO.Address address)
         {
-            var res = address == null ? null : new DAL.App.DTO.Address
+            var res = address == null ? null : new internalDTO.Address
             {
                 Id = address.Id,
                 Country = address.Country,
@@ -52,8 +50,6 @@ namespace BLL.App.Mappers
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
-                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.UserOnAddress>,
-                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromBLL(e)) as ICollection<DAL.App.DTO.TaskerTask>
             };
             
             return res;

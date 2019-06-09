@@ -9,11 +9,9 @@ namespace PublicApi.v1.DTO
         public int Id { get; set; }
 
         public decimal HourRate { get; set; }
-        
         public DateTime Start { get; set; }
-        
         public DateTime? End { get; set; }
         
-        public ICollection<AppUser> AppUsers { get; set; }
+        public List<AppUser> AppUsers { get; set; }
     }
 }

@@ -16,14 +16,10 @@ namespace BLL.App.Services
             ServiceRepository = Uow.Tasks;
         }
 
-        public async Task<BLL.App.DTO.TaskerTask> FindAllIncludedAsync(params object[] id)
+        public override async Task<BLL.App.DTO.TaskerTask> FindAsync(params object[] id)
         {
-            return TaskerTaskMapper.MapFromDAL(await Uow.Tasks.FindAllIncludedAsync(id));
+            return TaskerTaskMapper.MapFromDAL(await Uow.Tasks.FindAsync(id));
         }
-        
-        public async Task<BLL.App.DTO.TaskerTask> FindForUserAsync(int id, int userId)
-        {
-            return TaskerTaskMapper.MapFromDAL(await Uow.Tasks.FindForUserAsync(id, userId));
-        }
+
     }
 }

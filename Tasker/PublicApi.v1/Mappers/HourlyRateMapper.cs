@@ -35,7 +35,6 @@ namespace PublicApi.v1.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromBLL(e)) as ICollection<AppUser>
             };
 
             return res;
@@ -49,7 +48,6 @@ namespace PublicApi.v1.Mappers
                 HourRate = hourlyRate.HourRate,
                 Start = hourlyRate.Start,
                 End = hourlyRate.End,
-                AppUsers = hourlyRate.AppUsers.Select(e => AppUserMapper.MapFromExternal(e)) as ICollection<BLL.App.DTO.Identity.AppUser>
             };
             return res;
         }

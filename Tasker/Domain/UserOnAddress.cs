@@ -1,11 +1,10 @@
 using System;
 using Contracts.DAL.Base;
-using Domain.Base;
 using Domain.Identity;
 
 namespace Domain
 {
-    public class UserOnAddress : BaseEntity, IDomainEntity
+    public class UserOnAddress : DomainEntity
     {
 //        [Required]
         public DateTime Start { get; set; }

@@ -4,5 +4,6 @@ namespace Contracts.DAL.Base.Mappers
     {
         TOutObject Map<TOutObject>(object inObject)
             where TOutObject: class;
+
     }
 }

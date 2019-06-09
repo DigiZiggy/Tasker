@@ -3,7 +3,7 @@ using DALAppDTO = DAL.App.DTO;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IAddressRepository : IAddressRepository<DALAppDTO.Address>
+    public interface IAddressRepository : IBaseRepository<DALAppDTO.Address>
     {
         
     }

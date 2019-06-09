@@ -35,7 +35,6 @@ namespace PublicApi.v1.Mappers
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromBLL(taskerTask.Address),
-                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromBLL(e)) as ICollection<externalDTO.UserTask>
             };
 
             return res;
@@ -51,7 +50,6 @@ namespace PublicApi.v1.Mappers
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromExternal(taskerTask.Address),
-                AppUsersInvolved = taskerTask.AppUsersInvolved.Select(e => UserTaskMapper.MapFromExternal(e)) as ICollection<internalDTO.UserTask>
             };
             return res;
         }

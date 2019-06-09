@@ -98,4 +98,13 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="HourRate" xml:space="preserve">
+	  <value>Hourly Rate</value>
+    </data>
+	<data name="Start" xml:space="preserve">
+	  <value>Start</value>
+    </data>
+	<data name="End" xml:space="preserve">
+	  <value>End</value>
+    </data>
 </root>

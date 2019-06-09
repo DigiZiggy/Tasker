@@ -29,9 +29,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var identifications = await _bll.Identifications.AllForUserAsync(User.GetUserId());
-            
-            return View(identifications);
+            return View(await _bll.Identifications.AllAsync());
         }
 
         // GET: Identifications/Details/5
@@ -42,7 +40,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
+            var identification = await _bll.Identifications.FindAsync(id);
 
             if (identification == null)
             {
@@ -146,7 +144,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var identification = await _bll.Identifications.FindAllIncludedAsync(id);
+            var identification = await _bll.Identifications.FindAsync(id);
 
             if (identification == null)
             {

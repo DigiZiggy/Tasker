@@ -1,5 +1,8 @@
 using System;
+using BLL.App.Mappers.Identity;
 using Contracts.BLL.Base.Mappers;
+using internalDTO = DAL.App.DTO;
+using externalDTO = BLL.App.DTO;
 
 namespace BLL.App.Mappers
 {

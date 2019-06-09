@@ -32,6 +32,7 @@ namespace PublicApi.v1.Mappers
                 DocNumber = identification.DocNumber,
                 Start = identification.Start,
                 End = identification.End,
+                Comment = identification.Comment,
                 AppUserId = identification.AppUserId,
                 AppUser = AppUserMapper.MapFromBLL(identification.AppUser)
             };
@@ -47,6 +48,7 @@ namespace PublicApi.v1.Mappers
                 DocNumber = identification.DocNumber,
                 Start = identification.Start,
                 End = identification.End,
+                Comment = identification.Comment,
                 AppUserId = identification.AppUserId,
                 AppUser = AppUserMapper.MapFromExternal(identification.AppUser)               
             };

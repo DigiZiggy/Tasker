@@ -45,5 +45,35 @@ namespace Resources.Domain {
                 resourceCulture = value;
             }
         }
+        
+        public static string InvoiceNumber {
+            get {
+                return ResourceManager.GetString("InvoiceNumber", resourceCulture);
+            }
+        }
+        
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        public static string TotalWithVAT {
+            get {
+                return ResourceManager.GetString("TotalWithVAT", resourceCulture);
+            }
+        }
+        
+        public static string TotalWithoutVAT {
+            get {
+                return ResourceManager.GetString("TotalWithoutVAT", resourceCulture);
+            }
+        }
+        
+        public static string VAT {
+            get {
+                return ResourceManager.GetString("VAT", resourceCulture);
+            }
+        }
     }
 }

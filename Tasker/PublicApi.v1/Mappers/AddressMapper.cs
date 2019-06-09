@@ -36,8 +36,7 @@ namespace PublicApi.v1.Mappers
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
-                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromBLL(e)) as ICollection<externalDTO.UserOnAddress>,
-                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromBLL(e)) as ICollection<externalDTO.TaskerTask>
+
             };
 
             return res;
@@ -54,8 +53,7 @@ namespace PublicApi.v1.Mappers
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
-                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromExternal(e)) as ICollection<internalDTO.UserOnAddress>,
-                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromExternal(e)) as ICollection<internalDTO.TaskerTask>
+
             };
             return res;
         }

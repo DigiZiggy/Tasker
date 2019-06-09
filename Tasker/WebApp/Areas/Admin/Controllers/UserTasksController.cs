@@ -19,9 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: UserTasks
         public async Task<IActionResult> Index()
         {
-            var userTasks = await _bll.UserTasks.AllAsync();
-
-            return View(userTasks);
+            return View(await _bll.UserTasks.AllAsync());
         }
 
         // GET: UserTasks/Details/5
@@ -32,7 +30,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
+            var userTask = await _bll.UserTasks.FindAsync(id);
 
             if (userTask == null)
             {
@@ -150,7 +148,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var userTask = await _bll.UserTasks.FindAllIncludedAsync(id);
+            var userTask = await _bll.UserTasks.FindAsync(id);
 
             if (userTask == null)
             {

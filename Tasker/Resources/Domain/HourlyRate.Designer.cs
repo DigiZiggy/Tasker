@@ -45,5 +45,23 @@ namespace Resources.Domain {
                 resourceCulture = value;
             }
         }
+        
+        public static string HourRate {
+            get {
+                return ResourceManager.GetString("HourRate", resourceCulture);
+            }
+        }
+        
+        public static string Start {
+            get {
+                return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        public static string End {
+            get {
+                return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
     }
 }

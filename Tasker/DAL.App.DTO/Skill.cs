@@ -13,7 +13,6 @@ namespace DAL.App.DTO
         public string Description { get; set; }  
         
         public TaskType Category { get; set; }
-        
-        public ICollection<UserSkill> AppUsers { get; set; }
+
     }
 }

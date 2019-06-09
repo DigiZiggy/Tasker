@@ -19,9 +19,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            var reviews = await _bll.Reviews.AllAsync();
-
-            return View(reviews);
+            return View(await _bll.Reviews.AllAsync());
         }
 
         // GET: Reviews/Details/5
@@ -32,7 +30,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var review = await _bll.Reviews.FindAllIncludedAsync(id);
+            var review = await _bll.Reviews.FindAsync(id);
 
             if (review == null)
             {
@@ -151,7 +149,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var review = await _bll.Reviews.FindAllIncludedAsync(id);
+            var review = await _bll.Reviews.FindAsync(id);
             
             if (review == null)
             {

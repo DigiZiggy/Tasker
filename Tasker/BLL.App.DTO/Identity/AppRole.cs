@@ -4,6 +4,5 @@ namespace BLL.App.DTO.Identity
     {
         public int Id { get; set; }
 
-
     }
 }

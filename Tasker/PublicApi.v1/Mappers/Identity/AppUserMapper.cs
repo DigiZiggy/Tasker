@@ -36,14 +36,8 @@ namespace PublicApi.v1.Mappers.Identity
                 SelfDescription = appUser.SelfDescription,
                 HourlyRateId = appUser.HourlyRateId,
                 HourlyRate = HourlyRateMapper.MapFromBLL(appUser.HourlyRate),
-                Skills = appUser.Skills.Select(e => UserSkillMapper.MapFromBLL(e)) as ICollection<externalDTO.UserSkill>,
-                TasksCreated = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromBLL(e)) as ICollection<externalDTO.UserTask>,
-                TasksWorkedOn = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromBLL(e)) as ICollection<externalDTO.UserTask>,
-                Addresses = appUser.Addresses.Select(e => UserOnAddressMapper.MapFromBLL(e)) as ICollection<externalDTO.UserOnAddress>,
-                GivenReviews = appUser.GivenReviews.Select(e => ReviewMapper.MapFromBLL(e)) as ICollection<externalDTO.Review>,
-                ReceivedReviews = appUser.ReceivedReviews.Select(e => ReviewMapper.MapFromBLL(e)) as ICollection<externalDTO.Review>,
-                Invoices = appUser.Invoices.Select(e => InvoiceMapper.MapFromBLL(e)) as ICollection<externalDTO.Invoice>,
-                Identifications = appUser.Identifications.Select(e => IdentificationMapper.MapFromBLL(e)) as ICollection<externalDTO.Identification>
+                Email = appUser.Email
+
             };
 
             return res;
@@ -59,14 +53,8 @@ namespace PublicApi.v1.Mappers.Identity
                 SelfDescription = appUser.SelfDescription,
                 HourlyRateId = appUser.HourlyRateId,
                 HourlyRate = HourlyRateMapper.MapFromExternal(appUser.HourlyRate),
-                Skills = appUser.Skills.Select(e => UserSkillMapper.MapFromExternal(e)) as ICollection<internalDTO.UserSkill>,
-                TasksCreated = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromExternal(e)) as ICollection<internalDTO.UserTask>,
-                TasksWorkedOn = appUser.TasksCreated.Select(e => UserTaskMapper.MapFromExternal(e)) as ICollection<internalDTO.UserTask>,
-                Addresses = appUser.Addresses.Select(e => UserOnAddressMapper.MapFromExternal(e)) as ICollection<internalDTO.UserOnAddress>,
-                GivenReviews = appUser.GivenReviews.Select(e => ReviewMapper.MapFromExternal(e)) as ICollection<internalDTO.Review>,
-                ReceivedReviews = appUser.ReceivedReviews.Select(e => ReviewMapper.MapFromExternal(e)) as ICollection<internalDTO.Review>,
-                Invoices = appUser.Invoices.Select(e => InvoiceMapper.MapFromExternal(e)) as ICollection<internalDTO.Invoice>,
-                Identifications = appUser.Identifications.Select(e => IdentificationMapper.MapFromExternal(e)) as ICollection<internalDTO.Identification>
+                Email = appUser.Email
+
             };
             return res;
         }

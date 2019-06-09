@@ -6,7 +6,7 @@ using DALAppDTO = DAL.App.DTO;
 
 namespace Contracts.DAL.App.Repositories
 {
-    public interface IReviewRepository : IReviewRepository<DALAppDTO.Review>
+    public interface IReviewRepository : IBaseRepository<DALAppDTO.Review>
     {
 
     }
@@ -14,9 +14,5 @@ namespace Contracts.DAL.App.Repositories
     public interface IReviewRepository<TDALEntity> : IBaseRepository<TDALEntity>
         where TDALEntity : class, new()
     {
-        Task<List<TDALEntity>> AllForUserAsync(int userId);
-        Task<TDALEntity> FindAllIncludedAsync(params object[] id);
-        Task<TDALEntity> FindForUserAsync(int id, int userId);
-
     }
 }

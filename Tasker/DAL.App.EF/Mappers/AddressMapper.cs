@@ -29,14 +29,12 @@ namespace DAL.App.EF.Mappers
             var res = address == null ? null : new DAL.App.DTO.Address
             {
                 Id = address.Id,
-                Country = address.Country.Translate(),
-                City = address.City.Translate(),
+                Country = address.Country,
+                City = address.City,
                 Street = address.Street,
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
-                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromDomain(e)) as ICollection<UserOnAddress>,
-                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromDomain(e)) as ICollection<TaskerTask>
             };
 
 
@@ -48,14 +46,12 @@ namespace DAL.App.EF.Mappers
             var res = address == null ? null : new Domain.Address
             {
                 Id = address.Id,
-                Country = new Domain.MultiLangString(address.Country),
-                City = new Domain.MultiLangString(address.City),
+                Country = address.Country,
+                City = address.City,
                 Street = address.Street,
                 HouseNumber = address.HouseNumber,
                 UnitNumber = address.UnitNumber,
                 PostalCode = address.PostalCode,
-                AppUsersOnAddress = address.AppUsersOnAddress.Select(e => UserOnAddressMapper.MapFromDAL(e)) as ICollection<Domain.UserOnAddress>,
-                TasksOnAddress = address.TasksOnAddress.Select(e => TaskerTaskMapper.MapFromDAL(e)) as ICollection<Domain.TaskerTask>
             };
 
 
