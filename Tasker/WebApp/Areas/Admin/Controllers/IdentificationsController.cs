@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Contracts.BLL.App;
-using Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApp.ViewModels;

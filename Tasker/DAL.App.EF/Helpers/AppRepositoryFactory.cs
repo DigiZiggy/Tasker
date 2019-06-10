@@ -1,9 +1,8 @@
 using Contracts.DAL.App.Repositories;
 using Contracts.DAL.App.Repositories.Identity;
-using Contracts.DAL.Base.Helpers;
 using DAL.App.EF.Repositories;
 using DAL.App.EF.Repositories.Identity;
-using DAL.Base.EF.Helpers;
+using ee.itcollege.sigrid.narep.DAL.Base.EF.Helpers;
 
 namespace DAL.App.EF.Helpers
 {

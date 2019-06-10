@@ -1,7 +1,7 @@
 ﻿using System;
 using Contracts.BLL.App.Services;
 using Contracts.BLL.App.Services.Identity;
-using Contracts.BLL.Base;
+using ee.itcollege.sigrid.narep.Contracts.BLL.Base;
 
 namespace Contracts.BLL.App
 {

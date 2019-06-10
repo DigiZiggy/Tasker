@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Contracts.DAL.Base;
-using Contracts.DAL.Base.Helpers;
-using Contracts.DAL.Base.Repositories;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Helpers;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Base.EF

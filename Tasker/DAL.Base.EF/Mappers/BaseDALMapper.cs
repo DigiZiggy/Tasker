@@ -1,6 +1,6 @@
 using AutoMapper;
-using Contracts.DAL.Base;
-using Contracts.DAL.Base.Mappers;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Mappers;
 
 
 namespace DAL.Base.EF.Mappers

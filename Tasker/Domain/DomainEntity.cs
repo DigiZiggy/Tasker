@@ -1,4 +1,5 @@
-using Contracts.DAL.Base;
+
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base;
 
 namespace Domain
 {

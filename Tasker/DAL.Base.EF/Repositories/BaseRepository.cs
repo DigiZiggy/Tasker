@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Contracts.DAL.Base;
-using Contracts.DAL.Base.Helpers;
-using Contracts.DAL.Base.Mappers;
-using Contracts.DAL.Base.Repositories;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Mappers;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 

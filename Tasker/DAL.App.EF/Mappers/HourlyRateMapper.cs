@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
 using DAL.App.DTO.Identity;
 using DAL.App.EF.Mappers.Identity;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Mappers;
 
 namespace DAL.App.EF.Mappers
 {

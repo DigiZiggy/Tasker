@@ -5,11 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Contracts.DAL.Base\Contracts.DAL.Base.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="8.1.1" />
+      <PackageReference Include="ee.itcollege.sigrid.narep.Contracts.DAL.Base" Version="1.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
     </ItemGroup>
 

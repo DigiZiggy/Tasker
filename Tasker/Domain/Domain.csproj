@@ -5,12 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="ee.itcollege.sigrid.narep.Contracts.DAL.Base" Version="1.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
       <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Contracts.DAL.Base\Contracts.DAL.Base.csproj" />
     </ItemGroup>
 
 </Project>

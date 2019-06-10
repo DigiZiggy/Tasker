@@ -1,5 +1,5 @@
 using System;
-using Contracts.BLL.Base.Mappers;
+using ee.itcollege.sigrid.narep.Contracts.BLL.Base.Mappers;
 using internalDTO = DAL.App.DTO.Identity;
 using externalDTO = BLL.App.DTO.Identity;
 

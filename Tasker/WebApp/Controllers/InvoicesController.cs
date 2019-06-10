@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
 using Domain.Identity;
-using Identity;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers

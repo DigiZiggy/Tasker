@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
-        <UserSecretsId>aspnet-WebApp-61C4AB5E-ED48-4DC6-8E1D-1D354C80B0A3</UserSecretsId>
-        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>aspnet-WebApp-61C4AB5E-ED48-4DC6-8E1D-1D354C80B0A3</UserSecretsId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ee.itcollege.sigrid.narep.Identity" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="3.2.0" />
@@ -20,7 +21,6 @@
     <ProjectReference Include="..\BLL.App\BLL.App.csproj" />
     <ProjectReference Include="..\Contracts.BLL.App\Contracts.BLL.App.csproj" />
     <ProjectReference Include="..\DAL.App.EF\DAL.App.EF.csproj" />
-    <ProjectReference Include="..\Identity\Identity.csproj" />
     <ProjectReference Include="..\PublicApi.v1.DTO\PublicApi.v1.DTO.csproj" />
     <ProjectReference Include="..\PublicApi.v1\PublicApi.v1.csproj" />
     <ProjectReference Include="..\Resources\Resources.csproj" />

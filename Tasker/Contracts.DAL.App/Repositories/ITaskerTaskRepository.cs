@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Contracts.DAL.Base.Repositories;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Repositories;
 using DALAppDTO = DAL.App.DTO;
 
 

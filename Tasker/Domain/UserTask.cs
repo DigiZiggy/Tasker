@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Contracts.DAL.Base;
 using Domain.Identity;
 
 namespace Domain

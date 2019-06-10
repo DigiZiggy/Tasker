@@ -1,6 +1,6 @@
 using System;
-using Contracts.DAL.Base.Mappers;
 using DAL.App.DTO;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Mappers;
 
 namespace DAL.App.EF.Mappers
 {

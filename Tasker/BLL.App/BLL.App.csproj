@@ -5,9 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BLL.App.DTO\BLL.App.DTO.csproj" />
-        <ProjectReference Include="..\BLL.Base\BLL.Base.csproj" />
-        <ProjectReference Include="..\Contracts.BLL.App\Contracts.BLL.App.csproj" />
+      <ProjectReference Include="..\Contracts.BLL.App\Contracts.BLL.App.csproj" />
+      <ProjectReference Include="..\Contracts.DAL.App\Contracts.DAL.App.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ee.itcollege.sigrid.narep.BLL.Base" Version="1.0.0" />
+      <PackageReference Include="ee.itcollege.sigrid.narep.Contracts.BLL.Base" Version="1.0.0" />
     </ItemGroup>
 
 </Project>

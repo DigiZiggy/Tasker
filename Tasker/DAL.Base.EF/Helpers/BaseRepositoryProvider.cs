@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Contracts.DAL.Base;
-using Contracts.DAL.Base.Helpers;
-using Contracts.DAL.Base.Repositories;
 using DAL.Base.EF.Repositories;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Helpers;
+using ee.itcollege.sigrid.narep.Contracts.DAL.Base.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 

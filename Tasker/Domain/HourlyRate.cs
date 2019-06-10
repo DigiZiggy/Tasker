@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Contracts.DAL.Base;
 using Domain.Identity;
 
 namespace Domain

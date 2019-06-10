@@ -1,5 +1,4 @@
 using System;
-using Contracts.DAL.Base;
 using Domain.Identity;
 
 namespace Domain

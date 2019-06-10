@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BLL.App.Mappers;
 using BLL.App.Mappers.Identity;
-using BLL.Base.Services;
 using Contracts.BLL.App.Services.Identity;
 using Contracts.DAL.App;
+using ee.itcollege.sigrid.narep.BLL.Base.Services;
 
 
 namespace BLL.App.Services.Identity

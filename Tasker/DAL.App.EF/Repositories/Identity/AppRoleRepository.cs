@@ -6,7 +6,7 @@ using Contracts.DAL.App.Repositories.Identity;
 using DAL.App.EF.Helpers;
 using DAL.App.EF.Mappers;
 using DAL.App.EF.Mappers.Identity;
-using DAL.Base.EF.Repositories;
+using ee.itcollege.sigrid.narep.DAL.Base.EF.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories.Identity

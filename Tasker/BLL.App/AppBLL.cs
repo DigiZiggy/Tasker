@@ -1,10 +1,10 @@
 ﻿using System;
-using BLL.Base;
 using Contracts.BLL.App;
 using Contracts.BLL.App.Services;
 using Contracts.BLL.App.Services.Identity;
-using Contracts.BLL.Base.Helpers;
 using Contracts.DAL.App;
+using ee.itcollege.sigrid.narep.BLL.Base;
+using ee.itcollege.sigrid.narep.Contracts.BLL.Base.Helpers;
 
 namespace BLL.App
 {
