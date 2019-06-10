@@ -7,6 +7,7 @@ export class Home {
   
   constructor() {
     log.debug('constructor');
+    
   }
 
   // ============ View LifeCycle events ==============

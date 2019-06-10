@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 $('#feedPhotoCarousel').carousel({
     interval: 10000
-})
+});
 
 $('.carousel .carousel-item').each(function() {
     var next = $(this).next();

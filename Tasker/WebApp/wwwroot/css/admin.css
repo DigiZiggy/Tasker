@@ -11,3 +11,16 @@
 .container-fluid p.btn_add .btn-info {
     float: right;
 }
+
+.container-fluid p.btn_add {
+    padding-right: 2rem;
+}
+
+.container-fluid div.row {
+    width: 100%;
+}
+
+footer .row {
+    align-items: baseline;
+    justify-content: space-around;
+}

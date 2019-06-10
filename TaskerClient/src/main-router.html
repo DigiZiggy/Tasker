@@ -1,39 +1,58 @@
 <template>
 <require from="bootstrap/dist/css/bootstrap.min.css"></require>
+  <!--<require from="jquery/dist/jquery.js"></require>-->
+  <require from="css/client.css"></require>
+  
+  <!--<header>-->
+    <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">-->
+      <!--<div class="container">-->
+        <!--<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>-->
+        <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"-->
+                <!--aria-expanded="false" aria-label="Toggle navigation">-->
+          <!--<span class="navbar-toggler-icon"></span>-->
+        <!--</button>-->
+        <!--<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">-->
 
-<!--<require from="../../css/admin.css"></require>-->
-<!--<require from="../../css/site.css"></require>-->
-<!--<require from="../../css/style.css"></require>-->
+          <!--<ul class="navbar-nav">-->
+            <!--<li class="nav-item" show.bind="appConfig.jwt == null">-->
+              <!--<a class="nav-link text-dark" route-href="route: identityRegister">Register</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item" if.bind="appConfig.jwt == null">-->
+              <!--<a class="nav-link text-dark" route-href="route: identityLogin">Login</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item" show.bind="appConfig.jwt != null">-->
+              <!--<a class="nav-link text-dark" route-href="route: identityLogout">Logout</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+          <!---->
+          <!--<ul class="navbar-nav flex-grow-1">-->
+            <!--<li class="nav-item" repeat.for="nav of router.navigation">-->
+              <!--<a class="nav-link text-dark" href.bind="nav.href">${nav.title}</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</nav>-->
+  <!--</header>-->
 
   <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-      <div class="container">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-
-          <ul class="navbar-nav">
-            <li class="nav-item" show.bind="appConfig.jwt == null">
-              <a class="nav-link text-dark" route-href="route: identityRegister">Register</a>
-            </li>
-            <li class="nav-item" if.bind="appConfig.jwt == null">
-              <a class="nav-link text-dark" route-href="route: identityLogin">Login</a>
-            </li>
-            <li class="nav-item" show.bind="appConfig.jwt != null">
-              <a class="nav-link text-dark" route-href="route: identityLogout">Logout</a>
-            </li>
-          </ul>
-          
-          <ul class="navbar-nav flex-grow-1">
-            <li class="nav-item" repeat.for="nav of router.navigation">
-              <a class="nav-link text-dark" href.bind="nav.href">${nav.title}</a>
-            </li>
-          </ul>
-        </div>
+    <nav class='navbar__container'>
+      <div class='wrapper--wide flex-container flex--wrap'>
+        <a class='navbar__logo' href=''>
+          <img alt="Tasker" height="72" src="assets/tasker.svg"/>
+        </a>
       </div>
+      <ul class="navbar-nav">
+        <li class="nav-item" if.bind="appConfig.jwt == null">
+          <a class="nav-link" route-href="route: identityLogin">Login</a>
+        </li>
+        <li class="nav-item" show.bind="appConfig.jwt == null">
+          <a class="nav-link" id="register"  route-href="route: identityRegister">Become a Tasker</a>
+        </li>
+        <li class="nav-item" show.bind="appConfig.jwt != null">
+          <a class="nav-link text-dark" route-href="route: identityLogout">Logout</a>
+        </li>
+      </ul>    
     </nav>
   </header>
   <div class="container">
@@ -43,7 +62,7 @@
     </main>
   </div>
 
-  <footer class="border-top footer text-muted">
+  <footer class="footer text-muted">
     <div class="container">
       &copy; 2019 - Tasker 
     </div>
