@@ -46,6 +46,18 @@ namespace Resources.Domain {
             }
         }
         
+        public static string Country {
+            get {
+                return ResourceManager.GetString("Country", resourceCulture);
+            }
+        }
+        
+        public static string City {
+            get {
+                return ResourceManager.GetString("City", resourceCulture);
+            }
+        }
+        
         public static string Street {
             get {
                 return ResourceManager.GetString("Street", resourceCulture);

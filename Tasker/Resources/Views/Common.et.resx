@@ -98,4 +98,25 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
+	<data name="Add" xml:space="preserve">
+    <value>Lisa</value>
+  </data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Katkesta</value>
+  </data>
+	<data name="No" xml:space="preserve">
+    <value>Ei</value>
+  </data>
+	<data name="OK" xml:space="preserve">
+    <value>Sobib</value>
+  </data>
+	<data name="Remove" xml:space="preserve">
+    <value>Eemalda</value>
+  </data>
+	<data name="Submit" xml:space="preserve">
+    <value>Esita</value>
+  </data>
+	<data name="Yes" xml:space="preserve">
+    <value>Jah</value>
+  </data>
 </root>

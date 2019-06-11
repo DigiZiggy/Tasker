@@ -141,10 +141,111 @@
   <data name="NavPersons" xml:space="preserve">
     <value>Isikud</value>
   </data>
-  <data name="Privacy" xml:space="preserve">
-    <value>Privaatsus</value>
+  <data name="AddNew" xml:space="preserve">
+    <value>Lisa Uus</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Registreeru</value>
+  </data>
+  <data name="Internal" xml:space="preserve">
+    <value>Siseveeb</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Autoriõigused © 2019 Tasker. Kõik õigused kaitstud.</value>
+  </data>
+  <data name="EditDelete" xml:space="preserve">
+    <value>Muuda / Kustuta</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Muuda</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Vaata</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Kustuta</value>
+  </data>
+  <data name="Addresses" xml:space="preserve">
+    <value>Aadressid</value>
+  </data>
+  <data name="HourlyRates" xml:space="preserve">
+    <value>Tunni Hinnad</value>
+  </data>
+  <data name="Identifications" xml:space="preserve">
+    <value>Identifitseerimised</value>
+  </data>
+  <data name="Invoices" xml:space="preserve">
+    <value>Arved</value>
+  </data>
+  <data name="Payments" xml:space="preserve">
+    <value>Maksed</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Arvustused</value>
+  </data>
+  <data name="Skills" xml:space="preserve">
+    <value>Oskused</value>
+  </data>
+  <data name="Tasks" xml:space="preserve">
+    <value>Ülesanded</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Ülevaade</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Otsi:</value>
+  </data>
+
+  <data name="Address" xml:space="preserve">
+    <value>Aadress</value>
+  </data>
+  <data name="HourlyRate" xml:space="preserve">
+    <value>Tunni Hind</value>
+  </data>
+  <data name="Identification" xml:space="preserve">
+    <value>Identifitseerimine</value>
+  </data>
+  <data name="Invoice" xml:space="preserve">
+    <value>Arve</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Makse</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Arvustus</value>
+  </data>
+  <data name="Skill" xml:space="preserve">
+    <value>Oskus</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>Ülesanne</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Loo</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Tagasi Nimekirja</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salvesta</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Emaili aadress</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Salasõna</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Jäta mind meelde</value>
+  </data>
+
+  <data name="FirstName" xml:space="preserve">
+    <value>Eesnimi</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Perekonna nimi</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Kinnita salasõna</value>
   </data>
 </root>

@@ -54,14 +54,14 @@
 </style>
 
   <div class="container-fluid">
-    <h4 class="title c-grey-900 mT-10 mB-30">Invoices</h4>
+    <h4 class="title c-grey-900 mT-10 mB-30">@Resources.Views.Shared._Layout.Invoices</h4>
     <p class="btn_add mT-10 mB-30">
-        <a class="btn btn-info" role="button" asp-action="Create">Add New</a>
+        <a class="btn btn-info" role="button" asp-action="Create">@Resources.Views.Shared._Layout.AddNew</a>
     </p>
     <div class="row">
       <div class="col-md-12">
         <div class="bgc-white bd bdrs-3 p-20 mB-20">
-          <h4 class="c-grey-900 mB-20">Invoices Data Table</h4>
+          <h4 class="c-grey-900 mB-20">@Resources.Views.Invoices.Invoices.InvoicesDataTable</h4>
           <table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
               <thead>
                 <tr>
@@ -86,7 +86,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.AppUser)
                     </th>
-                    <th>Edit / Delete</th>
+                    <th>@Resources.Views.Shared._Layout.EditDelete</th>
                 </tr>
               </thead>
               <tfoot>
@@ -112,7 +112,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.AppUser)
                     </th>
-                  <th>Edit / Delete</th>
+                  <th>@Resources.Views.Shared._Layout.EditDelete</th>
                 </tr>
               </tfoot>
               <tbody>
@@ -140,9 +140,9 @@
                         @Html.DisplayFor(modelItem => item.AppUser.Id)
                     </td>
                     <td>
-                      <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                      <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                      <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id">@Resources.Views.Shared._Layout.Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">@Resources.Views.Shared._Layout.Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">@Resources.Views.Shared._Layout.Delete</a>
                     </td>
                 </tr>
               }

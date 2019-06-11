@@ -30,7 +30,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <a style="margin-right: 5rem;" class="btn btn-outline-success" role="button" asp-action="Index">Back to List</a>
-        <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <a style="margin-right: 5rem;" class="btn btn-outline-success" role="button" asp-action="Index">@Resources.Views.Shared._Layout.BackToList</a>
+        <input type="submit" value=@Resources.Views.Shared._Layout.Delete class="btn btn-danger" /> 
     </form>
 </div>

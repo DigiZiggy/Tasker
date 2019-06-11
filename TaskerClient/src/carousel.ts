@@ -2,7 +2,7 @@ import {Aurelia} from 'aurelia-framework';
 import {PLATFORM} from 'aurelia-pal';
 import {log} from "./home";
 
-export class App {
+export class Carousel {
   constructor() {
     log.debug('constructor');
 

@@ -2,10 +2,15 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>@ViewData["Title"]Tasker</title>
+    <title>@ViewData["Title"]Tasker Admin</title>
 
+    <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="stylesheet" href="~/css/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="~/css/themify-icons.css"/>
+    <link rel="stylesheet" href="~/css/stylesheet.css" type="text/css"/>
+    <link rel="stylesheet" href="~/css/admin.css"/>
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
     </environment>
@@ -16,33 +21,32 @@
               crossorigin="anonymous"
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
     </environment>
-    <link rel="stylesheet" href="~/css/client.css"/>
-    @RenderSection("CSS", required: false)
-    @RenderSection("HeaderScripts", required: false)
 </head>
-<body>
+<body class="app">
+    <div id='loader'>
+        <div class="spinner"></div>
+    </div>
+    
+    <script>
+        window.addEventListener('load', function load() {
+            const loader = document.getElementById('loader');
+            setTimeout(function() {
+                loader.classList.add('fadeOut');
+            }, 300);
+        });
+    </script>
+    @RenderBody()
 
-<script src="/js/site.js"></script>
-
-<header>
-    <nav class='navbar__container'>
-        <div class='wrapper--wide flex-container flex--wrap'>
-            <a class='navbar__logo' href=''>
-                <img alt="Tasker" height="72" src="~/assets/tasker.svg"/>
-            </a>
-        </div>
-        <partial name="_LoginPartial"/>
-    </nav>
-</header>
-@* <div class="container"> *@
-@*     <partial name="_CookieConsentPartial"/> *@
-@*     <main role="main" class="pb-3"> *@
-@*         @RenderBody() *@
+@* <div class="page-container"> *@
+@*     <partial name="_LoginPartial"/> *@
+@*          *@
+@*     <main class='main-content bgc-grey-100'> *@
+@*         <div id='mainContent'> *@
+@*             <partial name="_CookieConsentPartial"/> *@
+@*             @RenderBody() *@
+@*         </div> *@
 @*     </main> *@
 @* </div> *@
-
-<partial name="_CookieConsentPartial"/>
-@RenderBody()
 
 <environment include="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>

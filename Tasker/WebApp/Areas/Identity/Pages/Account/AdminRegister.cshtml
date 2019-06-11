@@ -1,0 +1,52 @@
+﻿@page
+@model AdminRegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="peers ai-s fxw-nw h-100vh">
+    <div class="peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv" style='background-image: url("/assets/bg.jpg")'>
+        <div class="pos-a centerXY">
+            <div class="bgc-white bdrs-50p pos-r" style='width: 120px; height: 120px;'>
+                <img class="pos-a centerXY" src="/assets/tasker.svg" style='width: 110px; height: 110px;' alt="">
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 bgc-white scrollable pos-r" style='min-width: 320px;'>
+        <h4 class="fw-300 c-grey-900 mB-40">@Resources.Views.Shared._Layout.Register</h4>
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <input asp-for="Input.FirstName" class="form-control" placeholder=@Resources.Views.Shared._Layout.FirstName/>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.LastName" class="form-control" placeholder=@Resources.Views.Shared._Layout.LastName/>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input asp-for="Input.Email" class="form-control" placeholder=@Resources.Views.Shared._Layout.Email/>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.Password" class="form-control" placeholder=@Resources.Views.Shared._Layout.Password/>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.ConfirmPassword" class="form-control" placeholder=@Resources.Views.Shared._Layout.ConfirmPassword/>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-info">@Resources.Views.Shared._Layout.Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

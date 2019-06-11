@@ -7,8 +7,11 @@ namespace BLL.App.DTO
     {
         public int Id { get; set; }
 
+        [Display(Name = nameof(Country), ResourceType = typeof(Resources.Domain.Address))]
         public string Country { get; set; }
 
+        
+        [Display(Name = nameof(City), ResourceType = typeof(Resources.Domain.Address))]
         public string City { get; set; }
         
         

@@ -29,8 +29,8 @@
             <input type="hidden" asp-for="Id" />
             <hr />
             <div class="form-group">
-                <a class="btn btn-outline-success" role="button" asp-action="Index">Back to List</a>
-                <input class="btn btn-info" type="submit" value="Save" style="float: right;"/>
+                <a class="btn btn-outline-success" role="button" asp-action="Index">@Resources.Views.Shared._Layout.BackToList</a>
+                <input class="btn btn-info" type="submit" value=@Resources.Views.Shared._Layout.Save style="float: right;"/>
             </div>
         </form>
     </div>

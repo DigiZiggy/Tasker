@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="TaskName" xml:space="preserve">
+    <value>Ülesanne</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Ülesande kirjeldus</value>
+  </data>
   <data name="TimeEstimate" xml:space="preserve">
-    <value>Ajakulu</value>
+    <value>Aja kulu</value>
   </data>
   <data name="TaskType" xml:space="preserve">
     <value>Ülesande tüüp</value>

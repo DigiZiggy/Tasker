@@ -102,9 +102,9 @@
 	  <value>Hourly Rate</value>
     </data>
 	<data name="Start" xml:space="preserve">
-	  <value>Start</value>
+	  <value>Starting from</value>
     </data>
 	<data name="End" xml:space="preserve">
-	  <value>End</value>
+	  <value>Till</value>
     </data>
 </root>

@@ -101,4 +101,7 @@
 	<data name="Rating" xml:space="preserve">
       <value>Rating</value>
     </data>
+	<data name="ReviewComment" xml:space="preserve">
+      <value>Review</value>
+    </data>
 </root>

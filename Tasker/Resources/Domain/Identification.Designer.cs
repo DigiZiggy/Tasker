@@ -69,5 +69,11 @@ namespace Resources.Domain {
                 return ResourceManager.GetString("End", resourceCulture);
             }
         }
+        
+        public static string Comment {
+            get {
+                return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
     }
 }

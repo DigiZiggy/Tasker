@@ -46,6 +46,18 @@ namespace Resources.Domain {
             }
         }
         
+        public static string TaskName {
+            get {
+                return ResourceManager.GetString("TaskName", resourceCulture);
+            }
+        }
+        
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
         public static string TimeEstimate {
             get {
                 return ResourceManager.GetString("TimeEstimate", resourceCulture);

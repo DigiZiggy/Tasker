@@ -1,0 +1,59 @@
+﻿@page
+@model AdminLoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<script>
+    window.addEventListener('load', function load() {
+        const loader = document.getElementById('loader');
+        setTimeout(function() {
+            loader.classList.add('fadeOut');
+        }, 300);
+    });
+</script>
+<div class="peers ai-s fxw-nw h-100vh">
+    <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv" style='background-image: url("/assets/bg.jpg")'>
+        <div class="pos-a centerXY">
+            <div class="bgc-white bdrs-50p pos-r" style='width: 120px; height: 120px;'>
+                <img class="pos-a centerXY" src="/assets/tasker.svg" style='width: 110px; height: 110px;' alt="">
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 bgc-white scrollable pos-r" style='min-width: 320px;'>
+        <h4 class="fw-300 c-grey-900 mB-40">@Resources.Views.Shared._Layout.Login</h4>
+        <form id="account" method="post">
+            <div class="form-group">
+                <label asp-for="Input.Email">@Resources.Views.Shared._Layout.Email</label>
+                <input asp-for="Input.Email" placeholder=@Resources.Views.Shared._Layout.Email class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password">@Resources.Views.Shared._Layout.Password</label>
+                <input asp-for="Input.Password" placeholder=@Resources.Views.Shared._Layout.Password class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="peers ai-c jc-sb fxw-nw">
+                    <div class="peer">
+                        <div class="checkbox checkbox-circle checkbox-info peers ai-c">
+                            <input type="checkbox" id="inputCall1" name="inputCheckboxesCall" class="peer">
+                            <label asp-for="Input.RememberMe">
+                                <input asp-for="Input.RememberMe" />
+                                @Resources.Views.Shared._Layout.RememberMe
+                            </label>
+                        </div>
+                    </div>
+                    <div class="peer">
+                        <button class="btn btn-info">@Resources.Views.Shared._Layout.Login</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

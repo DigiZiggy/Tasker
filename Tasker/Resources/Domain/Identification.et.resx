@@ -129,4 +129,7 @@
   <data name="End" xml:space="preserve">
     <value>Kuni</value>
   </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Kommentaar</value>
+  </data>
 </root>

@@ -107,4 +107,10 @@
 	<data name="Total" xml:space="preserve">
 	  <value>Total</value>
     </data>
+	<data name="MeansOfPayment" xml:space="preserve">
+	  <value>Means Of Payment</value>
+    </data>
+	<data name="Comment" xml:space="preserve">
+	  <value>Comment</value>
+    </data>
 </root>

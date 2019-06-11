@@ -9,10 +9,13 @@ namespace BLL.App.DTO
     {
         public int Id { get; set; }
 
+        [Display(Name = nameof(SkillName), ResourceType = typeof(Resources.Domain.Skill))]
         public string SkillName { get; set; }
         
+        [Display(Name = nameof(Description), ResourceType = typeof(Resources.Domain.Skill))]
         public string Description { get; set; }  
         
+        [Display(Name = nameof(Category), ResourceType = typeof(Resources.Domain.Skill))]
         public TaskType Category { get; set; }
         
     }

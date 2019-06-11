@@ -5,7 +5,7 @@
 }
 
 <div class="container-fluid">
-    <h4 class="title c-grey-900 mT-10 mB-30">Review Details</h4>
+    <h4 class="title c-grey-900 mT-10 mB-30">@Resources.Views.Shared._Layout.Review @Resources.Views.Shared._Layout.Details</h4>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rating)
@@ -34,6 +34,6 @@
     </dl>
 </div>
 <div class = "col-sm-3">
-    <a class="btn btn-outline-success" role="button" asp-action="Index">Back to List</a>
-    <a class="btn btn-info" role="button" style="float: right;" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-outline-success" role="button" asp-action="Index">@Resources.Views.Shared._Layout.BackToList</a>
+    <a class="btn btn-info" role="button" style="float: right;" asp-action="Edit" asp-route-id="@Model.Id">@Resources.Views.Shared._Layout.Edit</a>
 </div>

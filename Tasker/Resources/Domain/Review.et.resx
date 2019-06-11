@@ -120,4 +120,7 @@
   <data name="Rating" xml:space="preserve">
     <value>Hinne</value>
   </data>
+  <data name="ReviewComment" xml:space="preserve">
+    <value>Arvustus</value>
+  </data>
 </root>

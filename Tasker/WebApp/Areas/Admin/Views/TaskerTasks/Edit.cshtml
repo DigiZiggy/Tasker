@@ -7,7 +7,7 @@
 }
 
 <div class="container-fluid">
-<h4 class="title c-grey-900 mT-10 mB-30">Edit Task</h4>
+<h4 class="title c-grey-900 mT-10 mB-30">@Resources.Views.Shared._Layout.Edit @Resources.Views.Shared._Layout.Task</h4>
 <div class="row">
     <div class="col-md-5">
         <form asp-action="Edit">
@@ -45,8 +45,8 @@
             <input type="hidden" asp-for="TaskerTask.Id" />
             <hr />
             <div class="form-group">
-                <a class="btn btn-outline-success" role="button" asp-action="Index">Back to List</a>
-                <input class="btn btn-info" type="submit" value="Save" style="float: right;"/>
+                <a class="btn btn-outline-success" role="button" asp-action="Index">@Resources.Views.Shared._Layout.BackToList</a>
+                <input class="btn btn-info" type="submit" value=@Resources.Views.Shared._Layout.Save style="float: right;"/>
             </div>
         </form>
     </div>

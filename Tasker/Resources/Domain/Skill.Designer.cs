@@ -46,6 +46,18 @@ namespace Resources.Domain {
             }
         }
         
+        public static string SkillName {
+            get {
+                return ResourceManager.GetString("SkillName", resourceCulture);
+            }
+        }
+        
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
         public static string Category {
             get {
                 return ResourceManager.GetString("Category", resourceCulture);

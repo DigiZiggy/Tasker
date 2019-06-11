@@ -113,4 +113,7 @@
 	<data name="VAT" xml:space="preserve">
 	  <value>VAT</value>
     </data>
+	<data name="Comment" xml:space="preserve">
+	  <value>Comment</value>
+    </data>
 </root>

@@ -51,5 +51,11 @@ namespace Resources.Domain {
                 return ResourceManager.GetString("Rating", resourceCulture);
             }
         }
+        
+        public static string ReviewComment {
+            get {
+                return ResourceManager.GetString("ReviewComment", resourceCulture);
+            }
+        }
     }
 }

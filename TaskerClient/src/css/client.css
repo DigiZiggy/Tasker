@@ -1,6 +1,12 @@
+body {
+  color: #242a30;
+  font-weight: 300;
+}
+
 .container {
   margin: 0;
   padding: 0;
+  max-width: 100%;
 }
 
 .navbar__container {
@@ -256,4 +262,77 @@
 .carousel-control-next .carousel-control-next-icon {
   filter: invert(100%);
 
+}
+
+.section-bold {
+  display: block;
+  background: #f7f7f7;
+  padding: 3em 0;
+}
+
+
+.container--wide {
+  padding-left: 6%;
+  padding-right: 6%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.static-title {
+  width: 100%;
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 1em;
+  font-weight: 300;
+}
+
+.secondary-heading {
+  font-size: 2.5rem;
+}
+
+.how-it-works {
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.row .col-lg-4, 
+.row .tr-col-lg-4 {
+  width: 33.3333333333%;
+}
+
+.how-it-works__step-name {
+  font-size: 1.75rem;
+  margin-left: 1.5rem;
+  text-align: left;
+}
+
+.how-it-works__step-label {
+  color: #86919d;
+  font-size: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid #86919d;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.how-it-works__step-img img {
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 1rem;
 }

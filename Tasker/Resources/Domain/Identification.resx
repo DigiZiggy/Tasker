@@ -105,9 +105,12 @@
 	  <value>Identification Type</value>
     </data>
 	<data name="Start" xml:space="preserve">
-	  <value>Start</value>
+	  <value>Valid From</value>
     </data>
 	<data name="End" xml:space="preserve">
-	  <value>End</value>
+	  <value>Valid To</value>
+    </data>
+	<data name="Comment" xml:space="preserve">
+	  <value>Comment</value>
     </data>
 </root>

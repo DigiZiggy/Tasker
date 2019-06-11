@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal.Account
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,7 +113,7 @@
                   </div>
                 </div>
                 <div class="peer peer-greed">
-                  <h5 class="lh-1 mB-0 logo-text">Internal</h5>
+                  <h5 class="lh-1 mB-0 logo-text">@Resources.Views.Shared._Layout.Internal</h5>
                 </div>
               </div>
             </a>
@@ -134,7 +135,7 @@
             <span class="icon-holder">
               <i class="c-blue-500 ti-home"></i>
             </span>
-            <span class="title">Dashboard</span>
+            <span class="title">@Resources.Views.Shared._Layout.Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -142,164 +143,64 @@
             <span class="icon-holder">
               <i class="c-brown-500 ti-email"></i>
             </span>
-            <span class="title">Addresses</span>
+            <span class="title">@Resources.Views.Shared._Layout.Addresses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="sidebar-link" asp-area="Admin" asp-controller="HourlyRates" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-blue-500 ti-share"></i>
+              <i class="c-pink-500 ti-timer"></i>
             </span>
-            <span class="title">Hourly Rates</span>
+            <span class="title">@Resources.Views.Shared._Layout.HourlyRates</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="sidebar-link" asp-area="Admin" asp-controller="Identifications" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-deep-orange-500 ti-calendar"></i>
+              <i class="c-teal-500 ti-id-badge"></i>
             </span>
-            <span class="title">Identifications</span>
+            <span class="title">@Resources.Views.Shared._Layout.Identifications</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="sidebar-link" asp-area="Admin" asp-controller="Invoices" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-deep-purple-500 ti-comment-alt"></i>
+              <i class="c-red-500 ti-files"></i>
             </span>
-            <span class="title">Invoices</span>
+            <span class="title">@Resources.Views.Shared._Layout.Invoices</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="sidebar-link" asp-area="Admin" asp-controller="Payments" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-indigo-500 ti-bar-chart"></i>
+              <i class="c-indigo-500 ti-credit-card"></i>
             </span>
-            <span class="title">Payments</span>
+            <span class="title">@Resources.Views.Shared._Layout.Payments</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="sidebar-link" asp-area="Admin" asp-controller="Reviews" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-light-blue-500 ti-pencil"></i>
+              <i class="c-deep-purple-500 ti-comment-alt"></i>
             </span>
-            <span class="title">Reviews</span>
+            <span class="title">@Resources.Views.Shared._Layout.Reviews</span>
           </a>
         </li>
         <li class="nav-item dropdown">
           <a class="sidebar-link" asp-area="Admin" asp-controller="Skills" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-pink-500 ti-palette"></i>
+              <i class="c-pink-500 ti-ruler-alt-2"></i>
             </span>
-            <span class="title">Skills</span>
+            <span class="title">@Resources.Views.Shared._Layout.Skills</span>
           </a>
         </li>
         <li class="nav-item dropdown">
           <a class="sidebar-link" asp-area="Admin" asp-controller="TaskerTasks" asp-action="Index">
             <span class="icon-holder">
-              <i class="c-pink-500 ti-palette"></i>
+              <i class="c-light-blue-500 ti-paint-roller"></i>
             </span>
-            <span class="title">Tasks</span>
+            <span class="title">@Resources.Views.Shared._Layout.Tasks</span>
           </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="dropdown-toggle" href="javascript:void(0);">
-            <span class="icon-holder">
-              <i class="c-orange-500 ti-layout-list-thumb"></i>
-            </span>
-            <span class="title">Tables</span>
-            <span class="arrow">
-              <i class="ti-angle-right"></i>
-            </span>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a class='sidebar-link' href="basic-table.html">Basic Table</a>
-            </li>
-            <li>
-              <a class='sidebar-link' href="datatable.html">Data Table</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="dropdown-toggle" href="javascript:void(0);">
-            <span class="icon-holder">
-                <i class="c-purple-500 ti-map"></i>
-              </span>
-            <span class="title">Maps</span>
-            <span class="arrow">
-                <i class="ti-angle-right"></i>
-              </span>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="google-maps.html">Google Map</a>
-            </li>
-            <li>
-              <a href="vector-maps.html">Vector Map</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="dropdown-toggle" href="javascript:void(0);">
-            <span class="icon-holder">
-                <i class="c-red-500 ti-files"></i>
-              </span>
-            <span class="title">Pages</span>
-            <span class="arrow">
-                <i class="ti-angle-right"></i>
-              </span>
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <a class='sidebar-link' href="blank.html">Blank</a>
-            </li>                 
-            <li>
-              <a class='sidebar-link' href="404.html">404</a>
-            </li>
-            <li>
-              <a class='sidebar-link' href="500.html">500</a>
-            </li>
-            <li>
-              <a class='sidebar-link' href="signin.html">Sign In</a>
-            </li>
-            <li>
-              <a class='sidebar-link' href="signup.html">Sign Up</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="dropdown-toggle" href="javascript:void(0);">
-            <span class="icon-holder">
-              <i class="c-teal-500 ti-view-list-alt"></i>
-            </span>
-            <span class="title">Multiple Levels</span>
-            <span class="arrow">
-              <i class="ti-angle-right"></i>
-            </span>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="nav-item dropdown">
-              <a href="javascript:void(0);">
-                <span>Menu Item</span>
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="javascript:void(0);">
-                <span>Menu Item</span>
-                <span class="arrow">
-                  <i class="ti-angle-right"></i>
-                </span>
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a href="javascript:void(0);">Menu Item</a>
-                </li>
-                <li>
-                  <a href="javascript:void(0);">Menu Item</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
         </li>
       </ul>
     </div>
@@ -318,7 +219,7 @@
   <!-- ### $App Screen Footer ### -->
 <footer class="bdT ta-c lh-0 fsz-sm c-grey-600">
   <div class="row">
-    <div class="col-md-6">Copyright © 2019 Tasker. All rights reserved.</div>
+    <div class="col-md-6">@Resources.Views.Shared._Layout.Copyright</div>
     <div class="col-md-3"><partial name="_LanguageSelectionPartial"/></div>
   </div>
 </footer>

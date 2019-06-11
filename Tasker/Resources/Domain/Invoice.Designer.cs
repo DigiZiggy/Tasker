@@ -75,5 +75,11 @@ namespace Resources.Domain {
                 return ResourceManager.GetString("VAT", resourceCulture);
             }
         }
+        
+        public static string Comment {
+            get {
+                return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
     }
 }

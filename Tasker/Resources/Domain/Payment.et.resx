@@ -126,4 +126,10 @@
   <data name="Total" xml:space="preserve">
     <value>Summa</value>
   </data>
+  <data name="MeansOfPayment" xml:space="preserve">
+	  <value>Maksevahend</value>
+    </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Kommentaar</value>
+  </data>
 </root>
