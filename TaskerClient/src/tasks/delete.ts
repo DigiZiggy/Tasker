@@ -21,7 +21,7 @@ export class Delete {
   // ============ View Methods ==============
   submit():void{
     this.tasksService.delete(this.task.id).then(response => {
-      if (response.status == 200) {
+      if (response.status == 204) {
         this.router.navigateToRoute("tasksIndex");
       } else {
         log.debug('response', response);

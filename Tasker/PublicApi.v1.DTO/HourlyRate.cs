@@ -12,6 +12,5 @@ namespace PublicApi.v1.DTO
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
         
-        public List<AppUser> AppUsers { get; set; }
     }
 }

@@ -21,7 +21,7 @@ export class Delete {
   // ============ View Methods ==============
   submit():void{
     this.skillsService.delete(this.skill.id).then(response => {
-      if (response.status == 200) {
+      if (response.status == 204) {
         this.router.navigateToRoute("skillsIndex");
       } else {
         log.debug('response', response);

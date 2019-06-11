@@ -11,32 +11,32 @@
         <div class="form-group">
           <label for="Country" class="control-label">Country</label>
           <input class="form-control" type="text"
-                 id="Country" name="Country" value.bind="Address.Country"/>
+                 id="Country" name="Country" value.bind="address.Country"/>
         </div>
         <div class="form-group">
           <label asp-for="City" class="control-label">City</label>
           <input class="form-control" type="text"
-                 id="City" name="City" value.bind="Address.City"/>
+                 id="City" name="City" value.bind="address.City"/>
         </div>
         <div class="form-group">
           <label asp-for="Street" class="control-label">Street</label>
           <input class="form-control" type="text"
-                 id="Street" name="Street" value.bind="Address.Street"/>
+                 id="Street" name="Street" value.bind="address.Street"/>
         </div>
         <div class="form-group">
           <label asp-for="HouseNumber" class="control-label">House Number</label>
           <input class="form-control" type="text"
-                 id="HouseNumber" name="HouseNumber" value.bind="Address.HouseNumber"/>
+                 id="HouseNumber" name="HouseNumber" value.bind="address.HouseNumber"/>
         </div>
         <div class="form-group">
           <label asp-for="UnitNumber" class="control-label">Unit Number</label>
           <input class="form-control" type="text"
-                 id="UnitNumber" name="UnitNumber" value.bind="Address.UnitNumber"/>
+                 id="UnitNumber" name="UnitNumber" value.bind="address.UnitNumber"/>
         </div>
         <div class="form-group">
           <label asp-for="PostalCode" class="control-label">Postal Code</label>
           <input class="form-control" type="text"
-                 id="PostalCode" name="PostalCode" value.bind="Address.PostalCode"/>
+                 id="PostalCode" name="PostalCode" value.bind="address.PostalCode"/>
         </div>
         <div class="form-group">
           <input type="submit" value="Create" class="btn btn-primary" />
@@ -46,7 +46,7 @@
   </div>
 
   <div>
-    <a route-href="route: adressesIndex">Back to List</a>
+    <a route-href="route: addressesIndex">Back to List</a>
   </div>
   
 </template>

@@ -9,8 +9,5 @@ namespace PublicApi.v1.DTO
         public string SkillName { get; set; }
         public string Description { get; set; }         
 
-        public TaskType Category { get; set; }
-        
-        public List<UserSkill> AppUsers { get; set; }
     }
 }

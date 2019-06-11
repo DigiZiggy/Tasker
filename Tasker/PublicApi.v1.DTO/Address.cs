@@ -28,8 +28,5 @@ namespace PublicApi.v1.DTO
         [MinLength(1)]
         public string PostalCode { get; set; }
         
-        public List<UserOnAddress> AppUsersOnAddress { get; set; }
-        
-        public List<TaskerTask> TasksOnAddress { get; set; }
     }
 }

@@ -17,6 +17,5 @@ namespace PublicApi.v1.DTO
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         
-        public List<Payment> Payments { get; set; }
     }
 }

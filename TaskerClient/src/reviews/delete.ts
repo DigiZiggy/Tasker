@@ -21,7 +21,7 @@ export class Delete {
   // ============ View Methods ==============
   submit():void{
     this.reviewsService.delete(this.review.id).then(response => {
-      if (response.status == 200) {
+      if (response.status == 204) {
         this.router.navigateToRoute("reviewsIndex");
       } else {
         log.debug('response', response);

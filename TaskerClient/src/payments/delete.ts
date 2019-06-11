@@ -21,7 +21,7 @@ export class Delete {
   // ============ View Methods ==============
   submit():void{
     this.paymentsService.delete(this.payment.id).then(response => {
-      if (response.status == 200) {
+      if (response.status == 204) {
         this.router.navigateToRoute("paymentsIndex");
       } else {
         log.debug('response', response);
