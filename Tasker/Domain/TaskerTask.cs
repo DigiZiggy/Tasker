@@ -8,8 +8,13 @@ namespace Domain
 {
     public class TaskerTask : DomainEntity
     {       
-        public string TaskName { get; set; }       
-        public string Description { get; set; }
+        [ForeignKey(nameof(TaskName))]
+        public int TaskNameId { get; set; }
+        public MultiLangString TaskName { get; set; }
+        
+        [ForeignKey(nameof(Description))]
+        public int DescriptionId { get; set; }
+        public MultiLangString Description { get; set; }
                 
 //        [Required]
         public decimal TimeEstimate { get; set; }

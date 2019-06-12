@@ -95,17 +95,18 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var vm = new ReviewEditViewModel()
-            {
-                ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    review.ReviewGiverId),
-                ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    review.ReviewReceiverId)
-            };
+
+
+            var vm = new ReviewEditViewModel();
+            vm.Review = review;
+            vm.ReviewGiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                review.ReviewGiverId);
+            vm.ReviewReceiverSelectList = new SelectList(await _bll.AppUsers.AllAsync(),
+                    nameof(BLL.App.DTO.Identity.AppUser.Id),
+                    nameof(BLL.App.DTO.Identity.AppUser.Id),
+                    review.ReviewReceiverId);
 
             return View(vm);
         }

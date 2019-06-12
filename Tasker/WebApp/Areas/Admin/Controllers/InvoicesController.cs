@@ -88,13 +88,14 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var vm = new InvoiceEditViewModel()
-            {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    invoice.AppUserId)
-            };
+
+            var vm = new InvoiceEditViewModel();
+            vm.Invoice = invoice;
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                invoice.AppUserId);
+           
             
             return View(vm);
         }

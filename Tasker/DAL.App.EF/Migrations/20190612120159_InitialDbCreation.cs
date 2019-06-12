@@ -70,45 +70,6 @@ namespace DAL.App.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Skills",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    SkillName = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Category = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Skills", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TaskName = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    TimeEstimate = table.Column<decimal>(nullable: false),
-                    TaskType = table.Column<int>(nullable: false),
-                    TaskStatus = table.Column<int>(nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tasks_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -161,6 +122,69 @@ namespace DAL.App.EF.Migrations
                         name: "FK_AspNetUsers_HourlyRates_HourlyRateId",
                         column: x => x.HourlyRateId,
                         principalTable: "HourlyRates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SkillNameId = table.Column<int>(nullable: false),
+                    DescriptionId = table.Column<int>(nullable: false),
+                    Category = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Skills_MultiLangStrings_DescriptionId",
+                        column: x => x.DescriptionId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Skills_MultiLangStrings_SkillNameId",
+                        column: x => x.SkillNameId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    TaskNameId = table.Column<int>(nullable: false),
+                    DescriptionId = table.Column<int>(nullable: false),
+                    TimeEstimate = table.Column<decimal>(nullable: false),
+                    TaskType = table.Column<int>(nullable: false),
+                    TaskStatus = table.Column<int>(nullable: false),
+                    AddressId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_MultiLangStrings_DescriptionId",
+                        column: x => x.DescriptionId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_MultiLangStrings_TaskNameId",
+                        column: x => x.TaskNameId,
+                        principalTable: "MultiLangStrings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -327,13 +351,19 @@ namespace DAL.App.EF.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Rating = table.Column<int>(nullable: false),
-                    ReviewComment = table.Column<string>(nullable: true),
+                    ReviewCommentId = table.Column<int>(nullable: false),
                     ReviewGiverId = table.Column<int>(nullable: false),
                     ReviewReceiverId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_MultiLangStrings_ReviewCommentId",
+                        column: x => x.ReviewCommentId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reviews_AspNetUsers_ReviewGiverId",
                         column: x => x.ReviewGiverId,
@@ -522,6 +552,11 @@ namespace DAL.App.EF.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ReviewCommentId",
+                table: "Reviews",
+                column: "ReviewCommentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ReviewGiverId",
                 table: "Reviews",
                 column: "ReviewGiverId");
@@ -532,9 +567,29 @@ namespace DAL.App.EF.Migrations
                 column: "ReviewReceiverId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Skills_DescriptionId",
+                table: "Skills",
+                column: "DescriptionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Skills_SkillNameId",
+                table: "Skills",
+                column: "SkillNameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tasks_AddressId",
                 table: "Tasks",
                 column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_DescriptionId",
+                table: "Tasks",
+                column: "DescriptionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_TaskNameId",
+                table: "Tasks",
+                column: "TaskNameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Translations_MultiLangStringId",
@@ -622,9 +677,6 @@ namespace DAL.App.EF.Migrations
                 name: "Invoices");
 
             migrationBuilder.DropTable(
-                name: "MultiLangStrings");
-
-            migrationBuilder.DropTable(
                 name: "Skills");
 
             migrationBuilder.DropTable(
@@ -635,6 +687,9 @@ namespace DAL.App.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "Addresses");
+
+            migrationBuilder.DropTable(
+                name: "MultiLangStrings");
 
             migrationBuilder.DropTable(
                 name: "HourlyRates");

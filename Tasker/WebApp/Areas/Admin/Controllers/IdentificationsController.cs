@@ -87,13 +87,14 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var vm = new IdentificationEditViewModel()
-            {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    identification.AppUserId),
-            };
+
+            var vm = new IdentificationEditViewModel();
+            vm.Identification = identification;
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                identification.AppUserId);
+      
            
             return View(vm);
 

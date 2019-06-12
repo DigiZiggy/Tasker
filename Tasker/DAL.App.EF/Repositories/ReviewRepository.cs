@@ -19,47 +19,47 @@ namespace DAL.App.EF.Repositories
         {
         }
         
-//        public override async Task<Review> FindAsync(params object[] id)
-//        {
-//            var culture = Thread.CurrentThread.CurrentUICulture.Name.Substring(0, 2).ToLower();
-//            
-//            var review = await RepositoryDbSet.FindAsync(id);
-//            if (review != null)
-//            {
-//                await RepositoryDbContext.Entry(review)
-//                    .Reference(c => c.ReviewComment)
-//                    .LoadAsync();
-//                
-//                await RepositoryDbContext.Entry(review.ReviewComment)
-//                    .Collection(b => b.Translations)
-//                    .Query()
-//                    .Where(t => t.Culture == culture)
-//                    .LoadAsync();
-//            }
-// 
-//            return ReviewMapper.MapFromDomain(review);
-//        }
-//
-//        public override Review Update(Review entity)
-//        {
-//            var entityInDb = RepositoryDbSet
-//                .Include(m => m.ReviewComment)
-//                .ThenInclude(t => t.Translations)
-//                .FirstOrDefault(x => x.Id == entity.Id);
-//
-//            entityInDb.ReviewComment.SetTranslation(entity.ReviewComment);
-//
-//            return entity;
-//        }
-//        
-//        public override async Task<List<DAL.App.DTO.Review>> AllAsync()
-//        {
-//            return await RepositoryDbSet
-//                .Include(m => m.ReviewComment)
-//                .ThenInclude(t => t.Translations)
-//                .Include(r => r.ReviewReceiver)
-//                .Include(r => r.ReviewGiver)
-//                .Select(e => ReviewMapper.MapFromDomain(e)).ToListAsync();         
-//        }
+        public override async Task<Review> FindAsync(params object[] id)
+        {
+            var culture = Thread.CurrentThread.CurrentUICulture.Name.Substring(0, 2).ToLower();
+            
+            var review = await RepositoryDbSet.FindAsync(id);
+            if (review != null)
+            {
+                await RepositoryDbContext.Entry(review)
+                    .Reference(c => c.ReviewComment)
+                    .LoadAsync();
+                
+                await RepositoryDbContext.Entry(review.ReviewComment)
+                    .Collection(b => b.Translations)
+                    .Query()
+                    .Where(t => t.Culture == culture)
+                    .LoadAsync();
+            }
+ 
+            return ReviewMapper.MapFromDomain(review);
+        }
+
+        public override Review Update(Review entity)
+        {
+            var entityInDb = RepositoryDbSet
+                .Include(m => m.ReviewComment)
+                .ThenInclude(t => t.Translations)
+                .FirstOrDefault(x => x.Id == entity.Id);
+
+            entityInDb.ReviewComment.SetTranslation(entity.ReviewComment);
+
+            return entity;
+        }
+        
+        public override async Task<List<DAL.App.DTO.Review>> AllAsync()
+        {
+            return await RepositoryDbSet
+                .Include(m => m.ReviewComment)
+                .ThenInclude(t => t.Translations)
+                .Include(r => r.ReviewReceiver)
+                .Include(r => r.ReviewGiver)
+                .Select(e => ReviewMapper.MapFromDomain(e)).ToListAsync();         
+        }
     }
 }

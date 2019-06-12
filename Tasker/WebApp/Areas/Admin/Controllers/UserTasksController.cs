@@ -94,17 +94,17 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var vm = new UserTaskEditViewModel()
-            {
-                TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
-                    nameof(BLL.App.DTO.TaskerTask.Id), 
-                    nameof(BLL.App.DTO.TaskerTask.Id), 
-                    userTask.TaskGiverId),
-                TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(), 
-                    nameof(BLL.App.DTO.TaskerTask.Id), 
-                    nameof(BLL.App.DTO.TaskerTask.Id), 
-                    userTask.TaskerId)
-            };
+
+            var vm = new UserTaskEditViewModel();
+            vm.UserTask = userTask;
+            vm.TaskGiverSelectList = new SelectList(await _bll.Tasks.AllAsync(),
+                    nameof(BLL.App.DTO.TaskerTask.Id),
+                    nameof(BLL.App.DTO.TaskerTask.Id),
+                    userTask.TaskGiverId);
+            vm.TaskerSelectList = new SelectList(await _bll.Tasks.AllAsync(),
+                    nameof(BLL.App.DTO.TaskerTask.Id),
+                    nameof(BLL.App.DTO.TaskerTask.Id),
+                    userTask.TaskerId);
             
             return View(vm);
         }

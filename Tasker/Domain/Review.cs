@@ -7,9 +7,12 @@ namespace Domain
     public class Review : DomainEntity
     {
 //        [Required]
-        public int Rating { get; set; }        
-        public string ReviewComment { get; set; }
+        public int Rating { get; set; }  
         
+        [ForeignKey(nameof(ReviewComment))]
+        public int ReviewCommentId { get; set; }
+        public MultiLangString ReviewComment { get; set; }
+
         public int ReviewGiverId { get; set; } 
         public AppUser ReviewGiver { get; set; }        
         

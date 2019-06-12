@@ -29,8 +29,8 @@ namespace DAL.App.EF.Mappers
             var res = taskerTask == null ? null : new DAL.App.DTO.TaskerTask
             {
                 Id = taskerTask.Id,
-                TaskName = taskerTask.TaskName,
-                Description = taskerTask.Description,
+                TaskName = taskerTask.TaskName.Translate(),
+                Description = taskerTask.Description.Translate(),
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromDomain(taskerTask.Address),
@@ -45,8 +45,8 @@ namespace DAL.App.EF.Mappers
             var res = taskerTask == null ? null : new Domain.TaskerTask
             {
                 Id = taskerTask.Id,
-                TaskName = taskerTask.TaskName,
-                Description = taskerTask.Description,
+                TaskName = new Domain.MultiLangString(taskerTask.TaskName),
+                Description = new Domain.MultiLangString(taskerTask.Description),
                 TimeEstimate = taskerTask.TimeEstimate,
                 AddressId = taskerTask.AddressId,
                 Address = AddressMapper.MapFromDAL(taskerTask.Address),

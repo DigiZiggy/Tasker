@@ -239,13 +239,15 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("Rating");
 
-                    b.Property<string>("ReviewComment");
+                    b.Property<int>("ReviewCommentId");
 
                     b.Property<int>("ReviewGiverId");
 
                     b.Property<int>("ReviewReceiverId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReviewCommentId");
 
                     b.HasIndex("ReviewGiverId");
 
@@ -261,11 +263,15 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("Category");
 
-                    b.Property<string>("Description");
+                    b.Property<int>("DescriptionId");
 
-                    b.Property<string>("SkillName");
+                    b.Property<int>("SkillNameId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DescriptionId");
+
+                    b.HasIndex("SkillNameId");
 
                     b.ToTable("Skills");
                 });
@@ -277,9 +283,9 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<int>("AddressId");
 
-                    b.Property<string>("Description");
+                    b.Property<int>("DescriptionId");
 
-                    b.Property<string>("TaskName");
+                    b.Property<int>("TaskNameId");
 
                     b.Property<int>("TaskStatus");
 
@@ -290,6 +296,10 @@ namespace DAL.App.EF.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("DescriptionId");
+
+                    b.HasIndex("TaskNameId");
 
                     b.ToTable("Tasks");
                 });
@@ -501,6 +511,11 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.Review", b =>
                 {
+                    b.HasOne("Domain.MultiLangString", "ReviewComment")
+                        .WithMany()
+                        .HasForeignKey("ReviewCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Domain.Identity.AppUser", "ReviewGiver")
                         .WithMany("GivenReviews")
                         .HasForeignKey("ReviewGiverId")
@@ -512,11 +527,34 @@ namespace DAL.App.EF.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Domain.Skill", b =>
+                {
+                    b.HasOne("Domain.MultiLangString", "Description")
+                        .WithMany()
+                        .HasForeignKey("DescriptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.MultiLangString", "SkillName")
+                        .WithMany()
+                        .HasForeignKey("SkillNameId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Domain.TaskerTask", b =>
                 {
                     b.HasOne("Domain.Address", "Address")
                         .WithMany("TasksOnAddress")
                         .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.MultiLangString", "Description")
+                        .WithMany()
+                        .HasForeignKey("DescriptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.MultiLangString", "TaskName")
+                        .WithMany()
+                        .HasForeignKey("TaskNameId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

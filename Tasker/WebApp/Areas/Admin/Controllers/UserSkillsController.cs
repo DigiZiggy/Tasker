@@ -96,17 +96,18 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var vm = new UserSkillEditViewModel()
-            {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    userSkill.AppUserId),
-                SkillSelectList = new SelectList(await _bll.Skills.AllAsync(), 
-                    nameof(BLL.App.DTO.Skill.Id), 
-                    nameof(BLL.App.DTO.Skill.Id), 
-                    userSkill.SkillId),
-            };
+
+            var vm = new UserSkillEditViewModel();
+            vm.UserSkill = userSkill;
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                nameof(BLL.App.DTO.Identity.AppUser.Id),
+                userSkill.AppUserId);
+             vm.SkillSelectList = new SelectList(await _bll.Skills.AllAsync(),
+                 nameof(BLL.App.DTO.Skill.Id),
+                 nameof(BLL.App.DTO.Skill.Id),
+                 userSkill.SkillId);
+            
 
             return View(vm);
         }

@@ -97,17 +97,16 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var vm = new UserOnAddressEditViewModel()
-            {
-                AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
+            var vm = new UserOnAddressEditViewModel();
+            vm.UserOnAddress = userOnAddress;
+            vm.AppUserSelectList = new SelectList(await _bll.AppUsers.AllAsync(), 
                     nameof(BLL.App.DTO.Identity.AppUser.Id), 
                     nameof(BLL.App.DTO.Identity.AppUser.Id), 
-                    userOnAddress.AppUserId),
-                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
+                    userOnAddress.AppUserId);
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
                     nameof(BLL.App.DTO.Address.Id), 
                     nameof(BLL.App.DTO.Address.Id), 
-                    userOnAddress.AddressId),
-            };
+                    userOnAddress.AddressId);
             
             return View(vm);
         }

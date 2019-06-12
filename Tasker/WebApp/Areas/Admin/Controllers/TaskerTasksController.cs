@@ -89,14 +89,13 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var vm = new TaskEditViewModel()
-            {
-                AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(), 
-                    nameof(BLL.App.DTO.Address.Id), 
-                    nameof(BLL.App.DTO.Address.Id), 
-                    taskerTask.AddressId)
-            };
-
+            var vm = new TaskEditViewModel();
+            vm.TaskerTask = taskerTask;
+            vm.AddressSelectList = new SelectList(await _bll.Addresses.AllAsync(),
+                    nameof(BLL.App.DTO.Address.Id),
+                    nameof(BLL.App.DTO.Address.Id),
+                    taskerTask.AddressId);
+           
             return View(vm);
         }
 

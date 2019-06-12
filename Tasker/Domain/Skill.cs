@@ -7,8 +7,13 @@ namespace Domain
 {
     public class Skill : DomainEntity
     {
-        public string SkillName { get; set; }        
-        public string Description { get; set; }  
+        [ForeignKey(nameof(SkillName))]
+        public int SkillNameId { get; set; }
+        public MultiLangString SkillName { get; set; }
+        
+        [ForeignKey(nameof(Description))]
+        public int DescriptionId { get; set; }
+        public MultiLangString Description { get; set; }  
         
 
         public TaskType Category { get; set; }
